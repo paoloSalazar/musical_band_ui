@@ -9,6 +9,13 @@ export const API_CONFIG = {
 
 // API Endpoints
 export const API_ENDPOINTS = {
+  // Auth
+  auth: {
+    login: '/users/login',
+    logout: '/users/logout',
+    refresh: '/users/refresh',
+    me: '/users/me',
+  },
   // Users
   users: {
     list: '/users',
@@ -25,12 +32,5 @@ export const API_ENDPOINTS = {
     create: '/permissions',
     update: (id: string) => `/permissions/${id}`,
     delete: (id: string) => `/permissions/${id}`,
-  },
-  // Auth
-  auth: {
-    login: '/auth/login',
-    logout: '/auth/logout',
-    refresh: '/auth/refresh',
-    me: '/auth/me',
   },
 } as const
