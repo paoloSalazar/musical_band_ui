@@ -10,6 +10,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './tests/setup.ts',
+    include: ['tests/**/*.test.{ts,tsx}'],
+  },
   resolve: {
     alias: {
       // Alias @ to the src directory
