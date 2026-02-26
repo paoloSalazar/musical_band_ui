@@ -5,6 +5,7 @@ import { Label } from "@/app/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { Music, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
+import { authService } from "@/app/lib/api";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ export function LoginForm() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
@@ -24,15 +25,18 @@ export function LoginForm() {
       return;
     }
 
-    // Demo credentials (in production, this would be real authentication)
-    if (email === "admin@electricdreams.com" && password === "admin123") {
-      setTimeout(() => {
-        // Successful login - you can add navigation or state management here
-        alert("Login successful!");
-        setIsLoading(false);
-      }, 500);
-    } else {
-      setError("Invalid email or password");
+    try {
+      // Call the real API for authentication
+      const response = await authService.login({ email, password });
+      
+      // Successful login - store user data (you can expand this with context/redux)
+      console.log("Login successful!", response.user);
+      alert("Login successful!");
+    } catch (err) {
+      // Handle authentication error
+      const errorMessage = err instanceof Error ? err.message : "Invalid email or password";
+      setError(errorMessage);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -94,14 +98,14 @@ export function LoginForm() {
               </Button>
             </form>
 
-            {/* Demo Credentials Info */}
+            {/* API Configuration Info */}
             <div className="mt-6 p-4 bg-muted rounded-lg">
-              <p className="text-sm font-medium mb-2">Demo Credentials:</p>
+              <p className="text-sm font-medium mb-2">API Configuration:</p>
               <p className="text-sm text-muted-foreground">
-                Email: <span className="font-mono">admin@electricdreams.com</span>
+                Endpoint: <span className="font-mono">http://localhost:8000/api</span>
               </p>
-              <p className="text-sm text-muted-foreground">
-                Password: <span className="font-mono">admin123</span>
+              <p className="text-sm text-muted-foreground mt-1">
+                Configure via <span className="font-mono">.env</span> file
               </p>
             </div>
           </CardContent>
