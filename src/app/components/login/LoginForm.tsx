@@ -5,43 +5,33 @@ import { Label } from "@/app/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { Music, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
-import { authService } from "@/app/lib/api";
+import { useUser } from "@/app/contexts/UserContext";
 
-interface LoginFormProps {
-  onLoginSuccess: () => void;
-}
-
-export function LoginForm({ onLoginSuccess }: LoginFormProps) {
+export function LoginForm() {
+  const { login, isLoading } = useUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true);
 
     // Simple validation
     if (!email || !password) {
       setError("Please enter both email and password");
-      setIsLoading(false);
       return;
     }
 
     try {
-      // Call the real API for authentication
-      const response = await authService.login({ email, password });
-      
-      // Successful login - navigate to HomePage
-      console.log("Login successful!", response.user);
-      onLoginSuccess();
+      // Use the login from UserContext
+      await login(email, password);
+      // Login success - UserContext will update isAuthenticated
+      console.log("Login successful!");
     } catch (err) {
       // Handle authentication error
       const errorMessage = err instanceof Error ? err.message : "Invalid email or password";
       setError(errorMessage);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -101,17 +91,6 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
-
-            {/* API Configuration Info */}
-            {/* <div className="mt-6 p-4 bg-muted rounded-lg">
-              <p className="text-sm font-medium mb-2">API Configuration:</p>
-              <p className="text-sm text-muted-foreground">
-                Endpoint: <span className="font-mono">http://localhost:8000/api</span>
-              </p>
-              <p className="text-sm text-muted-foreground mt-1">
-                Configure via <span className="font-mono">.env</span> file
-              </p>
-            </div> */}
           </CardContent>
         </Card>
 

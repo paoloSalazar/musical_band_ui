@@ -1,25 +1,25 @@
-import { useState } from "react";
+import { UserProvider, useUser } from "./contexts/UserContext";
 import { LoginForm } from "./components/login/LoginForm";
 import { HomePage } from "./components/home/HomePage";
-import { authService } from "./lib/api";
 
-export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return authService.isAuthenticated();
-  });
-
-  const handleLoginSuccess = () => {
-    setIsAuthenticated(true);
-  };
+function AppContent() {
+  const { isAuthenticated, logout } = useUser();
 
   const handleLogout = () => {
-    authService.logout();
-    setIsAuthenticated(false);
+    logout();
   };
 
   if (isAuthenticated) {
     return <HomePage onLogout={handleLogout} />;
   }
 
-  return <LoginForm onLoginSuccess={handleLoginSuccess} />;
+  return <LoginForm />;
+}
+
+export default function App() {
+  return (
+    <UserProvider>
+      <AppContent />
+    </UserProvider>
+  );
 }
