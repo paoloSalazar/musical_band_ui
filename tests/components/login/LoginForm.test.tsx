@@ -1,9 +1,25 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { LoginForm } from '@/app/components/login/LoginForm';
 
+const mockOnLoginSuccess = vi.fn();
+
+// Mock the authService module
+const mockLogin = vi.fn();
+
+vi.mock('@/app/lib/api', () => ({
+  authService: {
+    login: (...args: unknown[]) => mockLogin(...args),
+  },
+}));
+
 describe('LoginForm', () => {
+  beforeEach(() => {
+    mockOnLoginSuccess.mockClear();
+    mockLogin.mockClear();
+  });
+
   it('renders the login form with all elements', () => {
-    render(<LoginForm />);
+    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
     
     expect(screen.getByText('The Electric Dreams')).toBeInTheDocument();
     expect(screen.getByText('Admin Portal')).toBeInTheDocument();
@@ -14,9 +30,7 @@ describe('LoginForm', () => {
   });
 
   it('shows error when submitting empty form', async () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
-    
-    render(<LoginForm />);
+    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
     
     const signInButton = screen.getByRole('button', { name: /sign in/i });
     fireEvent.click(signInButton);
@@ -24,14 +38,13 @@ describe('LoginForm', () => {
     await waitFor(() => {
       expect(screen.getByText('Please enter both email and password')).toBeInTheDocument();
     });
-    
-    alertSpy.mockRestore();
   });
 
   it('shows error for invalid credentials', async () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+    // Mock failed login response
+    mockLogin.mockRejectedValueOnce(new Error('Invalid email or password'));
     
-    render(<LoginForm />);
+    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
     
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
@@ -43,15 +56,23 @@ describe('LoginForm', () => {
     
     await waitFor(() => {
       expect(screen.getByText('Invalid email or password')).toBeInTheDocument();
-    });
-    
-    alertSpy.mockRestore();
+    }, { timeout: 3000 });
   });
 
   it('successfully logs in with correct credentials', async () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+    // Mock successful login response
+    mockLogin.mockResolvedValueOnce({
+      access_token: 'mock-token-123',
+      token_type: 'Bearer',
+      user: {
+        id: 1,
+        email: 'admin@electricdreams.com',
+        name: 'Admin User',
+        role: 'admin',
+      },
+    });
     
-    render(<LoginForm />);
+    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
     
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
@@ -62,24 +83,31 @@ describe('LoginForm', () => {
     fireEvent.click(signInButton);
     
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith('Login successful!');
-    });
-    
-    alertSpy.mockRestore();
+      expect(mockOnLoginSuccess).toHaveBeenCalled();
+    }, { timeout: 3000 });
   });
 
-  it('displays demo credentials info', () => {
-    render(<LoginForm />);
+  it('displays API configuration info', () => {
+    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
     
-    expect(screen.getByText('Demo Credentials:')).toBeInTheDocument();
-    expect(screen.getByText('admin@electricdreams.com')).toBeInTheDocument();
-    expect(screen.getByText('admin123')).toBeInTheDocument();
+    expect(screen.getByText('API Configuration:')).toBeInTheDocument();
+    expect(screen.getByText(/http:\/\/localhost:8000\/api/)).toBeInTheDocument();
   });
 
   it('shows loading state when submitting', async () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
+    // Mock successful login response
+    mockLogin.mockResolvedValueOnce({
+      access_token: 'mock-token-123',
+      token_type: 'Bearer',
+      user: {
+        id: 1,
+        email: 'admin@electricdreams.com',
+        name: 'Admin User',
+        role: 'admin',
+      },
+    });
     
-    render(<LoginForm />);
+    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
     
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
@@ -93,8 +121,6 @@ describe('LoginForm', () => {
     
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
-    });
-    
-    alertSpy.mockRestore();
+    }, { timeout: 3000 });
   });
 });

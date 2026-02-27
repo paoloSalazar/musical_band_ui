@@ -61,7 +61,7 @@ export const authService = {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
       // Try the standard token endpoint first
-      const response = await apiClient.post<LoginResponse>('/auth/login', credentials);
+      const response = await apiClient.post<LoginResponse>('/users/login', credentials);
       
       // Set the token in the client
       if (response.data.access_token) {

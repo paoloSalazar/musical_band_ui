@@ -1,0 +1,130 @@
+import { Button } from "@/app/components/ui/button";
+import { Music, Users, Calendar, Shield, LogOut } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
+
+interface HomePageProps {
+  onLogout: () => void;
+}
+
+export function HomePage({ onLogout }: HomePageProps) {
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative h-[400px] overflow-hidden bg-gradient-to-br from-purple-900 to-black">
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative h-full max-w-7xl mx-auto px-6 flex flex-col items-center justify-center text-center">
+          <Music className="h-16 w-16 mb-4 text-white" />
+          <h1 className="text-5xl mb-4 text-white">The Electric Dreams</h1>
+          <p className="text-xl text-white/90 max-w-2xl mb-6">
+            Rock band creating unforgettable music experiences since 2015
+          </p>
+          <Button 
+            variant="outline" 
+            className="text-white border-white hover:bg-white hover:text-black"
+            onClick={onLogout}
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Logout
+          </Button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="mb-12">
+          <h2 className="mb-2">Welcome to Admin Dashboard</h2>
+          <p className="text-muted-foreground">
+            Manage your band website from here
+          </p>
+        </div>
+
+        {/* Quick Actions Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center mb-4">
+                <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <CardTitle>Band Members</CardTitle>
+              <CardDescription>
+                Manage band member profiles and bios
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="secondary" className="w-full">
+                Manage Members
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
+                <Calendar className="h-6 w-6 text-green-600 dark:text-green-400" />
+              </div>
+              <CardTitle>Events</CardTitle>
+              <CardDescription>
+                Schedule and manage upcoming shows
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="secondary" className="w-full">
+                Manage Events
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+            <CardHeader>
+              <div className="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
+                <Shield className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <CardTitle>Admin Panel</CardTitle>
+              <CardDescription>
+                User management and permissions
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button variant="secondary" className="w-full">
+                Manage Admin
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Stats Section */}
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Total Band Members</CardDescription>
+              <CardTitle className="text-4xl">2</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">Active members</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Upcoming Events</CardDescription>
+              <CardTitle className="text-4xl">1</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">Scheduled shows</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Admin Users</CardDescription>
+              <CardTitle className="text-4xl">2</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">Active administrators</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}

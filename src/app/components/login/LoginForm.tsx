@@ -7,7 +7,11 @@ import { Music, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/app/components/ui/alert";
 import { authService } from "@/app/lib/api";
 
-export function LoginForm() {
+interface LoginFormProps {
+  onLoginSuccess: () => void;
+}
+
+export function LoginForm({ onLoginSuccess }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,9 +33,9 @@ export function LoginForm() {
       // Call the real API for authentication
       const response = await authService.login({ email, password });
       
-      // Successful login - store user data (you can expand this with context/redux)
+      // Successful login - navigate to HomePage
       console.log("Login successful!", response.user);
-      alert("Login successful!");
+      onLoginSuccess();
     } catch (err) {
       // Handle authentication error
       const errorMessage = err instanceof Error ? err.message : "Invalid email or password";
@@ -99,7 +103,7 @@ export function LoginForm() {
             </form>
 
             {/* API Configuration Info */}
-            <div className="mt-6 p-4 bg-muted rounded-lg">
+            {/* <div className="mt-6 p-4 bg-muted rounded-lg">
               <p className="text-sm font-medium mb-2">API Configuration:</p>
               <p className="text-sm text-muted-foreground">
                 Endpoint: <span className="font-mono">http://localhost:8000/api</span>
@@ -107,7 +111,7 @@ export function LoginForm() {
               <p className="text-sm text-muted-foreground mt-1">
                 Configure via <span className="font-mono">.env</span> file
               </p>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
 
