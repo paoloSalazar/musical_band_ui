@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app
 import { useUser } from "@/app/contexts/UserContext";
 import { Can } from "@/app/components/auth/Can";
 import { CanRole } from "@/app/components/auth/CanRole";
+import { Link } from "react-router-dom";
 
 interface HomePageProps {
   onLogout: () => void;
@@ -104,22 +105,24 @@ export function HomePage({ onLogout }: HomePageProps) {
 
           {/* Admin Panel - Only for admins */}
           <CanRole roles="admin">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                </div>
-                <CardTitle>Admin Panel</CardTitle>
-                <CardDescription>
-                  User management and permissions
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="secondary" className="w-full">
-                  Manage Admin
-                </Button>
-              </CardContent>
-            </Card>
+            <Link to="/admin/roles">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
+                    <Shield className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <CardTitle>Admin Panel</CardTitle>
+                  <CardDescription>
+                    User management and permissions
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button variant="secondary" className="w-full">
+                    Manage Admin
+                  </Button>
+                </CardContent>
+              </Card>
+            </Link>
           </CanRole>
         </div>
 

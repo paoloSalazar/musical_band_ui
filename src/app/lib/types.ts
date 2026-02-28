@@ -59,3 +59,38 @@ export interface UserActions {
  * Combined user context type
  */
 export type UserContextType = UserState & UserActions;
+
+// ============ RBAC Types ============
+
+/**
+ * Role type from /api/user-roles/ endpoints
+ */
+export interface Role {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+/**
+ * Form data for creating a role
+ */
+export interface RoleFormData {
+  name: string;
+  description?: string;
+}
+
+/**
+ * Form data for creating a permission
+ */
+export interface PermissionFormData {
+  name: string;
+  description?: string;
+}
+
+/**
+ * Response from permission assignment API
+ */
+export interface AssignPermissionResponse {
+  success: boolean;
+  message: string;
+}
