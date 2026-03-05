@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel RBAC Management Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #1a1a1a;
+            border-bottom: 3px solid #0066cc;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 1.5em;
+        }
+        
+        h3 {
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        h4 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d63384;
+        }
+        
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #0066cc;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .feature-table {
+            margin-bottom: 30px;
+        }
+        
+        .file-structure {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 40px 0;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .badge-high {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .badge-medium {
+            background-color: #ffc107;
+            color: #333;
+        }
+        
+        .badge-low {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .api-method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            font-weight: 700;
+            margin-right: 8px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .method-get {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .method-post {
+            background-color: #0066cc;
+            color: white;
+        }
+        
+        .method-patch {
+            background-color: #ffc107;
+            color: #333;
+        }
+        
+        .method-put {
+            background-color: #fd7e14;
+            color: white;
+        }
+        
+        .method-delete {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+            font-size: 0.9em;
+            text-align: center;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-box h2 {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.3);
+            margin-bottom: 15px;
+        }
+        
+        .summary-box ul {
+            margin-left: 20px;
+        }
+        
+        .summary-box li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Panel RBAC Management Plan</h1>
+        
+        <div class="summary-box">
+            <h2>Requirements Summary</h2>
+            <ul>
+                <li><strong>Manage User Roles</strong> - Create, read, update, delete user roles</li>
+                <li><strong>Manage Permissions</strong> - Create, read, update, delete permissions</li>
+                <li><strong>Assign Permissions</strong> - Map permissions to roles (many-to-many relationship)</li>
+            </ul>
+        </div>
+        
+        <h2>1. Backend API Requirements</h2>
+        
+        <div class="note">
+            <strong>Note:</strong> The actual backend endpoints have been documented in <a href="ADMIN_BACKEND_ENDPOINTS.md">docs/ADMIN_BACKEND_ENDPOINTS.md</a>. The frontend will integrate with these endpoints.
+        </div>
+        
+        <h3>1.1 Role Management Endpoints</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Endpoint</th>
+                    <th>Description</th>
+                    <th>Required Permission</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="api-method method-get">GET</span></td>
+                    <td><code>/api/user-roles/</code></td>
+                    <td>List all roles</td>
+                    <td><code>read:user_roles</code></td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-get">GET</span></td>
+                    <td><code>/api/user-roles/{name}</code></td>
+                    <td>Get role by name</td>
+                    <td><code>read:user_roles</code></td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-post">POST</span></td>
+                    <td><code>/api/user-roles/</code></td>
+                    <td>Create new role</td>
+                    <td><code>write:user_roles</code></td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-patch">PATCH</span></td>
+                    <td><code>/api/user-roles/</code></td>
+                    <td>Update role (by name)</td>
+                    <td><code>write:user_roles</code></td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-put">PUT</span></td>
+                    <td><code>/api/user-roles/</code></td>
+                    <td>Replace role (by id)</td>
+                    <td><code>write:user_roles</code></td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-delete">DELETE</span></td>
+                    <td><code>/api/user-roles/{name}</code></td>
+                    <td>Delete role by name</td>
+                    <td><code>delete:user_roles</code></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>1.2 Permission Management Endpoints</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Endpoint</th>
+                    <th>Description</th>
+                    <th>Required Permission</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="api-method method-get">GET</span></td>
+                    <td><code>/api/permissions/</code></td>
+                    <td>List all permissions</td>
+                    <td>Admin role</td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-get">GET</span></td>
+                    <td><code>/api/permissions/{permission_id}</code></td>
+                    <td>Get permission by ID</td>
+                    <td>Admin role</td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-post">POST</span></td>
+                    <td><code>/api/permissions/</code></td>
+                    <td>Create new permission</td>
+                    <td>Admin role</td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-patch">PATCH</span></td>
+                    <td><code>/api/permissions/{permission_id}</code></td>
+                    <td>Update permission</td>
+                    <td>Admin role</td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-delete">DELETE</span></td>
+                    <td><code>/api/permissions/{permission_id}</code></td>
+                    <td>Delete permission</td>
+                    <td>Admin role</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>1.3 Role-Permission Assignment Endpoints</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Endpoint</th>
+                    <th>Description</th>
+                    <th>Required Permission</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="api-method method-get">GET</span></td>
+                    <td><code>/api/permissions/{role_name}/permissions</code></td>
+                    <td>Get permissions for a role</td>
+                    <td>Admin role</td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-get">GET</span></td>
+                    <td><code>/api/permissions/role/{permission_name}/roles</code></td>
+                    <td>Get roles with a permission</td>
+                    <td>Admin role</td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-post">POST</span></td>
+                    <td><code>/api/permissions/roles/assign?permission_name=X&role_name=Y</code></td>
+                    <td>Assign permission to role</td>
+                    <td>Admin role</td>
+                </tr>
+                <tr>
+                    <td><span class="api-method method-post">POST</span></td>
+                    <td><code>/api/permissions/roles/remove?permission_name=X&role_name=Y</code></td>
+                    <td>Remove permission from role</td>
+                    <td>Admin role</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>1.4 Expected API Response Formats</h3>
+        
+        <h4>GET /api/user-roles/ Response</h4>
+        <pre><code>[
+  {
+    "id": 1,
+    "name": "admin",
+    "description": "Full system access"
+  },
+  {
+    "id": 2,
+    "name": "client",
+    "description": "Customer access"
+  }
+]</code></pre>
+        
+        <h4>GET /api/user-roles/{name} Response</h4>
+        <pre><code>{
+  "id": 1,
+  "name": "admin",
+  "description": "Full system access"
+}</code></pre>
+        
+        <h4>POST /api/user-roles/ Request</h4>
+        <pre><code>{
+  "name": "moderator",
+  "description": "Moderator access"
+}</code></pre>
+        
+        <h4>GET /api/permissions/ Response</h4>
+        <pre><code>[
+  { "id": 1, "name": "read:user_roles", "description": "View user roles" },
+  { "id": 2, "name": "write:user_roles", "description": "Manage user roles" },
+  { "id": 3, "name": "read:users", "description": "View users" }
+]</code></pre>
+        
+        <h4>GET /api/permissions/{role_name}/permissions Response</h4>
+        <pre><code>[
+  { "id": 1, "name": "read:users", "description": "View users" },
+  { "id": 2, "name": "write:users", "description": "Create/Edit users" }
+]</code></pre>
+        
+        <h4>POST /api/permissions/roles/assign Response</h4>
+        <pre><code>{
+  "success": true,
+  "message": "Permission 'read:users' assigned to role 'admin'"
+}</code></pre>
+        
+        <hr>
+        
+        <h2>2. Frontend Type Definitions</h2>
+        
+        <h3>2.1 New Types to Add</h3>
+        
+        <p><strong>File:</strong> <code>src/app/lib/types.ts</code></p>
+        
+        <pre><code>// ============ Role Types ============
+
+export interface Role {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+export interface RoleFormData {
+  name: string;
+  description?: string;
+}
+
+// ============ Permission Types ============
+
+export interface Permission {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+export interface PermissionFormData {
+  name: string;
+  description?: string;
+}
+
+// ============ API Response Types ============
+
+export interface AssignPermissionResponse {
+  success: boolean;
+  message: string;
+}</code></pre>
+        
+        <hr>
+        
+        <h2>3. Page Structure</h2>
+        
+        <h3>3.1 Route Configuration</h3>
+        
+        <p><strong>File:</strong> <code>src/app/App.tsx</code> (or router config)</p>
+        
+        <div class="note">
+            <strong>Note:</strong> Backend uses role <code>name</code> (string) for identification, not <code>id</code>
+        </div>
+        
+        <pre><code>// New routes to add
+{
+  path: '/admin',
+  children: [
+    {
+      path: '',
+      element: <AdminDashboard />, // Overview
+    },
+    {
+      path: 'roles',
+      element: <RolesPage />,       // List roles
+    },
+    {
+      path: 'roles/new',
+      element: <RoleFormPage />,    // Create role
+    },
+    {
+      path: 'roles/:name',           // Uses name, not id
+      element: <RoleDetailPage />,  // View/Edit role
+    },
+    {
+      path: 'roles/:name/edit',
+      element: <RoleFormPage />,    // Edit role
+    },
+    {
+      path: 'permissions',
+      element: <PermissionsPage />,  // List permissions
+    },
+    {
+      path: 'permissions/new',
+      element: <PermissionFormPage />, // Create permission
+    },
+    {
+      path: 'permissions/:id',
+      element: <PermissionDetailPage />, // View permission
+    },
+    {
+      path: 'permissions/:id/edit',
+      element: <PermissionFormPage />, // Edit permission
+    },
+  ],
+}</code></pre>
+        
+        <h3>3.2 Page Hierarchy</h3>
+        
+        <table>
+            <tbody>
+                <tr>
+                    <td><code>/admin</code></td>
+                    <td>Dashboard overview</td>
+                </tr>
+                <tr>
+                    <td><code>/admin/roles</code></td>
+                    <td>RolesListPage (table with all roles)</td>
+                </tr>
+                <tr>
+                    <td><code>/admin/roles/new</code></td>
+                    <td>RoleFormPage (create new role)</td>
+                </tr>
+                <tr>
+                    <td><code>/admin/roles/:name</code></td>
+                    <td>RoleDetailPage (view role details + permissions)</td>
+                </tr>
+                <tr>
+                    <td><code>/admin/roles/:name/edit</code></td>
+                    <td>RoleFormPage (edit existing role)</td>
+                </tr>
+                <tr>
+                    <td><code>/admin/permissions</code></td>
+                    <td>PermissionsListPage (table with all permissions)</td>
+                </tr>
+                <tr>
+                    <td><code>/admin/permissions/new</code></td>
+                    <td>PermissionFormPage (create new permission)</td>
+                </tr>
+                <tr>
+                    <td><code>/admin/permissions/:id</code></td>
+                    <td>PermissionDetailPage (view permission details)</td>
+                </tr>
+                <tr>
+                    <td><code>/admin/permissions/:id/edit</code></td>
+                    <td>PermissionFormPage (edit permission)</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <hr>
+        
+        <h2>4. Component Architecture</h2>
+        
+        <h3>4.1 New Component Structure</h3>
+        
+        <div class="file-structure">
+src/app/components/admin/<br>
+├── AdminLayout.tsx           # Layout wrapper with sidebar<br>
+├── roles/<br>
+│   ├── RolesListPage.tsx     # Main roles table<br>
+│   ├── RoleRow.tsx            # Single row in table<br>
+│   ├── RoleFormDialog.tsx    # Create/Edit role modal<br>
+│   ├── RoleDetailPage.tsx    # Role details + permissions<br>
+│   └── RolePermissionManager.tsx  # Permission assignment component<br>
+├── permissions/<br>
+│   ├── PermissionsListPage.tsx   # Main permissions table (CRUD)<br>
+│   ├── PermissionRow.tsx          # Single row in table<br>
+│   ├── PermissionFormDialog.tsx   # Create/Edit permission modal<br>
+│   ├── PermissionDetailPage.tsx   # Permission details<br>
+│   └── PermissionCategory.tsx     # Grouped permissions display<br>
+└── shared/<br>
+    ├── PermissionCheckbox.tsx  # Individual permission checkbox<br>
+    └── PermissionSelector.tsx  # Multi-select permission picker<br>
+        </div>
+        
+        <h3>4.2 Component Details</h3>
+        
+        <h4>AdminLayout</h4>
+        <ul>
+            <li>Sidebar with navigation to Roles, Permissions</li>
+            <li>Breadcrumb navigation</li>
+            <li>Page title and description</li>
+            <li>Protected by <code>read:user_roles</code> permission</li>
+        </ul>
+        
+        <h4>RolesListPage</h4>
+        <ul>
+            <li>Table with columns: Name, Description, Permissions Count, Users Count, Actions</li>
+            <li>Search/filter functionality</li>
+            <li>"Create Role" button</li>
+            <li>Pagination</li>
+            <li>Row actions: View, Edit, Delete (with confirmation)</li>
+        </ul>
+        
+        <h4>RoleFormDialog (Create/Edit)</h4>
+        <ul>
+            <li>Form fields: Name (required), Description (optional)</li>
+            <li>Permission selector (checkbox group or multi-select)</li>
+            <li>Form validation</li>
+            <li>Loading states</li>
+        </ul>
+        
+        <h4>RoleDetailPage</h4>
+        <ul>
+            <li>Role information display</li>
+            <li>Current permissions list with remove option</li>
+            <li>"Add Permissions" button to open selector</li>
+            <li>List of users with this role</li>
+            <li>Edit/Delete buttons</li>
+        </ul>
+        
+        <h4>PermissionsListPage (CRUD)</h4>
+        <ul>
+            <li>Table with columns: Name, Category, Description, Actions</li>
+            <li>Search/filter functionality</li>
+            <li>"Create Permission" button</li>
+            <li>Pagination</li>
+            <li>Row actions: View, Edit, Delete (with confirmation)</li>
+            <li>Shows which roles use each permission</li>
+        </ul>
+        
+        <h4>PermissionFormDialog (CRUD)</h4>
+        <ul>
+            <li>Form fields: Name (required), Category (required), Description (optional)</li>
+            <li>Form validation (unique name)</li>
+            <li>Loading states</li>
+            <li>Category dropdown with predefined categories</li>
+        </ul>
+        
+        <h4>PermissionDetailPage (CRUD)</h4>
+        <ul>
+            <li>Permission information display</li>
+            <li>List of roles that have this permission</li>
+            <li>Edit/Delete buttons</li>
+        </ul>
+        
+        <h4>PermissionSelector Component</h4>
+        <ul>
+            <li>Grouped by category (Users, Events, Bookings, etc.)</li>
+            <li>Searchable/filterable</li>
+            <li>Checkbox list with select all/none per category</li>
+            <li>Shows permission name and description</li>
+        </ul>
+        
+        <hr>
+        
+        <h2>5. API Service Functions</h2>
+        
+        <p><strong>File:</strong> <code>src/app/lib/api/rbac.ts</code> (new file)</p>
+        
+        <pre><code>import { client } from './client';
+import type { Role, Permission, RoleFormData, PermissionFormData } from '../types';
+
+// ============ Role API ============
+// Uses /api/user-roles/ endpoints
+
+export const rolesApi = {
+  list: async () => {
+    return client.get<Role[]>('/api/user-roles/');
+  },
+
+  getByName: async (name: string) => {
+    return client.get<Role>(`/api/user-roles/${name}`);
+  },
+
+  create: async (data: RoleFormData) => {
+    return client.post<Role>('/api/user-roles/', data);
+  },
+
+  update: async (name: string, data: Partial<RoleFormData>) => {
+    return client.patch<Role>('/api/user-roles/', { name, ...data });
+  },
+
+  replace: async (id: number, data: RoleFormData) => {
+    return client.put<Role>('/api/user-roles/', { id, ...data });
+  },
+
+  delete: async (name: string) => {
+    return client.delete<boolean>(`/api/user-roles/${name}`);
+  },
+};
+
+// ============ Permissions API ============
+// Uses /api/permissions endpoints
+
+export const permissionsApi = {
+  list: async () => {
+    return client.get<Permission[]>('/api/permissions/');
+  },
+
+  get: async (id: number) => {
+    return client.get<Permission>(`/api/permissions/${id}`);
+  },
+
+  create: async (data: PermissionFormData) => {
+    return client.post<Permission>('/api/permissions/', data);
+  },
+
+  update: async (id: number, data: Partial<PermissionFormData>) => {
+    return client.patch<Permission>(`/api/permissions/${id}`, data);
+  },
+
+  delete: async (id: number) => {
+    return client.delete<boolean>(`/api/permissions/${id}`);
+  },
+
+  // Role-Permission assignment
+  getPermissionsForRole: async (roleName: string) => {
+    return client.get<Permission[]>(`/api/permissions/${roleName}/permissions`);
+  },
+
+  getRolesForPermission: async (permissionName: string) => {
+    return client.get<Role[]>(`/api/permissions/role/${permissionName}/roles`);
+  },
+
+  assignToRole: async (permissionName: string, roleName: string) => {
+    return client.post<{ success: boolean; message: string }>(
+      `/api/permissions/roles/assign?permission_name=${permissionName}&role_name=${roleName}`
+    );
+  },
+
+  removeFromRole: async (permissionName: string, roleName: string) => {
+    return client.post<{ success: boolean; message: string }>(
+      `/api/permissions/roles/remove?permission_name=${permissionName}&role_name=${roleName}`
+    );
+  },
+};</code></pre>
+        
+        <hr>
+        
+        <h2>6. File Structure Summary</h2>
+        
+        <div class="file-structure">
+src/app/<br>
+├── lib/<br>
+│   ├── api/<br>
+│   │   └── rbac.ts              # UPDATE: Add permissions CRUD API<br>
+│   ├── types.ts                 # UPDATE: Add PermissionFormData type<br>
+│   └── permissions.ts           # UPDATE: May need category groupings<br>
+├── components/<br>
+│   ├── admin/                   # NEW: Admin components<br>
+│   │   ├── AdminLayout.tsx<br>
+│   │   ├── roles/<br>
+│   │   │   ├── RolesListPage.tsx<br>
+│   │   │   ├── RoleDetailPage.tsx<br>
+│   │   │   ├── RoleFormDialog.tsx<br>
+│   │   │   └── RolePermissionManager.tsx<br>
+│   │   ├── permissions/<br>
+│   │   │   ├── PermissionsListPage.tsx    # UPDATED: CRUD operations<br>
+│   │   │   ├── PermissionRow.tsx<br>
+│   │   │   ├── PermissionFormDialog.tsx   # NEW: Create/Edit form<br>
+│   │   │   ├── PermissionDetailPage.tsx  # NEW: View details<br>
+│   │   │   └── PermissionCategory.tsx<br>
+│   │   └── shared/<br>
+│   │       ├── PermissionCheckbox.tsx<br>
+│   │       └── PermissionSelector.tsx<br>
+│   └── auth/<br>
+│       └── ProtectedRoute.tsx   # UPDATE: Add admin routes protection<br>
+└── App.tsx                      # UPDATE: Add admin routes<br>
+        </div>
+        
+        <hr>
+        
+        <h2>7. UI/UX Design Guidelines</h2>
+        
+        <h3>7.1 Visual Style</h3>
+        <ul>
+            <li>Use existing UI components from <code>src/app/components/ui/</code></li>
+            <li>Consistent with current design system</li>
+            <li>Card-based layout for role and permission displays</li>
+        </ul>
+        
+        <h3>7.2 Key UI Components to Use</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code><Card></code></td>
+                    <td>Role/permission detail cards</td>
+                </tr>
+                <tr>
+                    <td><code><Table></code></td>
+                    <td>Roles list</td>
+                </tr>
+                <tr>
+                    <td><code><Dialog></code></td>
+                    <td>Create/edit role forms</td>
+                </tr>
+                <tr>
+                    <td><code><Checkbox></code></td>
+                    <td>Permission selection</td>
+                </tr>
+                <tr>
+                    <td><code><Badge></code></td>
+                    <td>Permission categories</td>
+                </tr>
+                <tr>
+                    <td><code><Button></code></td>
+                    <td>Actions</td>
+                </tr>
+                <tr>
+                    <td><code><Input></code></td>
+                    <td>Search fields</td>
+                </tr>
+                <tr>
+                    <td><code><Select></code></td>
+                    <td>Filters</td>
+                </tr>
+                <tr>
+                    <td><code><AlertDialog></code></td>
+                    <td>Delete confirmations</td>
+                </tr>
+                <tr>
+                    <td><code><Tabs></code></td>
+                    <td>Switch between Views</td>
+                </tr>
+                <tr>
+                    <td><code><Toast></code></td>
+                    <td>Success/error notifications</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>7.3 Permission Indicators</h3>
+        <ul>
+            <li>Use colored badges for permission categories</li>
+            <li>Group permissions by category in displays</li>
+            <li>Show permission count in role cards</li>
+        </ul>
+        
+        <hr>
+        
+        <h2>8. Implementation Order</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Phase</th>
+                    <th>Step</th>
+                    <th>Task</th>
+                    <th>Priority</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>1.1</td>
+                    <td>Add Role and Permission types to <code>types.ts</code></td>
+                    <td><span class="badge badge-high">High</span></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1.2</td>
+                    <td>Create <code>rbac.ts</code> API service with CRUD for both</td>
+                    <td><span class="badge badge-high">High</span></td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1.3</td>
+                    <td>Add admin routes to App.tsx</td>
+                    <td><span class="badge badge-high">High</span></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2.1</td>
+                    <td>Create AdminLayout component</td>
+                    <td><span class="badge badge-high">High</span></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2.2</td>
+                    <td>Create RolesListPage</td>
+                    <td><span class="badge badge-high">High</span></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2.3</td>
+                    <td>Create RoleDetailPage</td>
+                    <td><span class="badge badge-medium">Medium</span></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2.4</td>
+                    <td>Create RoleFormDialog</td>
+                    <td><span class="badge badge-medium">Medium</span></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>3.1</td>
+                    <td>Create PermissionsListPage (CRUD table)</td>
+                    <td><span class="badge badge-medium">Medium</span></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>3.2</td>
+                    <td>Create PermissionFormDialog</td>
+                    <td><span class="badge badge-medium">Medium</span></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>3.3</td>
+                    <td>Create PermissionDetailPage</td>
+                    <td><span class="badge badge-medium">Medium</span></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>4.1</td>
+                    <td>Create PermissionSelector component</td>
+                    <td><span class="badge badge-medium">Medium</span></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>4.2</td>
+                    <td>Create RolePermissionManager</td>
+                    <td><span class="badge badge-medium">Medium</span></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>5.1</td>
+                    <td>Add search/filter functionality</td>
+                    <td><span class="badge badge-low">Low</span></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>5.2</td>
+                    <td>Add delete confirmation dialogs</td>
+                    <td><span class="badge badge-low">Low</span></td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>6.1</td>
+                    <td>Test all CRUD operations (roles & permissions)</td>
+                    <td><span class="badge badge-high">High</span></td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>6.2</td>
+                    <td>Add loading and error states</td>
+                    <td><span class="badge badge-medium">Medium</span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <hr>
+        
+        <h2>9. Dependencies</h2>
+        
+        <p>No new dependencies required. Use existing:</p>
+        <ul>
+            <li>React Router for routing</li>
+            <li>Existing UI components from <code>src/app/components/ui/</code></li>
+            <li>Existing API client from <code>src/app/lib/api/client.ts</code></li>
+            <li>Existing toast/notification system</li>
+        </ul>
+        
+        <hr>
+        
+        <h2>10. Next Steps After Implementation</h2>
+        
+        <h3>1. Testing</h3>
+        <ul>
+            <li>Test role CRUD operations</li>
+            <li>Test permission assignment</li>
+            <li>Test that users with new roles get correct permissions</li>
+        </ul>
+        
+        <h3>2. Documentation</h3>
+        <ul>
+            <li>Document the new admin panel usage</li>
+            <li>Update API documentation</li>
+        </ul>
+        
+        <h3>3. Future Enhancements (optional)</h3>
+        <ul>
+            <li>Bulk permission assignment</li>
+            <li>Role cloning</li>
+            <li>Permission groups management</li>
+            <li>Audit log for role changes</li>
+        </ul>
+        
+        <div class="footer">
+            <p><em>Document created for Musical Band UI Project - Admin Panel RBAC Management</em></p>
+        </div>
+    </div>
+</body>
+</html>

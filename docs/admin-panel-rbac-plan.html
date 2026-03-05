@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel Role-Based Rendering Plan</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #0052CC;
+            border-bottom: 2px solid #DFE1E6;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0052CC;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #172B4D;
+            margin-top: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #DFE1E6;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #F4F5F7;
+            font-weight: 600;
+        }
+        code {
+            background-color: #F4F5F7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: "Monaco", "Menlo", monospace;
+            font-size: 13px;
+        }
+        pre {
+            background-color: #F4F5F7;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        ul, ol {
+            padding-left: 25px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        blockquote {
+            border-left: 4px solid #0052CC;
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #F4F5F7;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #DFE1E6;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Admin Panel Role-Based Rendering Plan</h1>
+
+<h2>Overview</h2>
+
+<p>This document outlines the implementation plan for adding role-based access control (RBAC) to the Musical Band UI application. The system will render pages and components based on user roles and permissions fetched from the backend.</p>
+
+<h2>Backend API</h2>
+
+<p>The backend provides user information through the <code>/api/users/me</code> endpoint, which returns:</p>
+
+<pre><code>{
+  "id": 1,
+  "name": "username",
+  "lastname": "userlastname",
+  "second_lastname": "usersecondlastname",
+  "email": "name.lastname@example.com",
+  "role": "admin",
+  "role_id": 1,
+  "permissions": [
+    "read:user_roles",
+    "write:user_roles",
+    "delete:user_roles",
+    "read:users",
+    "write:users",
+    "delete:users",
+    "read:events"
+  ]
+}</code></pre>
+
+<hr>
+
+<h2>Answers to Key Questions</h2>
+
+<h3>Is it good practice to get this data from backend?</h3>
+
+<p><strong>Yes, absolutely.</strong> Getting user data from the backend is the recommended approach because:</p>
+
+<table>
+    <tr>
+        <th>Benefit</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><strong>Security</strong></td>
+        <td>Permissions are validated server-side and cannot be manipulated by users</td>
+    </tr>
+    <tr>
+        <td><strong>Single Source of Truth</strong></td>
+        <td>All permission logic lives in one place</td>
+    </tr>
+    <tr>
+        <td><strong>Real-time Updates</strong></td>
+        <td>If permissions change, they take effect immediately without code changes</td>
+    </tr>
+    <tr>
+        <td><strong>Scalability</strong></td>
+        <td>Easy to manage permissions for thousands of users</td>
+    </tr>
+    <tr>
+        <td><strong>Audit Trail</strong></td>
+        <td>Backend can log access attempts</td>
+    </tr>
+</table>
+
+<hr>
+
+<h2>Implementation Plan</h2>
+
+<h3>Phase 1: User Context & API Integration</h3>
+
+<h4>1.1 Create UserContext</h4>
+
+<ul>
+    <li><strong>File</strong>: <code>src/app/contexts/UserContext.tsx</code></li>
+    <li><strong>Purpose</strong>: Store user data globally after login</li>
+    <li><strong>Contains</strong>: user info, role, permissions, loading state, logout function</li>
+</ul>
+
+<h4>1.2 Integrate <code>/api/users/me</code></h4>
+
+<ul>
+    <li>After successful login, call the endpoint to fetch user data</li>
+    <li>Store the response in UserContext</li>
+    <li>Make user data available throughout the application</li>
+</ul>
+
+<h4>1.3 Create <code>useUser</code> Hook</h4>
+
+<ul>
+    <li><strong>File</strong>: <code>src/app/hooks/useUser.ts</code></li>
+    <li><strong>Purpose</strong>: Easy access to user data from any component</li>
+    <li><strong>Exports</strong>: user, isLoading, hasPermission, hasRole, isAuthenticated</li>
+</ul>
+
+<h3>Phase 2: Permission System</h3>
+
+<h4>2.1 Define Role Constants</h4>
+
+<ul>
+    <li><strong>File</strong>: <code>src/app/lib/roles.ts</code></li>
+    <li><strong>Roles</strong>:
+        <ul>
+            <li><code>VISITOR</code> - Unauthenticated users</li>
+            <li><code>CLIENT</code> - Customers booking services</li>
+            <li><code>MUSICIAN</code> - Band members</li>
+            <li><code>ADMIN</code> - Full system access</li>
+        </ul>
+    </li>
+</ul>
+
+<h4>2.2 Define Permission Constants</h4>
+
+<ul>
+    <li><strong>File</strong>: <code>src/app/lib/permissions.ts</code></li>
+    <li>Use consistent naming: <code>resource:action</code> (e.g., <code>read:users</code>, <code>write:events</code>)</li>
+</ul>
+
+<h4>2.3 Create Permission Utilities</h4>
+
+<ul>
+    <li><strong>File</strong>: <code>src/app/lib/auth-utils.ts</code></li>
+    <li><strong>Functions</strong>:
+        <ul>
+            <li><code>hasPermission(permission: string): boolean</code> - Check single permission</li>
+            <li><code>hasRole(role: string): boolean</code> - Check user role</li>
+            <li><code>hasAnyPermission(permissions: string[]): boolean</code> - OR logic</li>
+            <li><code>hasAllPermissions(permissions: string[]): boolean</code> - AND logic</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>Phase 3: Reusable Components</h3>
+
+<h4>3.1 <code><Can></code> Component</h4>
+
+<p>Conditional rendering based on permissions:</p>
+
+<pre><code><Can permission="read:users">
+  <UsersTable />
+</Can></code></pre>
+
+<h4>3.2 <code><CanRole></code> Component</h4>
+
+<p>Conditional rendering based on roles:</p>
+
+<pre><code><CanRole roles={['admin', 'musician']}>
+  <AdminPanel />
+</CanRole></code></pre>
+
+<h4>3.3 <code><CanAny></code> Component</h4>
+
+<p>Multiple permissions (OR logic):</p>
+
+<pre><code><CanAny permissions={['read:users', 'read:user_roles']}>
+  <NavigationItem />
+</CanAny></code></pre>
+
+<h4>3.4 <code><ProtectedRoute></code> Component</h4>
+
+<p>Route-level protection:</p>
+
+<pre><code><ProtectedRoute requiredPermission="read:users">
+  <UsersPage />
+</ProtectedRoute></code></pre>
+
+<h3>Phase 4: Apply to Pages & Components</h3>
+
+<h4>4.1 Sidebar/Navigation</h4>
+
+<ul>
+    <li>Show/hide menu items based on role and permissions</li>
+    <li>Example:
+        <ul>
+            <li><strong>Visitor</strong>: Home only</li>
+            <li><strong>Client</strong>: Home, Events, Book Services</li>
+            <li><strong>Musician</strong>: Home, Events, Schedule, Profile</li>
+            <li><strong>Admin</strong>: All pages</li>
+        </ul>
+    </li>
+</ul>
+
+<h4>4.2 Page Routes</h4>
+
+<ul>
+    <li>Protect each route with appropriate permission requirements</li>
+    <li>Redirect unauthorized users to appropriate page</li>
+</ul>
+
+<h4>4.3 Buttons & Actions</h4>
+
+<ul>
+    <li>Show/hide edit, delete, create buttons based on permissions</li>
+    <li>Example: Delete button only visible with <code>delete:users</code> permission</li>
+</ul>
+
+<hr>
+
+<h2>Suggested Role Permissions Mapping</h2>
+
+<table>
+    <tr>
+        <th>Role</th>
+        <th>Permissions</th>
+    </tr>
+    <tr>
+        <td><strong>visitor</strong></td>
+        <td>No authenticated access (public pages only)</td>
+    </tr>
+    <tr>
+        <td><strong>client</strong></td>
+        <td><code>read:events</code>, <code>write:bookings</code>, <code>read:own_profile</code>, <code>write:own_profile</code></td>
+    </tr>
+    <tr>
+        <td><strong>musician</strong></td>
+        <td><code>read:events</code>, <code>read:schedule</code>, <code>write:availability</code>, <code>read:own_profile</code>, <code>write:own_profile</code></td>
+    </tr>
+    <tr>
+        <td><strong>admin</strong></td>
+        <td>Full access: all <code>read:*</code>, <code>write:*</code>, <code>delete:*</code> permissions</td>
+    </tr>
+</table>
+
+<hr>
+
+<h2>File Structure</h2>
+
+<pre><code>src/app/
+├── contexts/
+│   └── UserContext.tsx          # Global user state
+├── hooks/
+│   └── useUser.ts               # User access hook
+├── lib/
+│   ├── roles.ts                 # Role constants
+│   ├── permissions.ts           # Permission constants
+│   └── auth-utils.ts            # Permission check functions
+├── components/
+│   ├── auth/
+│   │   ├── ProtectedRoute.tsx  # Route wrapper
+│   │   ├── Can.tsx              # Permission component
+│   │   └── CanRole.tsx          # Role component
+│   └── ui/
+│       └── PermissionButton.tsx # Button wrapper
+└── pages/
+    └── (protected routes)</code></pre>
+
+<hr>
+
+<h2>Data Flow</h2>
+
+<ol>
+    <li>User logs in → API returns token</li>
+    <li>App calls GET /api/users/me with token</li>
+    <li>Backend returns user data with role and permissions</li>
+    <li>UserContext stores the data</li>
+    <li>All components can now check permissions</li>
+    <li>UI renders based on user's role and permissions</li>
+</ol>
+
+<hr>
+
+<h2>Implementation Order</h2>
+
+<table>
+    <tr>
+        <th>Step</th>
+        <th>Task</th>
+        <th>Priority</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Create UserContext</td>
+        <td>High</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Add API endpoint call for /api/users/me</td>
+        <td>High</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Create permission utilities</td>
+        <td>High</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Create <Can> component</td>
+        <td>High</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>Create <ProtectedRoute></td>
+        <td>High</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Update router with protected routes</td>
+        <td>Medium</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>Update sidebar navigation</td>
+        <td>Medium</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>Add button-level protection</td>
+        <td>Low</td>
+    </tr>
+</table>
+
+<hr>
+
+<h2>Next Steps</h2>
+
+<ol>
+    <li>Implement UserContext with <code>/api/users/me</code> integration</li>
+    <li>Create permission utilities and reusable components</li>
+    <li>Apply protection to existing pages and navigation</li>
+    <li>Test role-based rendering for each role type</li>
+</ol>
+
+<hr>
+
+<p><em>Document created for Musical Band UI Project</em></p>
+
+</body>
+</html>
