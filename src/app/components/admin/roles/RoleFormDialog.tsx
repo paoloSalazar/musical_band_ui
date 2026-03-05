@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { rolesApi } from '../../../lib/api';
 import type { Role } from '../../../lib/types';
+import type { ApiError } from '../../../lib/api/client';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
@@ -63,7 +64,8 @@ export function RoleFormDialog({ onSuccess, trigger }: RoleFormDialogProps) {
         onSuccess(response.data);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create role');
+      const error = err as ApiError;
+      setError(error.detail || error.message || 'Failed to create role');
     } finally {
       setIsLoading(false);
     }
