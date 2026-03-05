@@ -72,6 +72,15 @@ export interface Role {
 }
 
 /**
+ * Permission type from /api/permissions endpoints
+ */
+export interface Permission {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+/**
  * Form data for creating a role
  */
 export interface RoleFormData {

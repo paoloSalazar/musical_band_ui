@@ -4,7 +4,7 @@
  */
 
 import { apiClient, type ApiResponse } from './client';
-import type { Role, RoleFormData } from '../types';
+import type { Role, RoleFormData, Permission, PermissionFormData } from '../types';
 
 /**
  * Roles API
@@ -57,5 +57,59 @@ export const rolesApi = {
    */
   delete: async (name: string): Promise<ApiResponse<boolean>> => {
     return apiClient.delete<boolean>(`/user-roles/${name}`);
+  },
+};
+
+/**
+ * Permissions API
+ * Endpoints: /api/permissions/
+ */
+export const permissionsApi = {
+  /**
+   * Get all permissions
+   * GET /api/permissions/
+   */
+  list: async (): Promise<ApiResponse<Permission[]>> => {
+    return apiClient.get<Permission[]>('/permissions/');
+  },
+
+  /**
+   * Get a permission by ID
+   * GET /api/permissions/{id}
+   */
+  getById: async (id: number): Promise<ApiResponse<Permission>> => {
+    return apiClient.get<Permission>(`/permissions/${id}`);
+  },
+
+  /**
+   * Create a new permission
+   * POST /api/permissions/
+   */
+  create: async (data: PermissionFormData): Promise<ApiResponse<Permission>> => {
+    return apiClient.post<Permission>('/permissions/', data);
+  },
+
+  /**
+   * Update a permission (partial update)
+   * PATCH /api/permissions/{id}
+   */
+  update: async (id: number, data: Partial<PermissionFormData>): Promise<ApiResponse<Permission>> => {
+    return apiClient.patch<Permission>(`/permissions/${id}`, data);
+  },
+
+  /**
+   * Replace a permission (full update)
+   * PUT /api/permissions/{id}
+   */
+  replace: async (id: number, data: PermissionFormData): Promise<ApiResponse<Permission>> => {
+    return apiClient.put<Permission>(`/permissions/${id}`, data);
+  },
+
+  /**
+   * Delete a permission by ID
+   * DELETE /api/permissions/{id}
+   */
+  delete: async (id: number): Promise<ApiResponse<boolean>> => {
+    return apiClient.delete<boolean>(`/permissions/${id}`);
   },
 };
