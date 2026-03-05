@@ -19,13 +19,13 @@ import {
   CardTitle 
 } from '../../ui/card';
 import { 
-  Plus, 
   Pencil, 
   Trash2, 
   Eye,
   Loader2,
   Shield
 } from 'lucide-react';
+import { RoleFormDialog } from './RoleFormDialog';
 
 /**
  * Roles List Page
@@ -102,12 +102,11 @@ export function RolesListPage() {
             Manage user roles and their permissions
           </p>
         </div>
-        <Link to="/admin/roles/new">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Create Role
-          </Button>
-        </Link>
+        <RoleFormDialog
+          onSuccess={() => {
+            loadRoles();
+          }}
+        />
       </div>
 
       {/* Roles Table */}
