@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { permissionsApi } from '../../../lib/api';
 import type { Permission } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
@@ -28,6 +27,7 @@ import {
 } from 'lucide-react';
 import { PermissionFormDialog } from './PermissionFormDialog';
 import { ViewPermissionDialog } from './ViewPermissionDialog';
+import { EditPermissionDialog } from './EditPermissionDialog';
 
 /**
  * Permissions List Page
@@ -39,6 +39,9 @@ export function PermissionsListPage() {
   const [error, setError] = useState<string | null>(null);
   const [viewPermissionId, setViewPermissionId] = useState<number | null>(null);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [editPermissionId, setEditPermissionId] = useState<number | null>(null);
+  const [editPermissionName, setEditPermissionName] = useState('');
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   useEffect(() => {
     loadPermissions();
@@ -76,6 +79,12 @@ export function PermissionsListPage() {
   const handleView = (permissionId: number) => {
     setViewPermissionId(permissionId);
     setViewDialogOpen(true);
+  };
+
+  const handleEdit = (permissionId: number, permissionName: string) => {
+    setEditPermissionId(permissionId);
+    setEditPermissionName(permissionName);
+    setEditDialogOpen(true);
   };
 
   if (isLoading) {
@@ -168,11 +177,14 @@ export function PermissionsListPage() {
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Link to={`/admin/permissions/${permission.id}/edit`}>
-                          <Button variant="ghost" size="sm" title="Edit">
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                        </Link>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          title="Edit"
+                          onClick={() => handleEdit(permission.id, permission.name)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
                         <Button 
                           variant="ghost" 
                           size="sm" 
@@ -197,6 +209,20 @@ export function PermissionsListPage() {
         permissionId={viewPermissionId}
         open={viewDialogOpen}
         onOpenChange={setViewDialogOpen}
+      />
+
+      {/* Edit Permission Dialog */}
+      <EditPermissionDialog
+        permissionId={editPermissionId}
+        permissionName={editPermissionName}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onSuccess={(permission: Permission) => {
+          // Update the permission in the list
+          setPermissions(prev => 
+            prev.map(p => p.id === permission.id ? permission : p)
+          );
+        }}
       />
     </div>
   );
