@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { permissionsApi } from '../../../lib/api';
 import type { Permission } from '../../../lib/types';
+import type { ApiError } from '../../../lib/api/client';
 import { 
   Table, 
   TableBody, 
@@ -19,13 +20,13 @@ import {
   CardTitle 
 } from '../../ui/card';
 import { 
-  Plus, 
   Pencil, 
   Trash2, 
   Eye,
   Loader2,
   Lock
 } from 'lucide-react';
+import { PermissionFormDialog } from './PermissionFormDialog';
 
 /**
  * Permissions List Page
@@ -47,7 +48,8 @@ export function PermissionsListPage() {
       const response = await permissionsApi.list();
       setPermissions(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load permissions');
+      const error = err as ApiError;
+      setError(error.detail || error.message || 'Failed to load permissions');
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +65,8 @@ export function PermissionsListPage() {
       // Refresh the list
       loadPermissions();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to delete permission');
+      const error = err as ApiError;
+      alert(error.detail || error.message || 'Failed to delete permission');
     }
   };
 
@@ -102,12 +105,11 @@ export function PermissionsListPage() {
             Manage system permissions
           </p>
         </div>
-        <Link to="/admin/permissions/new">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Create Permission
-          </Button>
-        </Link>
+        <PermissionFormDialog
+          onSuccess={() => {
+            loadPermissions();
+          }}
+        />
       </div>
 
       {/* Permissions Table */}
