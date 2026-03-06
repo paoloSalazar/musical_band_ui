@@ -27,6 +27,7 @@ import {
   Lock
 } from 'lucide-react';
 import { PermissionFormDialog } from './PermissionFormDialog';
+import { ViewPermissionDialog } from './ViewPermissionDialog';
 
 /**
  * Permissions List Page
@@ -36,6 +37,8 @@ export function PermissionsListPage() {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [viewPermissionId, setViewPermissionId] = useState<number | null>(null);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
 
   useEffect(() => {
     loadPermissions();
@@ -68,6 +71,11 @@ export function PermissionsListPage() {
       const error = err as ApiError;
       alert(error.detail || error.message || 'Failed to delete permission');
     }
+  };
+
+  const handleView = (permissionId: number) => {
+    setViewPermissionId(permissionId);
+    setViewDialogOpen(true);
   };
 
   if (isLoading) {
@@ -152,11 +160,14 @@ export function PermissionsListPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Link to={`/admin/permissions/${permission.id}`}>
-                          <Button variant="ghost" size="sm" title="View">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </Link>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          title="View"
+                          onClick={() => handleView(permission.id)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
                         <Link to={`/admin/permissions/${permission.id}/edit`}>
                           <Button variant="ghost" size="sm" title="Edit">
                             <Pencil className="h-4 w-4" />
@@ -180,6 +191,13 @@ export function PermissionsListPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* View Permission Dialog */}
+      <ViewPermissionDialog
+        permissionId={viewPermissionId}
+        open={viewDialogOpen}
+        onOpenChange={setViewDialogOpen}
+      />
     </div>
   );
 }
