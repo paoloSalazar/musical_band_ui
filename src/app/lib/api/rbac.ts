@@ -106,6 +106,14 @@ export const permissionsApi = {
   },
 
   /**
+   * Delete a permission by name
+   * DELETE /api/permissions/{name}
+   */
+  deleteByName: async (name: string): Promise<ApiResponse<boolean>> => {
+    return apiClient.delete<boolean>(`/permissions/${name}`);
+  },
+
+  /**
    * Delete a permission by ID
    * DELETE /api/permissions/{id}
    */

@@ -28,6 +28,7 @@ import {
 import { PermissionFormDialog } from './PermissionFormDialog';
 import { ViewPermissionDialog } from './ViewPermissionDialog';
 import { EditPermissionDialog } from './EditPermissionDialog';
+import { DeletePermissionDialog } from './DeletePermissionDialog';
 
 /**
  * Permissions List Page
@@ -42,6 +43,9 @@ export function PermissionsListPage() {
   const [editPermissionId, setEditPermissionId] = useState<number | null>(null);
   const [editPermissionName, setEditPermissionName] = useState('');
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deletePermissionId, setDeletePermissionId] = useState<number | null>(null);
+  const [deletePermissionName, setDeletePermissionName] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     loadPermissions();
@@ -61,19 +65,10 @@ export function PermissionsListPage() {
     }
   };
 
-  const handleDelete = async (permissionId: number, permissionName: string) => {
-    if (!confirm(`Are you sure you want to delete the permission "${permissionName}"?`)) {
-      return;
-    }
-
-    try {
-      await permissionsApi.delete(permissionId);
-      // Refresh the list
-      loadPermissions();
-    } catch (err) {
-      const error = err as ApiError;
-      alert(error.detail || error.message || 'Failed to delete permission');
-    }
+  const handleDelete = (permissionId: number, permissionName: string) => {
+    setDeletePermissionId(permissionId);
+    setDeletePermissionName(permissionName);
+    setDeleteDialogOpen(true);
   };
 
   const handleView = (permissionId: number) => {
@@ -222,6 +217,18 @@ export function PermissionsListPage() {
           setPermissions(prev => 
             prev.map(p => p.id === permission.id ? permission : p)
           );
+        }}
+      />
+
+      {/* Delete Permission Dialog */}
+      <DeletePermissionDialog
+        permissionId={deletePermissionId!}
+        permissionName={deletePermissionName}
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onSuccess={() => {
+          // Refresh the list
+          loadPermissions();
         }}
       />
     </div>
