@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { permissionsApi } from '../../../lib/api';
 import type { Permission } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
@@ -18,6 +18,13 @@ import {
   CardHeader, 
   CardTitle 
 } from '../../ui/card';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+} from '../../ui/pagination';
 import { 
   Pencil, 
   Trash2, 
@@ -38,6 +45,13 @@ export function PermissionsListPage() {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Pagination state
+  const [skip, setSkip] = useState(0);
+  const limit = 8;
+  const [total, setTotal] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  
   const [viewPermissionId, setViewPermissionId] = useState<number | null>(null);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [editPermissionId, setEditPermissionId] = useState<number | null>(null);
@@ -49,14 +63,22 @@ export function PermissionsListPage() {
 
   useEffect(() => {
     loadPermissions();
-  }, []);
+  }, [skip]);
 
   const loadPermissions = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await permissionsApi.list();
-      setPermissions(response.data);
+      const response = await permissionsApi.list(skip, limit);
+      // Response structure: { data: Permission[], total: number, skip: number, limit: number }
+      const paginatedData = response.data;
+      setPermissions(paginatedData.data);
+      
+      // Check if there are more results
+      setHasMore(paginatedData.data.length === limit);
+      
+      // Update total count
+      setTotal(paginatedData.total);
     } catch (err) {
       const error = err as ApiError;
       setError(error.detail || error.message || 'Failed to load permissions');
@@ -64,6 +86,14 @@ export function PermissionsListPage() {
       setIsLoading(false);
     }
   };
+
+  const handlePreviousPage = useCallback(() => {
+    setSkip(prev => Math.max(0, prev - limit));
+  }, []);
+
+  const handleNextPage = useCallback(() => {
+    setSkip(prev => prev + limit);
+  }, []);
 
   const handleDelete = (permissionId: number, permissionName: string) => {
     setDeletePermissionId(permissionId);
@@ -132,7 +162,7 @@ export function PermissionsListPage() {
             All Permissions
           </CardTitle>
           <CardDescription>
-            Total: {permissions.length} permission(s)
+            Showing {permissions.length} of {total} permission(s)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -198,6 +228,33 @@ export function PermissionsListPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Pagination */}
+      {permissions.length > 0 && (
+        <div className="flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={handlePreviousPage}
+                  className={skip === 0 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <span className="px-4 text-sm text-gray-600">
+                  Page {Math.floor(skip / limit) + 1}
+                </span>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={handleNextPage}
+                  className={!hasMore ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
 
       {/* View Permission Dialog */}
       <ViewPermissionDialog

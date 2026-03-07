@@ -66,9 +66,9 @@ export function RolePermissionsPage() {
       const rolesResponse = await rolesApi.list();
       setRoles(rolesResponse.data);
       
-      // Load all permissions
-      const permissionsResponse = await permissionsApi.list();
-      setAllPermissions(permissionsResponse.data);
+      // Load all permissions (without pagination for role-permissions management)
+      const permissionsResponse = await permissionsApi.list(0, 1000);
+      setAllPermissions(permissionsResponse.data.data);
       
       // Load permissions for each role
       const permissionsMap: Record<string, Permission[]> = {};

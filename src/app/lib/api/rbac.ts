@@ -66,11 +66,12 @@ export const rolesApi = {
  */
 export const permissionsApi = {
   /**
-   * Get all permissions
-   * GET /api/permissions/
+   * Get all permissions with pagination
+   * GET /api/permissions/?skip=0&limit=8
+   * Response: { data: Permission[], total: number, skip: number, limit: number }
    */
-  list: async (): Promise<ApiResponse<Permission[]>> => {
-    return apiClient.get<Permission[]>('/permissions/');
+  list: async (skip = 0, limit = 8): Promise<ApiResponse<{ data: Permission[], total: number, skip: number, limit: number }>> => {
+    return apiClient.get<{ data: Permission[], total: number, skip: number, limit: number }>(`/permissions/?skip=${skip}&limit=${limit}`);
   },
 
   /**
