@@ -26,6 +26,9 @@ import {
   Shield
 } from 'lucide-react';
 import { RoleFormDialog } from './RoleFormDialog';
+import { ViewRoleDialog } from './ViewRoleDialog';
+import { EditRoleDialog } from './EditRoleDialog';
+import { DeleteRoleDialog } from './DeleteRoleDialog';
 
 /**
  * Roles List Page
@@ -35,6 +38,13 @@ export function RolesListPage() {
   const [roles, setRoles] = useState<Role[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [viewRoleName, setViewRoleName] = useState<string>('');
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [editRoleName, setEditRoleName] = useState<string>('');
+  const [editRoleId, setEditRoleId] = useState<number>(0);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteRoleName, setDeleteRoleName] = useState<string>('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     loadRoles();
@@ -53,18 +63,20 @@ export function RolesListPage() {
     }
   };
 
-  const handleDelete = async (roleName: string) => {
-    if (!confirm(`Are you sure you want to delete the role "${roleName}"?`)) {
-      return;
-    }
+  const handleDelete = (roleName: string) => {
+    setDeleteRoleName(roleName);
+    setDeleteDialogOpen(true);
+  };
 
-    try {
-      await rolesApi.delete(roleName);
-      // Refresh the list
-      loadRoles();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to delete role');
-    }
+  const handleView = (roleName: string) => {
+    setViewRoleName(roleName);
+    setViewDialogOpen(true);
+  };
+
+  const handleEdit = (roleId: number, roleName: string) => {
+    setEditRoleId(roleId);
+    setEditRoleName(roleName);
+    setEditDialogOpen(true);
   };
 
   if (isLoading) {
@@ -149,16 +161,22 @@ export function RolesListPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Link to={`/admin/roles/${role.name}`}>
-                          <Button variant="ghost" size="sm" title="View">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </Link>
-                        <Link to={`/admin/roles/${role.name}/edit`}>
-                          <Button variant="ghost" size="sm" title="Edit">
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                        </Link>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          title="View"
+                          onClick={() => handleView(role.name)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          title="Edit"
+                          onClick={() => handleEdit(role.id, role.name)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
                         <Button 
                           variant="ghost" 
                           size="sm" 
@@ -177,6 +195,38 @@ export function RolesListPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* View Role Dialog */}
+      <ViewRoleDialog
+        roleName={viewRoleName}
+        open={viewDialogOpen}
+        onOpenChange={setViewDialogOpen}
+      />
+
+      {/* Edit Role Dialog */}
+      <EditRoleDialog
+        roleId={editRoleId}
+        roleName={editRoleName}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onSuccess={(role: Role) => {
+          // Update the role in the list
+          setRoles(prev => 
+            prev.map(r => r.name === role.name ? role : r)
+          );
+        }}
+      />
+
+      {/* Delete Role Dialog */}
+      <DeleteRoleDialog
+        roleName={deleteRoleName}
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onSuccess={() => {
+          // Refresh the list
+          loadRoles();
+        }}
+      />
     </div>
   );
 }

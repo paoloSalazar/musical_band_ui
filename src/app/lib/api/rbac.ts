@@ -39,8 +39,8 @@ export const rolesApi = {
    * Update a role (partial update)
    * PATCH /api/user-roles/
    */
-  update: async (name: string, data: Partial<RoleFormData>): Promise<ApiResponse<Role>> => {
-    return apiClient.patch<Role>('/user-roles/', { name, ...data });
+  update: async (id: number, data: Partial<RoleFormData>): Promise<ApiResponse<Role>> => {
+    return apiClient.patch<Role>(`/user-roles/${id}`, data);
   },
 
   /**
