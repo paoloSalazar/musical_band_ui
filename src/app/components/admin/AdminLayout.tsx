@@ -5,7 +5,8 @@ import {
   Shield, 
   Settings, 
   ChevronRight,
-  LayoutDashboard
+  LayoutDashboard,
+  Key
 } from 'lucide-react';
 import { cn } from '../ui/utils';
 
@@ -32,6 +33,11 @@ export function AdminLayout() {
       name: 'Permissions',
       href: '/admin/permissions',
       icon: Shield,
+    },
+    {
+      name: 'Role Permissions',
+      href: '/admin/role-permissions',
+      icon: Key,
     },
   ];
 

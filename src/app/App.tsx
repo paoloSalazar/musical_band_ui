@@ -5,6 +5,7 @@ import { HomePage } from './components/home/HomePage';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { RolesListPage } from './components/admin/roles/RolesListPage';
 import { PermissionsListPage } from './components/admin/permissions/PermissionsListPage';
+import { RolePermissionsPage } from './components/admin/role-permissions/RolePermissionsPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function AppContent() {
@@ -34,6 +35,7 @@ function AppContent() {
         <Route path="roles/:name" element={<div>Role Detail Page - Coming Soon</div>} />
         <Route path="roles/:name/edit" element={<div>Edit Role Page - Coming Soon</div>} />
         <Route path="permissions" element={<PermissionsListPage />} />
+        <Route path="role-permissions" element={<RolePermissionsPage />} />
       </Route>
 
       {/* Fallback */}

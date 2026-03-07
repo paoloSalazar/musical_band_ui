@@ -120,4 +120,32 @@ export const permissionsApi = {
   delete: async (id: number): Promise<ApiResponse<boolean>> => {
     return apiClient.delete<boolean>(`/permissions/${id}`);
   },
+
+  /**
+   * Get permissions for a role
+   * GET /api/permissions/{role_name}/permissions
+   */
+  getPermissionsForRole: async (roleName: string): Promise<ApiResponse<Permission[]>> => {
+    return apiClient.get<Permission[]>(`/permissions/${roleName}/permissions`);
+  },
+
+  /**
+   * Assign permission to role
+   * POST /api/permissions/roles/assign?permission_name=X&role_name=Y
+   */
+  assignToRole: async (permissionName: string, roleName: string): Promise<ApiResponse<{ success: boolean; message: string }>> => {
+    return apiClient.post<{ success: boolean; message: string }>(
+      `/permissions/roles/assign?permission_name=${permissionName}&role_name=${roleName}`
+    );
+  },
+
+  /**
+   * Remove permission from role
+   * POST /api/permissions/roles/remove?permission_name=X&role_name=Y
+   */
+  removeFromRole: async (permissionName: string, roleName: string): Promise<ApiResponse<{ success: boolean; message: string }>> => {
+    return apiClient.post<{ success: boolean; message: string }>(
+      `/permissions/roles/remove?permission_name=${permissionName}&role_name=${roleName}`
+    );
+  },
 };
