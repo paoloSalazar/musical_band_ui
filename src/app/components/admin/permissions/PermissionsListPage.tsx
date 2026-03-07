@@ -140,7 +140,7 @@ export function PermissionsListPage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Permissions</h2>
           <p className="text-gray-600 mt-1">
@@ -173,7 +173,8 @@ export function PermissionsListPage() {
               <p className="text-sm">Create your first permission to get started</p>
             </div>
           ) : (
-            <Table>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
@@ -225,6 +226,7 @@ export function PermissionsListPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </CardContent>
       </Card>
