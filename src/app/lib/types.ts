@@ -97,6 +97,18 @@ export interface PermissionFormData {
 }
 
 /**
+ * Form data for creating a user
+ */
+export interface UserFormData {
+  name: string;
+  lastname: string;
+  second_lastname?: string;
+  email: string;
+  password: string;
+  role_id: number;
+}
+
+/**
  * Response from permission assignment API
  */
 export interface AssignPermissionResponse {

@@ -10,7 +10,8 @@ import {
   LayoutDashboard,
   Key,
   Menu,
-  X
+  X,
+  UserCircle
 } from 'lucide-react';
 import { cn } from '../ui/utils';
 import { Button } from '../ui/button';
@@ -37,6 +38,11 @@ export function AdminLayout() {
       name: 'Dashboard',
       href: '/admin',
       icon: LayoutDashboard,
+    },
+    {
+      name: 'Users',
+      href: '/admin/users',
+      icon: UserCircle,
     },
     {
       name: 'User Roles',

@@ -6,6 +6,7 @@ import { AdminLayout } from './components/admin/AdminLayout';
 import { RolesListPage } from './components/admin/roles/RolesListPage';
 import { PermissionsListPage } from './components/admin/permissions/PermissionsListPage';
 import { RolePermissionsPage } from './components/admin/role-permissions/RolePermissionsPage';
+import { UsersListPage } from './components/admin/users/UsersListPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function AppContent() {
@@ -30,6 +31,7 @@ function AppContent() {
         }
       >
         <Route index element={<AdminDashboard />} />
+        <Route path="users" element={<UsersListPage />} />
         <Route path="roles" element={<RolesListPage />} />
         <Route path="roles/new" element={<div>Create Role Page - Coming Soon</div>} />
         <Route path="roles/:name" element={<div>Role Detail Page - Coming Soon</div>} />
