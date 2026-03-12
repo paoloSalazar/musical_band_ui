@@ -39,6 +39,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
   const [lastname, setLastname] = useState('');
   const [secondLastname, setSecondLastname] = useState('');
   const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [roleId, setRoleId] = useState<string>('');
 
@@ -65,6 +66,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
     setLastname('');
     setSecondLastname('');
     setEmail('');
+    setPhoneNumber('');
     setPassword('');
     setRoleId('');
     setError(null);
@@ -110,6 +112,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
         lastname: lastname.trim(),
         second_lastname: secondLastname.trim() || undefined,
         email: email.trim(),
+        phone_number: phoneNumber.trim() || undefined,
         password: password.trim(),
         role_id: parseInt(roleId, 10),
       };
@@ -213,6 +216,21 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g., juan.perez@example.com"
+                className="col-span-3"
+                disabled={isLoading}
+              />
+            </div>
+            
+            {/* Phone Number */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="phoneNumber" className="text-right">
+                Phone Number
+              </Label>
+              <Input
+                id="phoneNumber"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="e.g., +1234567890"
                 className="col-span-3"
                 disabled={isLoading}
               />

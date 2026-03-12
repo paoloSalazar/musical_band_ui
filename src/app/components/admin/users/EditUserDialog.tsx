@@ -39,6 +39,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
   const [secondLastname, setSecondLastname] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [roleId, setRoleId] = useState<string>('');
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
       setName(user.name);
       setLastname(user.lastname);
       setSecondLastname(user.second_lastname || '');
+      setPhoneNumber(user.phone_number || '');
       setRoleId(user.role_id.toString());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load user');
@@ -82,6 +84,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
     setName('');
     setLastname('');
     setSecondLastname('');
+    setPhoneNumber('');
     setRoleId('');
     setError(null);
   };
@@ -117,6 +120,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
         name: name.trim(),
         lastname: lastname.trim(),
         second_lastname: secondLastname.trim() || undefined,
+        phone_number: phoneNumber.trim() || undefined,
         role_id: parseInt(roleId, 10),
       };
       
@@ -206,6 +210,21 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
                   value={secondLastname}
                   onChange={(e) => setSecondLastname(e.target.value)}
                   placeholder="e.g., Villarroel"
+                  className="col-span-3"
+                  disabled={isLoading}
+                />
+              </div>
+              
+              {/* Phone Number */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-phoneNumber" className="text-right">
+                  Phone Number
+                </Label>
+                <Input
+                  id="edit-phoneNumber"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="e.g., +1234567890"
                   className="col-span-3"
                   disabled={isLoading}
                 />

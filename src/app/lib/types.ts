@@ -9,6 +9,7 @@ export interface User {
   lastname: string;
   second_lastname?: string;
   email: string;
+  phone_number?: string;
   role: string;
   role_id: number;
   permissions: string[];
@@ -104,6 +105,7 @@ export interface UserFormData {
   lastname: string;
   second_lastname?: string;
   email: string;
+  phone_number?: string;
   password: string;
   role_id: number;
 }

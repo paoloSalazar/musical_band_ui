@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../../ui/dialog';
-import { Loader2, User as UserIcon, Mail, Shield } from 'lucide-react';
+import { Loader2, User as UserIcon, Mail, Phone, Shield } from 'lucide-react';
 
 interface ViewUserDialogProps {
   userId: number;
@@ -86,6 +86,16 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
                   <p className="font-medium">{user.email}</p>
                 </div>
               </div>
+              
+              {user.phone_number && (
+                <div className="flex items-center gap-3">
+                  <Phone className="h-4 w-4 text-gray-400" />
+                  <div>
+                    <p className="text-sm text-gray-500">Phone Number</p>
+                    <p className="font-medium">{user.phone_number}</p>
+                  </div>
+                </div>
+              )}
               
               <div className="flex items-center gap-3">
                 <Shield className="h-4 w-4 text-gray-400" />

@@ -154,6 +154,7 @@ export function UsersListPage() {
                       <TableHead>ID</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Last Name</TableHead>
+                      <TableHead>Phone Number</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Role</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
@@ -171,6 +172,9 @@ export function UsersListPage() {
                         </TableCell>
                         <TableCell className="text-gray-600">
                           {user.lastname}
+                        </TableCell>
+                        <TableCell className="text-gray-600">
+                          {user.phone_number || '-'}
                         </TableCell>
                         <TableCell className="text-gray-600">
                           {user.email}
