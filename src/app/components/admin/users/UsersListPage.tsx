@@ -258,11 +258,9 @@ export function UsersListPage() {
         userId={editUserId}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
-        onSuccess={(user: User) => {
-          // Update the user in the list
-          setUsers(prev => 
-            prev.map(u => u.id === user.id ? user : u)
-          );
+        onSuccess={() => {
+          // Reload the list to get updated role name
+          loadUsers();
         }}
       />
 
