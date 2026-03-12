@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../../ui/dialog';
-import { Loader2, Pencil } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 interface EditUserDialogProps {
   userId: number;
@@ -39,8 +39,6 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
   const [secondLastname, setSecondLastname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [roleId, setRoleId] = useState<string>('');
 
   useEffect(() => {
@@ -60,8 +58,6 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
       setName(user.name);
       setLastname(user.lastname);
       setSecondLastname(user.second_lastname || '');
-      setEmail(user.email);
-      setPassword('');
       setRoleId(user.role_id.toString());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load user');
@@ -86,8 +82,6 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
     setName('');
     setLastname('');
     setSecondLastname('');
-    setEmail('');
-    setPassword('');
     setRoleId('');
     setError(null);
   };
@@ -110,10 +104,6 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
       setError('Last name is required');
       return;
     }
-    if (!email.trim()) {
-      setError('Email is required');
-      return;
-    }
     if (!roleId) {
       setError('Role is required');
       return;
@@ -127,14 +117,8 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
         name: name.trim(),
         lastname: lastname.trim(),
         second_lastname: secondLastname.trim() || undefined,
-        email: email.trim(),
         role_id: parseInt(roleId, 10),
       };
-
-      // Only include password if it was provided
-      if (password.trim()) {
-        userData.password = password.trim();
-      }
       
       const response = await usersApi.update(userId, userData);
       
@@ -159,7 +143,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
         <DialogHeader>
           <DialogTitle>Edit User</DialogTitle>
           <DialogDescription>
-            Update user information. Leave password blank to keep current password.
+            Update user name, last name, and role.
           </DialogDescription>
         </DialogHeader>
         
@@ -222,38 +206,6 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
                   value={secondLastname}
                   onChange={(e) => setSecondLastname(e.target.value)}
                   placeholder="e.g., Villarroel"
-                  className="col-span-3"
-                  disabled={isLoading}
-                />
-              </div>
-              
-              {/* Email */}
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-email" className="text-right">
-                  Email *
-                </Label>
-                <Input
-                  id="edit-email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g., juan.perez@example.com"
-                  className="col-span-3"
-                  disabled={isLoading}
-                />
-              </div>
-              
-              {/* Password (optional for edit) */}
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-password" className="text-right">
-                  Password
-                </Label>
-                <Input
-                  id="edit-password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Leave blank to keep current"
                   className="col-span-3"
                   disabled={isLoading}
                 />

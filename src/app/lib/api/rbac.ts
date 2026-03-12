@@ -162,7 +162,7 @@ export const usersApi = {
    * Response: { data: User[], total: number, skip: number, limit: number }
    */
   list: async (skip = 0, limit = 10): Promise<ApiResponse<{ data: User[], total: number, skip: number, limit: number }>> => {
-    return apiClient.get<{ data: User[], total: number, skip: number, limit: number }>(`/users/?skip=${skip}&limit=${limit}`);
+    return apiClient.get<{ data: User[], total: number, skip: number, limit: number }>(`/users/?skip=${skip}&limit=${limit}&order_by=id`);
   },
 
   /**
