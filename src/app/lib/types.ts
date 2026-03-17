@@ -117,3 +117,23 @@ export interface AssignPermissionResponse {
   success: boolean;
   message: string;
 }
+
+// ============ Profile Types ============
+
+/**
+ * User detail from /api/users/{id}/details endpoint
+ */
+export interface UserDetail {
+  id: number;
+  user_id: number;
+  detail_type: string;
+  detail_value: string;
+}
+
+/**
+ * User profile with additional details
+ */
+export interface UserProfileWithDetails {
+  user: User;
+  details: UserDetail[];
+}

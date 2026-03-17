@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider, useUser } from './contexts/UserContext';
 import { LoginForm } from './components/login/LoginForm';
 import { HomePage } from './components/home/HomePage';
+import { ProfilePage } from './components/profile/ProfilePage';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { RolesListPage } from './components/admin/roles/RolesListPage';
 import { PermissionsListPage } from './components/admin/permissions/PermissionsListPage';
@@ -20,6 +21,9 @@ function AppContent() {
     <Routes>
       {/* Main Home Page */}
       <Route path="/" element={<HomePageWrapper />} />
+
+      {/* Profile Page - Available to all authenticated users */}
+      <Route path="/profile" element={<ProfilePage />} />
 
       {/* Login Page */}
       <Route path="/login" element={<LoginForm />} />

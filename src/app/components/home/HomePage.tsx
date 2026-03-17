@@ -41,14 +41,25 @@ export function HomePage({ onLogout }: HomePageProps) {
             </div>
           )}
           
-          <Button 
-            variant="outline" 
-            className="text-white border-white hover:bg-white hover:text-black"
-            onClick={handleLogout}
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
+          <div className="flex gap-2">
+            <Link to="/profile">
+              <Button 
+                variant="outline" 
+                className="text-white border-white hover:bg-white hover:text-black"
+              >
+                <User className="h-4 w-4 mr-2" />
+                My Profile
+              </Button>
+            </Link>
+            <Button 
+              variant="outline" 
+              className="text-white border-white hover:bg-white hover:text-black"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
       </div>
 
