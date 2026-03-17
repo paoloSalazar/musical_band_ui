@@ -21,6 +21,9 @@ function AppContent() {
       {/* Main Home Page */}
       <Route path="/" element={<HomePageWrapper />} />
 
+      {/* Login Page */}
+      <Route path="/login" element={<LoginForm />} />
+
       {/* Admin Routes */}
       <Route
         path="/admin"

@@ -11,7 +11,8 @@ import {
   Key,
   Menu,
   X,
-  UserCircle
+  UserCircle,
+  HomeIcon
 } from 'lucide-react';
 import { cn } from '../ui/utils';
 import { Button } from '../ui/button';
@@ -59,11 +60,19 @@ export function AdminLayout() {
       href: '/admin/role-permissions',
       icon: Key,
     },
+    {
+      name: 'Home',
+      href: '/',
+      icon: HomeIcon,
+    },
   ];
 
   const isActive = (href: string) => {
     if (href === '/admin') {
       return location.pathname === '/admin';
+    }
+    if (href === '/') {
+      return location.pathname === '/';
     }
     return location.pathname.startsWith(href);
   };
