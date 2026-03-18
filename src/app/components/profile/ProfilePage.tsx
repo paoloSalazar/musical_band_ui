@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { profileApi } from '../../lib/api';
 import type { UserProfileWithDetails } from '../../lib/types';
 import { Button } from '../ui/button';
-import { Loader2, User as UserIcon, Mail, Phone, Shield, MapPin, ArrowLeft } from 'lucide-react';
+import { Loader2, User as UserIcon, Mail, Phone, Shield, MapPin, ArrowLeft, Pencil } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { EditProfileDialog } from './EditProfileDialog';
 
 export function ProfilePage() {
   const [profile, setProfile] = useState<UserProfileWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -29,6 +31,11 @@ export function ProfilePage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleProfileUpdate = async () => {
+    // Reload the full profile to ensure all data (details, permissions) is preserved
+    await loadProfile();
   };
 
   const { user, details } = profile || {};
@@ -75,7 +82,19 @@ export function ProfilePage() {
       </Link>
 
       <div className="bg-white rounded-lg shadow-sm border p-6">
-        <h1 className="text-2xl font-bold mb-6">My Profile</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold">My Profile</h1>
+          {user && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsEditDialogOpen(true)}
+            >
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit Profile
+            </Button>
+          )}
+        </div>
 
         <div className="space-y-6">
           {/* User Icon and Basic Info */}
@@ -171,6 +190,16 @@ export function ProfilePage() {
           )}
         </div>
       </div>
+
+      {/* Edit Profile Dialog */}
+      {user && (
+        <EditProfileDialog
+          user={user}
+          open={isEditDialogOpen}
+          onOpenChange={setIsEditDialogOpen}
+          onSuccess={handleProfileUpdate}
+        />
+      )}
     </div>
   );
 }

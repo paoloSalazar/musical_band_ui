@@ -7,6 +7,16 @@ import { apiClient, type ApiResponse } from './client';
 import type { User, UserDetail, UserProfileWithDetails } from '../types';
 
 /**
+ * Profile update data type
+ */
+export interface ProfileUpdateData {
+  name?: string;
+  lastname?: string;
+  second_lastname?: string;
+  phone_number?: string;
+}
+
+/**
  * Profile API
  * Endpoints: /api/users/me, /api/users/{id}/details
  */
@@ -56,6 +66,14 @@ export const profileApi = {
       data: combined,
       success: true,
     };
+  },
+
+  /**
+   * Update current user profile
+   * PATCH /api/users/me
+   */
+  updateCurrentUser: async (data: ProfileUpdateData): Promise<ApiResponse<User>> => {
+    return apiClient.patch<User>('/users/me', data);
   },
 };
 
