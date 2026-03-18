@@ -45,7 +45,7 @@ export function HomePage({ onLogout }: HomePageProps) {
             <Link to="/profile">
               <Button 
                 variant="outline" 
-                className="text-white border-white hover:bg-white hover:text-black"
+                className="text-black border-white hover:bg-white hover:text-gray-400"
               >
                 <User className="h-4 w-4 mr-2" />
                 My Profile
@@ -53,7 +53,7 @@ export function HomePage({ onLogout }: HomePageProps) {
             </Link>
             <Button 
               variant="outline" 
-              className="text-white border-white hover:bg-white hover:text-black"
+                className="text-black border-white hover:bg-white hover:text-gray-400"
               onClick={handleLogout}
             >
               <LogOut className="h-4 w-4 mr-2" />
