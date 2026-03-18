@@ -17,6 +17,15 @@ export interface ProfileUpdateData {
 }
 
 /**
+ * User detail creation data type
+ */
+export interface UserDetailCreateData {
+  user_id: number;
+  detail_type: string;
+  detail_value: string;
+}
+
+/**
  * Profile API
  * Endpoints: /api/users/me, /api/users/{id}/details
  */
@@ -74,6 +83,36 @@ export const profileApi = {
    */
   updateCurrentUser: async (data: ProfileUpdateData): Promise<ApiResponse<User>> => {
     return apiClient.patch<User>('/users/me', data);
+  },
+
+  /**
+   * Create user additional detail
+   * POST /api/users/{id}/details
+   */
+  createUserDetail: async (userId: number, detailType: string, detailValue: string): Promise<ApiResponse<UserDetail>> => {
+    return apiClient.post<UserDetail>(`/users/${userId}/details`, {
+      user_id: userId,
+      detail_type: detailType,
+      detail_value: detailValue,
+    });
+  },
+
+  /**
+   * Update user additional detail
+   * PATCH /api/users/{userId}/details/{detailId}
+   */
+  updateUserDetail: async (userId: number, detailId: number, detailValue: string): Promise<ApiResponse<UserDetail>> => {
+    return apiClient.patch<UserDetail>(`/users/${userId}/details/${detailId}`, {
+      detail_value: detailValue,
+    });
+  },
+
+  /**
+   * Delete user additional detail
+   * DELETE /api/users/{userId}/details/{detailId}
+   */
+  deleteUserDetail: async (userId: number, detailId: number): Promise<ApiResponse<void>> => {
+    return apiClient.delete<void>(`/users/${userId}/details/${detailId}`);
   },
 };
 

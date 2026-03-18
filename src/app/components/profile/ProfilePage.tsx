@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import { profileApi } from '../../lib/api';
-import type { UserProfileWithDetails } from '../../lib/types';
+import type { UserProfileWithDetails, UserDetail } from '../../lib/types';
 import { Button } from '../ui/button';
-import { Loader2, User as UserIcon, Mail, Phone, Shield, MapPin, ArrowLeft, Pencil } from 'lucide-react';
+import { Loader2, User as UserIcon, Mail, Phone, Shield, MapPin, ArrowLeft, Pencil, Plus, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { EditProfileDialog } from './EditProfileDialog';
+import { AddAdditionalInfoDialog } from './AddAdditionalInfoDialog';
+import { EditAdditionalInfoDialog } from './EditAdditionalInfoDialog';
+import { DeleteAdditionalInfoDialog } from './DeleteAdditionalInfoDialog';
 
 export function ProfilePage() {
   const [profile, setProfile] = useState<UserProfileWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAddInfoDialogOpen, setIsAddInfoDialogOpen] = useState(false);
+  const [selectedDetail, setSelectedDetail] = useState<UserDetail | null>(null);
+  const [isEditDetailDialogOpen, setIsEditDetailDialogOpen] = useState(false);
+  const [isDeleteDetailDialogOpen, setIsDeleteDetailDialogOpen] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -151,26 +158,62 @@ export function ProfilePage() {
           </div>
 
           {/* Additional Details */}
-          {details && details.length > 0 && (
-            <div className="pt-6 border-t">
-              <h3 className="text-lg font-semibold mb-4">Additional Information</h3>
+          <div className="pt-6 border-t">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Additional Information</h3>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAddInfoDialogOpen(true)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Info
+              </Button>
+            </div>
+            {details && details.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {details.map((detail) => (
-                  <div key={detail.id} className="flex items-start gap-3">
-                    {detail.detail_type === 'address1' || detail.detail_type === 'address' ? (
-                      <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
-                    ) : (
-                      <div className="h-5 w-5 rounded-full bg-gray-200 mt-0.5" />
-                    )}
-                    <div>
-                      <p className="text-sm text-gray-500 capitalize">{detail.detail_type.replace(/_/g, ' ')}</p>
-                      <p className="font-medium">{detail.detail_value}</p>
+                  <div key={detail.id} className="flex items-start justify-between gap-3 p-3 rounded-lg border hover:bg-gray-50">
+                    <div className="flex items-start gap-3">
+                      {detail.detail_type === 'address1' || detail.detail_type === 'address' ? (
+                        <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
+                      ) : (
+                        <div className="h-5 w-5 rounded-full bg-gray-200 mt-0.5" />
+                      )}
+                      <div>
+                        <p className="text-sm text-gray-500 capitalize">{detail.detail_type.replace(/_/g, ' ')}</p>
+                        <p className="font-medium">{detail.detail_value}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          setSelectedDetail(detail);
+                          setIsEditDetailDialogOpen(true);
+                        }}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          setSelectedDetail(detail);
+                          setIsDeleteDetailDialogOpen(true);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            ) : (
+              <p className="text-gray-500 text-sm">No additional information added yet. Click "Add Info" to add details like address, city, or other information.</p>
+            )}
+          </div>
 
           {/* Permissions */}
           {user.permissions && user.permissions.length > 0 && (
@@ -197,6 +240,38 @@ export function ProfilePage() {
           user={user}
           open={isEditDialogOpen}
           onOpenChange={setIsEditDialogOpen}
+          onSuccess={handleProfileUpdate}
+        />
+      )}
+
+      {/* Add Additional Info Dialog */}
+      {user && (
+        <AddAdditionalInfoDialog
+          userId={user.id}
+          open={isAddInfoDialogOpen}
+          onOpenChange={setIsAddInfoDialogOpen}
+          onSuccess={handleProfileUpdate}
+        />
+      )}
+
+      {/* Edit Additional Info Dialog */}
+      {user && selectedDetail && (
+        <EditAdditionalInfoDialog
+          userId={user.id}
+          detail={selectedDetail}
+          open={isEditDetailDialogOpen}
+          onOpenChange={setIsEditDetailDialogOpen}
+          onSuccess={handleProfileUpdate}
+        />
+      )}
+
+      {/* Delete Additional Info Dialog */}
+      {user && selectedDetail && (
+        <DeleteAdditionalInfoDialog
+          userId={user.id}
+          detail={selectedDetail}
+          open={isDeleteDetailDialogOpen}
+          onOpenChange={setIsDeleteDetailDialogOpen}
           onSuccess={handleProfileUpdate}
         />
       )}

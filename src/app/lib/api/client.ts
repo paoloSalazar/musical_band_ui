@@ -76,6 +76,15 @@ class ApiClient {
       throw error;
     }
 
+    // Handle empty responses (e.g., DELETE requests)
+    const contentType = response.headers.get('content-type');
+    if (response.status === 204 || !contentType || !contentType.includes('application/json')) {
+      return {
+        data: {} as T,
+        success: true,
+      };
+    }
+
     const data = await response.json();
     return {
       data,
