@@ -3,6 +3,7 @@
  * Protects routes based on authentication and permissions
  */
 
+import { Navigate, useLocation } from 'react-router-dom';
 import { ReactNode } from 'react';
 import { useUser } from '../../contexts/UserContext';
 
@@ -83,7 +84,8 @@ export function ProtectedRoute({
   
   // Check authentication
   if (requireAuth && !isAuthenticated) {
-    return <>{onAccessDenied?.() ?? null}</>;
+    const location = useLocation();
+    return onAccessDenied?.() ?? <Navigate to="/login" state={{ from: location }} replace />;
   }
   
   // Check single permission

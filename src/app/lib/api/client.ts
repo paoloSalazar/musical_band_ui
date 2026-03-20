@@ -13,6 +13,7 @@ export interface ApiResponse<T> {
 
 export interface ApiError {
   message: string;
+  detail?: string;
   status: number;
   errors?: Record<string, string[]>;
 }
@@ -65,13 +66,23 @@ class ApiClient {
 
       try {
         const errorData = await response.json();
-        error.message = errorData.message || errorData.detail || error.message;
+        error.message = errorData.detail || errorData.message || error.message;
+        error.detail = errorData.detail;
         error.errors = errorData.errors;
       } catch {
         error.message = response.statusText || error.message;
       }
 
       throw error;
+    }
+
+    // Handle empty responses (e.g., DELETE requests)
+    const contentType = response.headers.get('content-type');
+    if (response.status === 204 || !contentType || !contentType.includes('application/json')) {
+      return {
+        data: {} as T,
+        success: true,
+      };
     }
 
     const data = await response.json();

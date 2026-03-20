@@ -9,6 +9,7 @@ export interface User {
   lastname: string;
   second_lastname?: string;
   email: string;
+  phone_number?: string;
   role: string;
   role_id: number;
   permissions: string[];
@@ -72,6 +73,15 @@ export interface Role {
 }
 
 /**
+ * Permission type from /api/permissions endpoints
+ */
+export interface Permission {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+/**
  * Form data for creating a role
  */
 export interface RoleFormData {
@@ -88,9 +98,42 @@ export interface PermissionFormData {
 }
 
 /**
+ * Form data for creating a user
+ */
+export interface UserFormData {
+  name: string;
+  lastname: string;
+  second_lastname?: string;
+  email: string;
+  phone_number?: string;
+  password: string;
+  role_id: number;
+}
+
+/**
  * Response from permission assignment API
  */
 export interface AssignPermissionResponse {
   success: boolean;
   message: string;
+}
+
+// ============ Profile Types ============
+
+/**
+ * User detail from /api/users/{id}/details endpoint
+ */
+export interface UserDetail {
+  id: number;
+  user_id: number;
+  detail_type: string;
+  detail_value: string;
+}
+
+/**
+ * User profile with additional details
+ */
+export interface UserProfileWithDetails {
+  user: User;
+  details: UserDetail[];
 }

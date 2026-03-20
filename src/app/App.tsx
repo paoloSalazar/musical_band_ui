@@ -2,8 +2,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { UserProvider, useUser } from './contexts/UserContext';
 import { LoginForm } from './components/login/LoginForm';
 import { HomePage } from './components/home/HomePage';
+import { ProfilePage } from './components/profile/ProfilePage';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { RolesListPage } from './components/admin/roles/RolesListPage';
+import { PermissionsListPage } from './components/admin/permissions/PermissionsListPage';
+import { RolePermissionsPage } from './components/admin/role-permissions/RolePermissionsPage';
+import { UsersListPage } from './components/admin/users/UsersListPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function AppContent() {
@@ -18,6 +22,12 @@ function AppContent() {
       {/* Main Home Page */}
       <Route path="/" element={<HomePageWrapper />} />
 
+      {/* Profile Page - Available to all authenticated users */}
+      <Route path="/profile" element={<ProfilePage />} />
+
+      {/* Login Page */}
+      <Route path="/login" element={<LoginForm />} />
+
       {/* Admin Routes */}
       <Route
         path="/admin"
@@ -28,11 +38,13 @@ function AppContent() {
         }
       >
         <Route index element={<AdminDashboard />} />
+        <Route path="users" element={<UsersListPage />} />
         <Route path="roles" element={<RolesListPage />} />
         <Route path="roles/new" element={<div>Create Role Page - Coming Soon</div>} />
         <Route path="roles/:name" element={<div>Role Detail Page - Coming Soon</div>} />
         <Route path="roles/:name/edit" element={<div>Edit Role Page - Coming Soon</div>} />
-        <Route path="permissions" element={<div>Permissions Page - Coming Soon</div>} />
+        <Route path="permissions" element={<PermissionsListPage />} />
+        <Route path="role-permissions" element={<RolePermissionsPage />} />
       </Route>
 
       {/* Fallback */}
