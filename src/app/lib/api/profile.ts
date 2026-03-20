@@ -114,6 +114,17 @@ export const profileApi = {
   deleteUserDetail: async (userId: number, detailId: number): Promise<ApiResponse<void>> => {
     return apiClient.delete<void>(`/users/${userId}/details/${detailId}`);
   },
+
+  /**
+   * Change user password
+   * PATCH /api/users/{email}/password
+   */
+  changePassword: async (email: string, currentPassword: string, newPassword: string): Promise<ApiResponse<void>> => {
+    return apiClient.patch<void>(`/users/${encodeURIComponent(email)}/password`, {
+      current_password: currentPassword,
+      new_password: newPassword,
+    });
+  },
 };
 
 export default profileApi;

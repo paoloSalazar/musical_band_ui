@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { profileApi } from '../../lib/api';
 import type { UserProfileWithDetails, UserDetail } from '../../lib/types';
 import { Button } from '../ui/button';
-import { Loader2, User as UserIcon, Mail, Phone, Shield, MapPin, ArrowLeft, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Loader2, User as UserIcon, Mail, Phone, Shield, MapPin, ArrowLeft, Pencil, Plus, Trash2, KeyRound } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { EditProfileDialog } from './EditProfileDialog';
 import { AddAdditionalInfoDialog } from './AddAdditionalInfoDialog';
 import { EditAdditionalInfoDialog } from './EditAdditionalInfoDialog';
 import { DeleteAdditionalInfoDialog } from './DeleteAdditionalInfoDialog';
+import { ChangePasswordDialog } from './ChangePasswordDialog';
 
 export function ProfilePage() {
   const [profile, setProfile] = useState<UserProfileWithDetails | null>(null);
@@ -18,6 +19,7 @@ export function ProfilePage() {
   const [selectedDetail, setSelectedDetail] = useState<UserDetail | null>(null);
   const [isEditDetailDialogOpen, setIsEditDetailDialogOpen] = useState(false);
   const [isDeleteDetailDialogOpen, setIsDeleteDetailDialogOpen] = useState(false);
+  const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -92,14 +94,24 @@ export function ProfilePage() {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">My Profile</h1>
           {user && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsEditDialogOpen(true)}
-            >
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit Profile
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsChangePasswordDialogOpen(true)}
+              >
+                <KeyRound className="h-4 w-4 mr-2" />
+                Change Password
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditDialogOpen(true)}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit Profile
+              </Button>
+            </div>
           )}
         </div>
 
@@ -273,6 +285,16 @@ export function ProfilePage() {
           open={isDeleteDetailDialogOpen}
           onOpenChange={setIsDeleteDetailDialogOpen}
           onSuccess={handleProfileUpdate}
+        />
+      )}
+
+      {/* Change Password Dialog */}
+      {user && (
+        <ChangePasswordDialog
+          userEmail={user.email}
+          open={isChangePasswordDialogOpen}
+          onOpenChange={setIsChangePasswordDialogOpen}
+          onSuccess={() => {}}
         />
       )}
     </div>
