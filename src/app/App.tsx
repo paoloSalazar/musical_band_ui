@@ -3,6 +3,7 @@ import { UserProvider, useUser } from './contexts/UserContext';
 import { LoginForm } from './components/login/LoginForm';
 import { HomePage } from './components/home/HomePage';
 import { ProfilePage } from './components/profile/ProfilePage';
+import { EventsPage } from './components/events/EventsPage';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { RolesListPage } from './components/admin/roles/RolesListPage';
 import { PermissionsListPage } from './components/admin/permissions/PermissionsListPage';
@@ -24,6 +25,16 @@ function AppContent() {
 
       {/* Profile Page - Available to all authenticated users */}
       <Route path="/profile" element={<ProfilePage />} />
+
+      {/* Events Page - Available to users with read:events permission */}
+      <Route
+        path="/events"
+        element={
+          <ProtectedRoute requiredPermission="read:events">
+            <EventsPage />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Login Page */}
       <Route path="/login" element={<LoginForm />} />

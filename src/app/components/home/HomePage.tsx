@@ -96,22 +96,24 @@ export function HomePage({ onLogout }: HomePageProps) {
 
           {/* Events - Visible to all authenticated users */}
           <Can permission="read:events">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
-                  <Calendar className="h-6 w-6 text-green-600 dark:text-green-400" />
-                </div>
-                <CardTitle>Events</CardTitle>
-                <CardDescription>
-                  Schedule and manage upcoming shows
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="secondary" className="w-full">
-                  Manage Events
-                </Button>
-              </CardContent>
-            </Card>
+            <Link to="/events">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <CardHeader>
+                  <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
+                    <Calendar className="h-6 w-6 text-green-600 dark:text-green-400" />
+                  </div>
+                  <CardTitle>Events</CardTitle>
+                  <CardDescription>
+                    Schedule and manage upcoming shows
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button variant="secondary" className="w-full">
+                    Manage Events
+                  </Button>
+                </CardContent>
+              </Card>
+            </Link>
           </Can>
 
           {/* Admin Panel - Only for admins */}

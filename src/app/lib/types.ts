@@ -137,3 +137,44 @@ export interface UserProfileWithDetails {
   user: User;
   details: UserDetail[];
 }
+
+// ============ Events Types ============
+
+/**
+ * Creator of an event (nested in event response)
+ */
+export interface EventCreator {
+  user_id: number;
+  name: string;
+  lastname: string;
+  email: string;
+  phone_number?: string;
+}
+
+/**
+ * Event type from /api/events/ endpoint
+ */
+export interface Event {
+  id: number;
+  name: string;
+  place: string;
+  description?: string;
+  start_datetime: string;
+  end_datetime: string;
+  is_all_day: boolean;
+  user_id: number;
+  status: string;
+  created_by: EventCreator;
+}
+
+/**
+ * Form data for creating an event
+ */
+export interface EventFormData {
+  name: string;
+  place: string;
+  description?: string;
+  start_datetime: string;
+  end_datetime: string;
+  is_all_day: boolean;
+}
