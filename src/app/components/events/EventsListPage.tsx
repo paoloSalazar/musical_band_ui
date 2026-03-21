@@ -24,10 +24,12 @@ import {
   Eye,
   Loader2,
   Calendar,
+  Plus,
 } from 'lucide-react';
 import { ViewEventDialog } from './ViewEventDialog';
 import { EditEventDialog } from './EditEventDialog';
 import { DeleteEventDialog } from './DeleteEventDialog';
+import { CreateEventDialog } from './CreateEventDialog';
 
 interface EventsListPageProps {
   onEditEvent?: (eventId: number) => void;
@@ -53,6 +55,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
   const [deleteEventId, setDeleteEventId] = useState<number>(0);
   const [deleteEventName, setDeleteEventName] = useState<string>('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   // Check permissions
   const canEdit = hasPermission('write:events') || hasPermission('update:events');
@@ -152,13 +155,23 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
       {/* Events Table */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center">
-            <Calendar className="mr-2 h-5 w-5" />
-            All Events
-          </CardTitle>
-          <CardDescription>
-            Total: {total} event(s) - Page {currentPage} of {totalPages}
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center">
+                <Calendar className="mr-2 h-5 w-5" />
+                All Events
+              </CardTitle>
+              <CardDescription>
+                Total: {total} event(s) - Page {currentPage} of {totalPages}
+              </CardDescription>
+            </div>
+            {canEdit && (
+              <Button onClick={() => setCreateDialogOpen(true)} className="flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                Create Event
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {sortedEvents.length === 0 ? (
@@ -303,6 +316,20 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
           eventName={deleteEventName}
           open={deleteDialogOpen}
           onOpenChange={setDeleteDialogOpen}
+          onSuccess={() => {
+            loadEvents();
+            if (onEventUpdated) {
+              onEventUpdated();
+            }
+          }}
+        />
+      )}
+
+      {/* Create Event Dialog */}
+      {canEdit && (
+        <CreateEventDialog
+          open={createDialogOpen}
+          onOpenChange={setCreateDialogOpen}
           onSuccess={() => {
             loadEvents();
             if (onEventUpdated) {
