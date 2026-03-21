@@ -7,16 +7,35 @@ import { apiClient, type ApiResponse } from './client';
 import type { Event, EventFormData } from '../types';
 
 /**
+ * Paginated events response for table view
+ */
+export interface PaginatedEventsResponse {
+  items: Event[];
+  total: number;
+  page: number;
+  limit: number;
+  total_pages: number;
+}
+
+/**
  * Events API
  * Endpoints: /api/events/
  */
 export const eventsApi = {
   /**
-   * Get all events
-   * GET /api/events/
+   * Get paginated events (for table view)
+   * GET /api/events/?page=1&limit=10
    */
-  list: async (): Promise<ApiResponse<Event[]>> => {
-    return apiClient.get<Event[]>('/events/');
+  list: async (page = 1, limit = 10): Promise<ApiResponse<PaginatedEventsResponse>> => {
+    return apiClient.get<PaginatedEventsResponse>(`/events/?page=${page}&limit=${limit}`);
+  },
+
+  /**
+   * Get events for calendar view (filtered by year and month)
+   * GET /api/events/calendar?year=2026&month=3
+   */
+  listForCalendar: async (year: number, month: number): Promise<ApiResponse<Event[]>> => {
+    return apiClient.get<Event[]>(`/events/calendar?year=${year}&month=${month}`);
   },
 
   /**

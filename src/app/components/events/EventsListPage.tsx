@@ -37,6 +37,10 @@ interface EventsListPageProps {
 export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPageProps) {
   const { hasPermission, hasRole } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,14 +59,16 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
 
   useEffect(() => {
     loadEvents();
-  }, []);
+  }, [currentPage, pageSize]);
 
   const loadEvents = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await eventsApi.list();
-      setEvents(response.data);
+      const response = await eventsApi.list(currentPage, pageSize);
+      setEvents(response.data.items);
+      setTotal(response.data.total);
+      setTotalPages(response.data.total_pages);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load events');
     } finally {
@@ -142,7 +148,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
             All Events
           </CardTitle>
           <CardDescription>
-            Total: {events.length} event(s)
+            Total: {total} event(s) - Page {currentPage} of {totalPages}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -153,79 +159,108 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
               <p className="text-sm">Create your first event to get started</p>
             </div>
           ) : (
-            <div className="overflow-x-auto -mx-4 sm:mx-0">
-              <Table className="min-w-full">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Place</TableHead>
-                    <TableHead>Start Date</TableHead>
-                    <TableHead>End Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sortedEvents.map((event) => (
-                    <TableRow key={event.id}>
-                      <TableCell className="font-medium">{event.name}</TableCell>
-                      <TableCell className="text-gray-600">
-                        {event.place}
-                      </TableCell>
-                      <TableCell className="text-gray-600">
-                        {formatDateTime(event.start_datetime)}
-                      </TableCell>
-                      <TableCell className="text-gray-600">
-                        {formatDateTime(event.end_datetime)}
-                      </TableCell>
-                      <TableCell>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          event.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
-                          event.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
-                          event.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
-                          {event.status}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            title="View Details"
-                            onClick={() => handleView(event.id)}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          {canEdit && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              title="Edit"
-                              onClick={() => handleEdit(event.id)}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          )}
-                          {isAdmin && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              title="Delete"
-                              onClick={() => handleDelete(event)}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div>
-                      </TableCell>
+            <>
+              <div className="overflow-x-auto -mx-4 sm:mx-0">
+                <Table className="min-w-full">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Place</TableHead>
+                      <TableHead>Start Date</TableHead>
+                      <TableHead>End Date</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                  </TableHeader>
+                  <TableBody>
+                    {sortedEvents.map((event) => (
+                      <TableRow key={event.id}>
+                        <TableCell className="font-medium">{event.name}</TableCell>
+                        <TableCell className="text-gray-600">
+                          {event.place}
+                        </TableCell>
+                        <TableCell className="text-gray-600">
+                          {formatDateTime(event.start_datetime)}
+                        </TableCell>
+                        <TableCell className="text-gray-600">
+                          {formatDateTime(event.end_datetime)}
+                        </TableCell>
+                        <TableCell>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            event.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                            event.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' :
+                            event.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {event.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              title="View Details"
+                              onClick={() => handleView(event.id)}
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            {canEdit && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                title="Edit"
+                                onClick={() => handleEdit(event.id)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                            )}
+                            {isAdmin && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                title="Delete"
+                                onClick={() => handleDelete(event)}
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between mt-4">
+                  <div className="text-sm text-gray-600">
+                    Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, total)} of {total} events
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage >= totalPages}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

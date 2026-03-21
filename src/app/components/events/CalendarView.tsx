@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
@@ -28,22 +28,26 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
   // Check permissions
   const canEdit = hasPermission('write:events') || hasPermission('update:events');
 
-  useEffect(() => {
-    loadEvents();
-  }, []);
+  // Load events when year or month changes
+  const loadEvents = useCallback(async () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1; // JavaScript months are 0-indexed
 
-  const loadEvents = async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await eventsApi.list();
+      const response = await eventsApi.listForCalendar(year, month);
       setEvents(response.data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load events');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentDate]);
+
+  useEffect(() => {
+    loadEvents();
+  }, [loadEvents]);
 
   // Get days in month
   const getDaysInMonth = (year: number, month: number) => {
@@ -203,76 +207,78 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
         <h2 className="text-lg sm:text-xl font-semibold capitalize text-center">
           {formatMonthYear(currentDate)}
         </h2>
-        <div className="hidden sm:block" /> {/* Spacer for alignment */}
+        <div className="hidden sm:block" />
       </div>
 
       {/* Calendar Grid */}
       <div className="overflow-x-auto">
-        <Card className="min-w-[600px]">
-          <CardContent className="p-0">
-            <div className="grid grid-cols-7">
-            {/* Day headers */}
-            {dayNames.map((day) => (
-              <div
-                key={day}
-                className="p-2 text-center text-sm font-medium text-gray-500 border-b"
-              >
-                {day}
-              </div>
-            ))}
-
-            {/* Calendar days */}
-            {calendarDays.map((day, index) => {
-              const dayEvents = getEventsForDate(day.date);
-              return (
-                <div
-                  key={index}
-                  className={`min-h-[100px] p-1 border-b border-r ${
-                    !day.isCurrentMonth ? 'bg-gray-50' : ''
-                  }`}
-                >
+        <div className="min-w-[600px]">
+          <Card>
+            <CardContent className="p-0">
+              <div className="grid grid-cols-7">
+                {/* Day headers */}
+                {dayNames.map((day) => (
                   <div
-                    className={`text-sm font-medium p-1 ${
-                      isToday(day.date)
-                        ? 'bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center'
-                        : day.isCurrentMonth
-                        ? 'text-gray-900'
-                        : 'text-gray-400'
-                    }`}
+                    key={day}
+                    className="p-2 text-center text-sm font-medium text-gray-500 border-b"
                   >
-                    {day.date.getDate()}
+                    {day}
                   </div>
-                  <div className="space-y-1">
-                    {dayEvents.slice(0, 3).map((event) => (
+                ))}
+
+                {/* Calendar days */}
+                {calendarDays.map((day, index) => {
+                  const dayEvents = getEventsForDate(day.date);
+                  return (
+                    <div
+                      key={index}
+                      className={`min-h-[100px] p-1 border-b border-r ${
+                        !day.isCurrentMonth ? 'bg-gray-50' : ''
+                      }`}
+                    >
                       <div
-                        key={event.id}
-                        onClick={(e) => handleEventClick(event, e)}
-                        className={`text-xs p-1 rounded cursor-pointer truncate ${
-                          event.status === 'PENDING'
-                            ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-                            : event.status === 'CONFIRMED'
-                            ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                            : event.status === 'CANCELLED'
-                            ? 'bg-red-100 text-red-800 hover:bg-red-200'
-                            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                        className={`text-sm font-medium p-1 ${
+                          isToday(day.date)
+                            ? 'bg-blue-600 text-white rounded-full w-7 h-7 flex items-center justify-center'
+                            : day.isCurrentMonth
+                            ? 'text-gray-900'
+                            : 'text-gray-400'
                         }`}
-                        title={event.name}
                       >
-                        {event.name}
+                        {day.date.getDate()}
                       </div>
-                    ))}
-                    {dayEvents.length > 3 && (
-                      <div className="text-xs text-gray-500 pl-1">
-                        +{dayEvents.length - 3} more
+                      <div className="space-y-1">
+                        {dayEvents.slice(0, 3).map((event) => (
+                          <div
+                            key={event.id}
+                            onClick={(e) => handleEventClick(event, e)}
+                            className={`text-xs p-1 rounded cursor-pointer truncate ${
+                              event.status === 'PENDING'
+                                ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                                : event.status === 'CONFIRMED'
+                                ? 'bg-green-100 text-green-800 hover:bg-green-200'
+                                : event.status === 'CANCELLED'
+                                ? 'bg-red-100 text-red-800 hover:bg-red-200'
+                                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                            }`}
+                            title={event.name}
+                          >
+                            {event.name}
+                          </div>
+                        ))}
+                        {dayEvents.length > 3 && (
+                          <div className="text-xs text-gray-500 pl-1">
+                            +{dayEvents.length - 3} more
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-        </Card>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* View Event Dialog */}
