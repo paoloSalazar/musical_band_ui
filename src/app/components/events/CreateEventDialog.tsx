@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { eventsApi } from '../../lib/api';
 import type { Event, EventFormData } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
@@ -21,9 +21,19 @@ interface CreateEventDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: (event: Event) => void;
+  initialDate?: string; // ISO date string for pre-filling start date
 }
 
-export function CreateEventDialog({ open, onOpenChange, onSuccess }: CreateEventDialogProps) {
+export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }: CreateEventDialogProps) {
+  // Pre-fill dates when initialDate is provided
+  useEffect(() => {
+    if (open && initialDate) {
+      const date = new Date(initialDate);
+      const dateStr = date.toISOString().split('T')[0];
+      setStartDate(dateStr);
+      setEndDate(dateStr);
+    }
+  }, [open, initialDate]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

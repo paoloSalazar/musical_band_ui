@@ -4,9 +4,10 @@ import type { Event } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
-import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Loader2, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { ViewEventDialog } from './ViewEventDialog';
 import { EditEventDialog } from './EditEventDialog';
+import { CreateEventDialog } from './CreateEventDialog';
 
 interface CalendarViewProps {
   onEventUpdated?: () => void;
@@ -25,6 +26,8 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [editEventId, setEditEventId] = useState<number>(0);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   // Check permissions
   const canEdit = hasPermission('write:events') || hasPermission('update:events');
@@ -168,6 +171,14 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
     setEditDialogOpen(true);
   };
 
+  // Handle clicking on a date cell to create new event
+  const handleDateClick = (date: Date) => {
+    if (canEdit) {
+      setSelectedDate(date.toISOString());
+      setCreateDialogOpen(true);
+    }
+  };
+
   // Day names
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -241,7 +252,8 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
                   return (
                     <div
                       key={index}
-                      className={`min-h-[100px] p-1 border-b border-r ${
+                      onClick={() => canEdit && handleDateClick(day.date)}
+                      className={`min-h-[100px] p-1 border-b border-r cursor-pointer hover:bg-gray-50 ${
                         !day.isCurrentMonth ? 'bg-gray-50' : ''
                       }`}
                     >
@@ -304,6 +316,19 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
         eventId={editEventId}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
+        onSuccess={() => {
+          loadEvents();
+          if (onEventUpdated) {
+            onEventUpdated();
+          }
+        }}
+      />
+
+      {/* Create Event Dialog */}
+      <CreateEventDialog
+        open={createDialogOpen}
+        onOpenChange={setCreateDialogOpen}
+        initialDate={selectedDate || undefined}
         onSuccess={() => {
           loadEvents();
           if (onEventUpdated) {
