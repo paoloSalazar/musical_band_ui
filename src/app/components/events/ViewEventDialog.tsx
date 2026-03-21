@@ -17,9 +17,10 @@ interface ViewEventDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onEdit?: (eventId: number) => void;
+  canEditEvent?: boolean;
 }
 
-export function ViewEventDialog({ eventId, open, onOpenChange, onEdit }: ViewEventDialogProps) {
+export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEvent }: ViewEventDialogProps) {
   const [event, setEvent] = useState<Event | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -174,7 +175,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit }: ViewEve
         ) : null}
 
         <DialogFooter>
-          {onEdit && (
+          {onEdit && canEditEvent && (
             <Button type="button" onClick={handleEdit}>
               <Pencil className="h-4 w-4 mr-2" />
               Edit Event

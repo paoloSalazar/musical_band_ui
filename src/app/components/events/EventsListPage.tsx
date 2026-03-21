@@ -35,7 +35,7 @@ interface EventsListPageProps {
 }
 
 export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPageProps) {
-  const { hasPermission, hasRole } = useUser();
+  const { user, hasPermission, hasRole } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,6 +46,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
 
   // Dialog states
   const [viewEventId, setViewEventId] = useState<number>(0);
+  const [viewingEvent, setViewingEvent] = useState<Event | null>(null);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [editEventId, setEditEventId] = useState<number>(0);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -83,6 +84,13 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
     });
   }, [events]);
 
+  // Check if user can edit an event (owns it or is admin)
+  const canEditEvent = (event: Event) => {
+    if (!user) return false;
+    // User can edit if they own the event OR they are an admin
+    return event.user_id === user.id || isAdmin;
+  };
+
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', {
@@ -94,8 +102,9 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
     });
   };
 
-  const handleView = (eventId: number) => {
-    setViewEventId(eventId);
+  const handleView = (event: Event) => {
+    setViewEventId(event.id);
+    setViewingEvent(event);
     setViewDialogOpen(true);
   };
 
@@ -201,11 +210,11 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                               variant="ghost"
                               size="sm"
                               title="View Details"
-                              onClick={() => handleView(event.id)}
+                              onClick={() => handleView(event)}
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            {canEdit && (
+                            {canEdit && canEditEvent(event) && (
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -271,6 +280,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
         open={viewDialogOpen}
         onOpenChange={setViewDialogOpen}
         onEdit={canEdit ? handleEdit : undefined}
+        canEditEvent={viewingEvent ? canEditEvent(viewingEvent) : false}
       />
 
       {/* Edit Event Dialog */}

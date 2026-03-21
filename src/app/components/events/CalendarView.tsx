@@ -13,7 +13,7 @@ interface CalendarViewProps {
 }
 
 export function CalendarView({ onEventUpdated }: CalendarViewProps) {
-  const { hasPermission } = useUser();
+  const { user, hasPermission, hasRole } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,12 +21,20 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
 
   // Dialog states
   const [viewEventId, setViewEventId] = useState<number>(0);
+  const [viewingEvent, setViewingEvent] = useState<Event | null>(null);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [editEventId, setEditEventId] = useState<number>(0);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   // Check permissions
   const canEdit = hasPermission('write:events') || hasPermission('update:events');
+  const isAdmin = hasRole('admin');
+
+  // Check if user can edit an event (owns it or is admin)
+  const canEditEvent = (event: Event) => {
+    if (!user) return false;
+    return event.user_id === user.id || isAdmin;
+  };
 
   // Load events when year or month changes
   const loadEvents = useCallback(async () => {
@@ -151,6 +159,7 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
   const handleEventClick = (event: Event, e: React.MouseEvent) => {
     e.stopPropagation();
     setViewEventId(event.id);
+    setViewingEvent(event);
     setViewDialogOpen(true);
   };
 
@@ -287,6 +296,7 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
         open={viewDialogOpen}
         onOpenChange={setViewDialogOpen}
         onEdit={canEdit ? handleEdit : undefined}
+        canEditEvent={viewingEvent ? canEditEvent(viewingEvent) : false}
       />
 
       {/* Edit Event Dialog */}
