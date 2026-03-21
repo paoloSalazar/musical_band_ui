@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Calendar, List } from 'lucide-react';
+import { useUser } from '../../contexts/UserContext';
 import { EventsListPage } from './EventsListPage';
 import { CalendarView } from './CalendarView';
 
 type ViewMode = 'list' | 'calendar';
 
 export function EventsPage() {
+  const { user } = useUser();
   const [currentView, setCurrentView] = useState<ViewMode>('list');
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -15,38 +17,62 @@ export function EventsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold">Events</h2>
-          <p className="text-gray-600 mt-1">
-            Manage your band events and schedule
-          </p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header - Similar to AdminLayout */}
+      <header className="bg-white border-b shadow-sm sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Calendar className="h-6 w-6 text-green-600" />
+              <h1 className="text-xl font-semibold">Events</h1>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm text-gray-600 hidden sm:block">
+                Logged in as: <span className="font-medium">{user?.name}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="space-y-6">
+          {/* Page Description */}
+          <div>
+            <p className="text-gray-600">
+              Manage your band events and schedule
+            </p>
+          </div>
+
+          {/* View Toggle Card */}
+          <div className="bg-white rounded-lg shadow-sm border p-4">
+            <Tabs 
+              value={currentView} 
+              onValueChange={(value) => setCurrentView(value as ViewMode)}
+              className="w-full"
+            >
+              <TabsList className="w-full sm:w-auto">
+                <TabsTrigger value="list" className="flex-1 sm:flex-none items-center gap-2">
+                  <List className="h-4 w-4" />
+                  List View
+                </TabsTrigger>
+                <TabsTrigger value="calendar" className="flex-1 sm:flex-none items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Calendar View
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+
+          {/* Content Area */}
+          {currentView === 'list' ? (
+            <EventsListPage key={`list-${refreshKey}`} onEventUpdated={handleEventUpdated} />
+          ) : (
+            <CalendarView key={`calendar-${refreshKey}`} onEventUpdated={handleEventUpdated} />
+          )}
         </div>
       </div>
-
-      {/* View Toggle */}
-      <Tabs value={currentView} onValueChange={(value) => setCurrentView(value as ViewMode)}>
-        <TabsList>
-          <TabsTrigger value="list" className="flex items-center gap-2">
-            <List className="h-4 w-4" />
-            List View
-          </TabsTrigger>
-          <TabsTrigger value="calendar" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            Calendar View
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="list" className="mt-6">
-          <EventsListPage key={`list-${refreshKey}`} onEventUpdated={handleEventUpdated} />
-        </TabsContent>
-
-        <TabsContent value="calendar" className="mt-6">
-          <CalendarView key={`calendar-${refreshKey}`} onEventUpdated={handleEventUpdated} />
-        </TabsContent>
-      </Tabs>
     </div>
   );
 }

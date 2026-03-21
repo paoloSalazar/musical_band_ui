@@ -186,28 +186,31 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
   return (
     <div className="space-y-4">
       {/* Calendar Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={prevMonth}>
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="sm" onClick={nextMonth}>
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="sm" onClick={goToToday}>
-            Today
-          </Button>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <Button variant="outline" size="icon" onClick={prevMonth} className="h-8 w-8">
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" onClick={nextMonth} className="h-8 w-8">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={goToToday} className="hidden sm:flex">
+              Today
+            </Button>
+          </div>
         </div>
-        <h2 className="text-xl font-semibold capitalize">
+        <h2 className="text-lg sm:text-xl font-semibold capitalize text-center">
           {formatMonthYear(currentDate)}
         </h2>
-        <div className="w-[200px]" /> {/* Spacer for alignment */}
+        <div className="hidden sm:block" /> {/* Spacer for alignment */}
       </div>
 
       {/* Calendar Grid */}
-      <Card>
-        <CardContent className="p-0">
-          <div className="grid grid-cols-7">
+      <div className="overflow-x-auto">
+        <Card className="min-w-[600px]">
+          <CardContent className="p-0">
+            <div className="grid grid-cols-7">
             {/* Day headers */}
             {dayNames.map((day) => (
               <div
@@ -269,7 +272,8 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
             })}
           </div>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
 
       {/* View Event Dialog */}
       <ViewEventDialog
