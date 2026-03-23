@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
+import { formatDate as formatDateUtil, formatTime } from '../../lib/timezone';
 import { Button } from '../ui/button';
 import {
   Dialog,
@@ -44,24 +45,12 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
     }
   };
 
-  const formatDateTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+  const formatDate = (dateString: string) => {
+    return formatDateUtil(dateString);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+  const formatTimeOnly = (dateString: string) => {
+    return formatTime(dateString);
   };
 
   const handleEdit = () => {
@@ -135,7 +124,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                 <div>
                   <p className="text-sm text-gray-500">Time</p>
                   <p className="text-sm">
-                    {formatDateTime(event.start_datetime).split(' ')[1]} - {formatDateTime(event.end_datetime).split(' ')[1]}
+                    {formatTimeOnly(event.start_datetime)} - {formatTimeOnly(event.end_datetime)}
                   </p>
                 </div>
               </div>

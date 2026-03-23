@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { eventsApi } from '../../lib/api';
 import type { Event, EventFormData } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
+import { convertToUTC } from '../../lib/timezone';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -98,12 +99,12 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
       setError(null);
 
       const startDateTime = isAllDay
-        ? `${startDate}T00:00:00`
-        : `${startDate} ${startTime}`;
+        ? `${startDate}T00:00:00Z`
+        : convertToUTC(`${startDate}T${startTime}:00`);
 
       const endDateTime = isAllDay
-        ? `${endDate}T23:59:59`
-        : `${endDate} ${endTime}`;
+        ? `${endDate}T23:59:59Z`
+        : convertToUTC(`${endDate}T${endTime}:00`);
 
       const eventData: EventFormData = {
         name: name.trim(),

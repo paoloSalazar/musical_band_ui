@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
+import { formatDateTimeHumanReadable, formatDate, formatDateTime } from '../../lib/timezone';
 import {
   Table,
   TableBody,
@@ -95,14 +96,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
   };
 
   const formatDateTime = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    return formatDateTimeHumanReadable(dateString);
   };
 
   const handleView = (event: Event) => {
@@ -202,10 +196,10 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                           {event.place}
                         </TableCell>
                         <TableCell className="text-gray-600">
-                          {formatDateTime(event.start_datetime)}
+                          {event.is_all_day ? formatDate(event.start_datetime) : formatDateTime(event.start_datetime)}
                         </TableCell>
                         <TableCell className="text-gray-600">
-                          {formatDateTime(event.end_datetime)}
+                          {event.is_all_day ? formatDate(event.end_datetime) : formatDateTime(event.end_datetime)}
                         </TableCell>
                         <TableCell>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
