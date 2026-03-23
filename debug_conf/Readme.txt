@@ -1,0 +1,1 @@
+Add this files to .vscode folder in the root of the project in order to debug apps with breakpoints
