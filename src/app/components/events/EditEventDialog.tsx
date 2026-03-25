@@ -126,11 +126,11 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
       setError(null);
 
       const startDateTime = isAllDay
-        ? `${startDate}T00:00:00Z`
+        ? `${startDate}T08:00:00Z`
         : convertToUTC(`${startDate}T${startTime}:00`);
 
       const endDateTime = isAllDay
-        ? `${endDate}T23:59:59Z`
+        ? `${endDate}T23:00:00Z`
         : convertToUTC(`${endDate}T${endTime}:00`);
 
       const eventData: Partial<EventFormData> = {
@@ -171,11 +171,6 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
             <span className="ml-2 text-gray-600">Loading event...</span>
-          </div>
-        ) : error && !isLoading ? (
-          <div className="text-red-600 text-center py-4">
-            <p className="font-medium">Error</p>
-            <p className="text-sm">{error}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
