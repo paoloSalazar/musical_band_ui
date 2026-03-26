@@ -61,6 +61,11 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
   // Check permissions
   const canEdit = hasPermission('write:events') || hasPermission('update:events');
   const isAdmin = hasRole('admin');
+  
+  // Admin can only edit price, not create/edit/delete events
+  const canCreateEvent = canEdit && !isAdmin;
+  const canEditEventAction = canEdit && !isAdmin;
+  const canDeleteEvent = isAdmin;
 
   useEffect(() => {
     loadEvents();
@@ -159,7 +164,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                 Total: {total} event(s) - Page {currentPage} of {totalPages}
               </CardDescription>
             </div>
-            {canEdit && (
+            {canCreateEvent && (
               <Button onClick={() => setCreateDialogOpen(true)} className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 Create Event
@@ -225,7 +230,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            {canEdit && canEditEvent(event) && (
+                            {canEditEventAction && canEditEvent(event) && (
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -235,7 +240,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                                 <Pencil className="h-4 w-4" />
                               </Button>
                             )}
-                            {isAdmin && (
+                            {canDeleteEvent && (
                               <Button
                                 variant="ghost"
                                 size="sm"
@@ -290,25 +295,35 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
         eventId={viewEventId}
         open={viewDialogOpen}
         onOpenChange={setViewDialogOpen}
-        onEdit={canEdit ? handleEdit : undefined}
+        onEdit={canEditEventAction ? handleEdit : undefined}
         canEditEvent={viewingEvent ? canEditEvent(viewingEvent) : false}
-      />
-
-      {/* Edit Event Dialog */}
-      <EditEventDialog
-        eventId={editEventId}
-        open={editDialogOpen}
-        onOpenChange={setEditDialogOpen}
-        onSuccess={() => {
-          loadEvents();
-          if (onEventUpdated) {
-            onEventUpdated();
+        showEditButton={!isAdmin}
+        onPriceUpdate={(event) => {
+          // Update the event in the local list
+          setEvents(prev => prev.map(e => e.id === event.id ? event : e));
+          if (viewingEvent && viewingEvent.id === event.id) {
+            setViewingEvent(event);
           }
         }}
       />
 
+      {/* Edit Event Dialog */}
+      {canEditEventAction && (
+        <EditEventDialog
+          eventId={editEventId}
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+          onSuccess={() => {
+            loadEvents();
+            if (onEventUpdated) {
+              onEventUpdated();
+            }
+          }}
+        />
+      )}
+
       {/* Delete Event Dialog */}
-      {isAdmin && (
+      {canDeleteEvent && (
         <DeleteEventDialog
           eventId={deleteEventId}
           eventName={deleteEventName}
@@ -324,7 +339,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
       )}
 
       {/* Create Event Dialog */}
-      {canEdit && (
+      {canCreateEvent && (
         <CreateEventDialog
           open={createDialogOpen}
           onOpenChange={setCreateDialogOpen}

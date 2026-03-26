@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
+import type { ApiError } from '../../lib/api/client';
 import { formatDate as formatDateUtil, formatTime } from '../../lib/timezone';
+import { useUser } from '../../contexts/UserContext';
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 import {
   Dialog,
   DialogContent,
@@ -11,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
-import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign } from 'lucide-react';
+import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save } from 'lucide-react';
 
 interface ViewEventDialogProps {
   eventId: number;
@@ -19,12 +22,20 @@ interface ViewEventDialogProps {
   onOpenChange: (open: boolean) => void;
   onEdit?: (eventId: number) => void;
   canEditEvent?: boolean;
+  onPriceUpdate?: (event: Event) => void;
+  showEditButton?: boolean;
 }
 
-export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEvent }: ViewEventDialogProps) {
+export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEvent, onPriceUpdate, showEditButton = true }: ViewEventDialogProps) {
+  const { hasRole } = useUser();
+  const isAdmin = hasRole('admin');
+  
   const [event, setEvent] = useState<Event | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isUpdatingPrice, setIsUpdatingPrice] = useState(false);
+  const [priceInput, setPriceInput] = useState('');
+  const [priceError, setPriceError] = useState<string | null>(null);
 
   useEffect(() => {
     if (open && eventId) {
@@ -57,6 +68,50 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
     if (onEdit && eventId) {
       onEdit(eventId);
       onOpenChange(false);
+    }
+  };
+
+  const handleStartEditPrice = () => {
+    if (event) {
+      setPriceInput(event.price !== undefined && event.price !== null ? event.price.toString() : '');
+    }
+  };
+
+  const handleCancelEditPrice = () => {
+    setPriceInput('');
+    setPriceError(null);
+  };
+
+  const handleSavePrice = async () => {
+    if (!event) return;
+    
+    const priceValue = priceInput.trim() === '' ? null : parseFloat(priceInput);
+    
+    if (priceValue !== null && isNaN(priceValue)) {
+      setPriceError('Please enter a valid number');
+      return;
+    }
+    
+    if (priceValue !== null && priceValue < 0) {
+      setPriceError('Price cannot be negative');
+      return;
+    }
+
+    try {
+      setIsUpdatingPrice(true);
+      setPriceError(null);
+      
+      const response = await eventsApi.updatePrice(event.id, priceValue || 0);
+      setEvent(response.data);
+      
+      if (onPriceUpdate) {
+        onPriceUpdate(response.data);
+      }
+    } catch (err) {
+      const apiError = err as ApiError;
+      setPriceError(apiError.detail || apiError.message || 'Failed to update price');
+    } finally {
+      setIsUpdatingPrice(false);
     }
   };
 
@@ -148,15 +203,76 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
             </div>
 
             {/* Price */}
-            {event.price !== undefined && event.price !== null && (
-              <div className="flex items-start space-x-2">
-                <DollarSign className="h-4 w-4 mt-1 text-gray-500" />
-                <div>
-                  <p className="text-sm text-gray-500">Price</p>
-                  <p className="text-sm">${event.price.toFixed(2)}</p>
-                </div>
+            <div className="flex items-start space-x-2">
+              <DollarSign className="h-4 w-4 mt-1 text-gray-500" />
+              <div className="flex-1">
+                <p className="text-sm text-gray-500">Price</p>
+                {isAdmin ? (
+                  priceInput !== '' || event.price !== undefined ? (
+                    <div className="flex items-center gap-2 mt-1">
+                      <Input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={priceInput}
+                        onChange={(e) => setPriceInput(e.target.value)}
+                        placeholder="Enter price"
+                        className="h-8 w-32"
+                        disabled={isUpdatingPrice}
+                      />
+                      {priceInput !== '' ? (
+                        <>
+                          <Button
+                            size="sm"
+                            onClick={handleSavePrice}
+                            disabled={isUpdatingPrice}
+                            className="h-8"
+                          >
+                            <Save className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={handleCancelEditPrice}
+                            disabled={isUpdatingPrice}
+                            className="h-8"
+                          >
+                            Cancel
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={handleStartEditPrice}
+                          className="h-8"
+                        >
+                          Set Price
+                        </Button>
+                      )}
+                    </div>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleStartEditPrice}
+                      className="h-8 mt-1"
+                    >
+                      Set Price
+                    </Button>
+                  )
+                ) : (
+                  <p className="text-sm">
+                    {event.price !== undefined && event.price !== null 
+                      ? `${event.price.toFixed(2)}` 
+                      : 'No price set'}
+                  </p>
+                )}
+                {priceError && (
+                  <p className="text-xs text-red-600 mt-1">{priceError}</p>
+                )}
               </div>
-            )}
+            </div>
 
             {/* Created By */}
             {event.created_by && (
@@ -175,7 +291,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
         ) : null}
 
         <DialogFooter>
-          {onEdit && canEditEvent && (
+          {showEditButton && onEdit && canEditEvent && (
             <Button type="button" onClick={handleEdit}>
               <Pencil className="h-4 w-4 mr-2" />
               Edit Event

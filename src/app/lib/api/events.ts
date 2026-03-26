@@ -77,4 +77,12 @@ export const eventsApi = {
   delete: async (id: number): Promise<ApiResponse<boolean>> => {
     return apiClient.delete<boolean>(`/events/${id}`);
   },
+
+  /**
+   * Update event price only
+   * PATCH /api/events/{id}/price
+   */
+  updatePrice: async (id: number, price: number): Promise<ApiResponse<Event>> => {
+    return apiClient.patch<Event>(`/events/${id}/price`, { price });
+  },
 };

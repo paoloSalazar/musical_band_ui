@@ -3,7 +3,6 @@ import { eventsApi } from '../../lib/api';
 import type { Event, EventFormData } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
 import { convertToUserTimeZone, convertToUTC, formatDateTime } from '../../lib/timezone';
-import { useUser } from '../../contexts/UserContext';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -27,9 +26,6 @@ interface EditEventDialogProps {
 }
 
 export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: EditEventDialogProps) {
-  const { hasRole } = useUser();
-  const isAdmin = hasRole('admin');
-
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +38,6 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
   const [endDate, setEndDate] = useState('');
   const [endTime, setEndTime] = useState('');
   const [isAllDay, setIsAllDay] = useState(false);
-  const [price, setPrice] = useState('');
 
   useEffect(() => {
     if (open && eventId) {
@@ -72,7 +67,6 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
       setEndTime(formatDateTime(event.end_datetime, 'HH:mm'));
 
       setIsAllDay(event.is_all_day);
-      setPrice(event.price !== undefined && event.price !== null ? event.price.toString() : '');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load event');
     } finally {
@@ -89,7 +83,6 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
     setEndDate('');
     setEndTime('');
     setIsAllDay(false);
-    setPrice('');
     setError(null);
   };
 
@@ -147,7 +140,6 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
         start_datetime: startDateTime,
         end_datetime: endDateTime,
         is_all_day: isAllDay,
-        ...(isAdmin && price !== '' && { price: parseFloat(price) }),
       };
 
       const response = await eventsApi.update(eventId, eventData);
@@ -218,26 +210,6 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
                   disabled={isLoading}
                 />
               </div>
-
-              {/* Price (Admin only) */}
-              {isAdmin && (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="edit-price" className="text-right">
-                    Price
-                  </Label>
-                  <Input
-                    id="edit-price"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    placeholder="e.g., 50.00"
-                    className="col-span-3"
-                    disabled={isLoading}
-                  />
-                </div>
-              )}
 
               {/* Description */}
               <div className="grid grid-cols-4 items-center gap-4">
