@@ -3,6 +3,7 @@ import { eventsApi } from '../../lib/api';
 import type { Event, EventFormData } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
 import { convertToUTC } from '../../lib/timezone';
+import { useUser } from '../../contexts/UserContext';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -26,6 +27,9 @@ interface CreateEventDialogProps {
 }
 
 export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }: CreateEventDialogProps) {
+  const { hasRole } = useUser();
+  const isAdmin = hasRole('admin');
+
   // Pre-fill dates when initialDate is provided
   useEffect(() => {
     if (open && initialDate) {
@@ -46,6 +50,7 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
   const [endDate, setEndDate] = useState('');
   const [endTime, setEndTime] = useState('');
   const [isAllDay, setIsAllDay] = useState(false);
+  const [price, setPrice] = useState('');
 
   const resetForm = () => {
     setName('');
@@ -56,6 +61,7 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
     setEndDate('');
     setEndTime('');
     setIsAllDay(false);
+    setPrice('');
     setError(null);
   };
 
@@ -113,6 +119,7 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
         start_datetime: startDateTime,
         end_datetime: endDateTime,
         is_all_day: isAllDay,
+        price: isAdmin && price ? parseFloat(price) : undefined,
       };
 
       const response = await eventsApi.create(eventData);
@@ -177,6 +184,26 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
                 disabled={isLoading}
               />
             </div>
+
+            {/* Price (Admin only) */}
+            {isAdmin && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="create-price" className="text-right">
+                  Price
+                </Label>
+                <Input
+                  id="create-price"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="e.g., 50.00"
+                  className="col-span-3"
+                  disabled={isLoading}
+                />
+              </div>
+            )}
 
             {/* Description */}
             <div className="grid grid-cols-4 items-center gap-4">

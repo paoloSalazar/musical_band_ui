@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
-import { Loader2, Pencil, Calendar, MapPin, Clock, User } from 'lucide-react';
+import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign } from 'lucide-react';
 
 interface ViewEventDialogProps {
   eventId: number;
@@ -146,6 +146,17 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                 <p className="text-sm">{event.place}</p>
               </div>
             </div>
+
+            {/* Price */}
+            {event.price !== undefined && event.price !== null && (
+              <div className="flex items-start space-x-2">
+                <DollarSign className="h-4 w-4 mt-1 text-gray-500" />
+                <div>
+                  <p className="text-sm text-gray-500">Price</p>
+                  <p className="text-sm">${event.price.toFixed(2)}</p>
+                </div>
+              </div>
+            )}
 
             {/* Created By */}
             {event.created_by && (

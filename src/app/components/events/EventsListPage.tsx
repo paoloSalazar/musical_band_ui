@@ -184,6 +184,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                       <TableHead>Place</TableHead>
                       <TableHead>Start Date</TableHead>
                       <TableHead>End Date</TableHead>
+                      <TableHead>Price</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -200,6 +201,9 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                         </TableCell>
                         <TableCell className="text-gray-600">
                           {event.is_all_day ? formatDate(event.end_datetime) : formatDateTime(event.end_datetime)}
+                        </TableCell>
+                        <TableCell className="text-gray-600">
+                          {event.price !== undefined && event.price !== null ? `${event.price.toFixed(2)}` : '-'}
                         </TableCell>
                         <TableCell>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
