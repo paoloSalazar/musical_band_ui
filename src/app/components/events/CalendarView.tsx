@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
+import { convertToUserTimeZone } from '../../lib/timezone';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Loader2, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
@@ -117,8 +118,8 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
   // Get events for a specific date
   const getEventsForDate = (date: Date) => {
     return events.filter((event) => {
-      const eventStart = new Date(event.start_datetime);
-      const eventEnd = new Date(event.end_datetime);
+      const eventStart = convertToUserTimeZone(event.start_datetime);
+      const eventEnd = convertToUserTimeZone(event.end_datetime);
       const checkDate = new Date(date);
 
       // Normalize times to compare dates only

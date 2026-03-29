@@ -162,6 +162,7 @@ export interface Event {
   start_datetime: string;
   end_datetime: string;
   is_all_day: boolean;
+  price?: number;
   user_id: number;
   status: string;
   created_by: EventCreator;
@@ -177,4 +178,5 @@ export interface EventFormData {
   start_datetime: string;
   end_datetime: string;
   is_all_day: boolean;
+  price?: number;
 }
