@@ -106,7 +106,7 @@ export const eventsApi = {
    * Create a payment for an event
    * POST /api/events/{event_id}/payments
    */
-  createPayment: async (eventId: number, data: Omit<PaymentFormData, 'event_id'>): Promise<ApiResponse<Payment>> => {
+  createPayment: async (eventId: number, data: PaymentFormData): Promise<ApiResponse<Payment>> => {
     return apiClient.post<Payment>(`/events/${eventId}/payments`, data);
   },
 };

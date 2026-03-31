@@ -69,6 +69,9 @@ export function ViewPaymentDetailsDialog({
 
   const formatAmount = (amount: string) => {
     const num = parseFloat(amount);
+    if (isNaN(num)) {
+      return '0.00';
+    }
     return num.toFixed(2);
   };
 
@@ -128,11 +131,11 @@ export function ViewPaymentDetailsDialog({
                   <div>
                     <p className="text-gray-500">Remaining</p>
                     <p className={`font-medium ${
-                      parseFloat(summary.remaining_balance) > 0
+                      parseFloat(summary.pending_balance) > 0
                         ? 'text-red-600'
                         : 'text-green-600'
                     }`}>
-                      ${formatAmount(summary.remaining_balance)}
+                      ${formatAmount(summary.pending_balance)}
                     </p>
                   </div>
                 </div>

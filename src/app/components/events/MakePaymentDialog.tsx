@@ -76,7 +76,7 @@ export function MakePaymentDialog({
 
   const getRemainingBalance = (): number => {
     if (!summary) return 0;
-    return parseFloat(summary.remaining_balance);
+    return parseFloat(summary.pending_balance);
   };
 
   const getFinalPrice = (): number => {
@@ -123,6 +123,7 @@ export function MakePaymentDialog({
       setError(null);
 
       await eventsApi.createPayment(eventId, {
+        event_id: eventId,
         user_id: userId,
         amount: parseFloat(amount),
         payment_type: paymentType,
