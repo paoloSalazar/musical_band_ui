@@ -303,8 +303,8 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
               Edit Event
             </Button>
           )}
-          {/* Payment buttons - only for event creator (non-admin) */}
-          {event && user && !isAdmin && event.user_id === user.id && (
+          {/* Payment buttons - for event creator (non-admin) or admin */}
+          {event && user && (isAdmin || (!isAdmin && event.user_id === user.id)) && (
             <>
               <Button
                 type="button"
@@ -312,8 +312,13 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                 onClick={() => setShowPaymentDetails(true)}
               >
                 <CreditCard className="h-4 w-4 mr-2" />
-                View Payment Details
+                Payment Details
               </Button>
+            </>
+          )}
+          {/* Make Payment button - only for event creator (non-admin) */}
+          {event && user && !isAdmin && event.user_id === user.id && (
+            <>
               <Button
                 type="button"
                 onClick={() => setShowMakePayment(true)}

@@ -89,7 +89,7 @@ export function MakePaymentDialog({
     setPaymentType(type);
 
     // Auto-fill amount based on payment type
-    if (type === 'FULL') {
+    if (type === 'TOTAL') {
       setAmount(getRemainingBalance().toFixed(2));
     }
   };

@@ -186,7 +186,7 @@ export interface EventFormData {
 /**
  * Payment type enum
  */
-export type PaymentType = 'ADVANCE' | 'REMAINING' | 'FULL';
+export type PaymentType = 'ADVANCE' | 'REMAINING' | 'TOTAL';
 
 /**
  * Payment from /api/events/{event_id}/payments endpoint
