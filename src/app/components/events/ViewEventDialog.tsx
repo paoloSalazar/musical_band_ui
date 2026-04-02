@@ -14,7 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
-import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save } from 'lucide-react';
+import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save, CreditCard, Wallet } from 'lucide-react';
+import { ViewPaymentDetailsDialog } from './ViewPaymentDetailsDialog';
+import { MakePaymentDialog } from './MakePaymentDialog';
 
 interface ViewEventDialogProps {
   eventId: number;
@@ -27,7 +29,7 @@ interface ViewEventDialogProps {
 }
 
 export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEvent, onPriceUpdate, showEditButton = true }: ViewEventDialogProps) {
-  const { hasRole } = useUser();
+  const { hasRole, user } = useUser();
   const isAdmin = hasRole('admin');
   
   const [event, setEvent] = useState<Event | null>(null);
@@ -36,6 +38,10 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   const [isUpdatingPrice, setIsUpdatingPrice] = useState(false);
   const [priceInput, setPriceInput] = useState('');
   const [priceError, setPriceError] = useState<string | null>(null);
+
+  // Payment dialogs state
+  const [showPaymentDetails, setShowPaymentDetails] = useState(false);
+  const [showMakePayment, setShowMakePayment] = useState(false);
 
   useEffect(() => {
     if (open && eventId) {
@@ -297,8 +303,53 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
               Edit Event
             </Button>
           )}
+          {/* Payment buttons - for event creator (non-admin) or admin */}
+          {event && user && (isAdmin || (!isAdmin && event.user_id === user.id)) && (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowPaymentDetails(true)}
+              >
+                <CreditCard className="h-4 w-4 mr-2" />
+                Payment Details
+              </Button>
+            </>
+          )}
+          {/* Make Payment button - only for event creator (non-admin) */}
+          {event && user && !isAdmin && event.user_id === user.id && (
+            <>
+              <Button
+                type="button"
+                onClick={() => setShowMakePayment(true)}
+              >
+                <Wallet className="h-4 w-4 mr-2" />
+                Make Payment
+              </Button>
+            </>
+          )}
         </DialogFooter>
       </DialogContent>
+
+      {event && (
+        <ViewPaymentDetailsDialog
+        eventId={event.id}
+        eventName={event.name}
+        open={showPaymentDetails}
+        onOpenChange={setShowPaymentDetails}
+      />
+    )}
+
+    {/* Make Payment Dialog */}
+    {event && user && (
+      <MakePaymentDialog
+        eventId={event.id}
+        eventName={event.name}
+        userId={user.id}
+        open={showMakePayment}
+        onOpenChange={setShowMakePayment}
+      />
+    )}
     </Dialog>
   );
 }

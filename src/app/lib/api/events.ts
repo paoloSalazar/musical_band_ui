@@ -4,7 +4,7 @@
  */
 
 import { apiClient, type ApiResponse } from './client';
-import type { Event, EventFormData } from '../types';
+import type { Event, EventFormData, Payment, PaymentSummary, PaymentFormData } from '../types';
 
 /**
  * Paginated events response for table view
@@ -84,5 +84,29 @@ export const eventsApi = {
    */
   updatePrice: async (id: number, price: number): Promise<ApiResponse<Event>> => {
     return apiClient.patch<Event>(`/events/${id}/price`, { price });
+  },
+
+  /**
+   * Get payments for an event
+   * GET /api/events/{event_id}/payments
+   */
+  getPayments: async (eventId: number): Promise<ApiResponse<Payment[]>> => {
+    return apiClient.get<Payment[]>(`/events/${eventId}/payments`);
+  },
+
+  /**
+   * Get payment summary for an event
+   * GET /api/events/{event_id}/payments/summary
+   */
+  getPaymentSummary: async (eventId: number): Promise<ApiResponse<PaymentSummary>> => {
+    return apiClient.get<PaymentSummary>(`/events/${eventId}/payments/summary`);
+  },
+
+  /**
+   * Create a payment for an event
+   * POST /api/events/{event_id}/payments
+   */
+  createPayment: async (eventId: number, data: PaymentFormData): Promise<ApiResponse<Payment>> => {
+    return apiClient.post<Payment>(`/events/${eventId}/payments`, data);
   },
 };

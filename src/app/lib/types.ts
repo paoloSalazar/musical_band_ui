@@ -180,3 +180,43 @@ export interface EventFormData {
   is_all_day: boolean;
   price?: number;
 }
+
+// ============ Event Payments Types ============
+
+/**
+ * Payment type enum
+ */
+export type PaymentType = 'ADVANCE' | 'REMAINING' | 'TOTAL';
+
+/**
+ * Payment from /api/events/{event_id}/payments endpoint
+ */
+export interface Payment {
+  id: number;
+  event_id: number;
+  user_id: number;
+  amount: string;
+  payment_type: PaymentType;
+  payment_date: string;
+  notes?: string;
+}
+
+/**
+ * Payment summary from /api/events/{event_id}/payments/summary endpoint
+ */
+export interface PaymentSummary {
+  total_paid: string;
+  remaining_balance: string;
+  final_price: string;
+}
+
+/**
+ * Form data for creating a payment
+ */
+export interface PaymentFormData {
+  event_id: number;
+  user_id: number;
+  amount: number;
+  payment_type: PaymentType;
+  notes?: string;
+}
