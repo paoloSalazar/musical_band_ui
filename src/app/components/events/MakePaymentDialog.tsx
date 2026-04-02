@@ -201,11 +201,11 @@ export function MakePaymentDialog({
               <SelectContent>
                 <SelectItem value="ADVANCE">Advance Payment</SelectItem>
                 <SelectItem value="REMAINING">Remaining Balance</SelectItem>
-                <SelectItem value="FULL">Full Payment</SelectItem>
+                <SelectItem value="TOTAL">Full Payment</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-xs text-gray-500">
-              {paymentType === 'FULL' 
+              {paymentType === 'TOTAL' 
                 ? 'Pays the entire remaining balance'
                 : paymentType === 'REMAINING'
                 ? 'Pays the full remaining balance'
@@ -228,7 +228,7 @@ export function MakePaymentDialog({
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0.00"
                 className="pl-9"
-                disabled={paymentType === 'FULL'}
+                disabled={paymentType === 'TOTAL'}
               />
             </div>
           </div>
