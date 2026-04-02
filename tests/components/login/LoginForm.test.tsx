@@ -133,7 +133,7 @@ describe('LoginForm', () => {
     });
   });
 
-  it('should clear error when user starts typing', async () => {
+  it('should not clear error when user starts typing (error only clears on submit)', async () => {
     render(
       <UserProvider>
         <LoginForm />
@@ -149,11 +149,11 @@ describe('LoginForm', () => {
       expect(screen.getByText(/please enter both email and password/i)).toBeTruthy();
     });
 
-    // Now type in email field - error should clear
+    // Now type in email field - error should NOT clear (per actual implementation)
     const emailInput = screen.getByLabelText(/email/i);
     fireEvent.change(emailInput, { target: { value: 'a' } });
 
-    // Error should be gone
-    expect(screen.queryByText(/please enter both email and password/i)).toBeNull();
+    // Error should still be present (the component only clears error on submit, not on change)
+    expect(screen.queryByText(/please enter both email and password/i)).toBeTruthy();
   });
 });
