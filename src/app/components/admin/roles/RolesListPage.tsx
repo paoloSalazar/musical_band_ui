@@ -214,7 +214,7 @@ export function RolesListPage() {
         onSuccess={(role: Role) => {
           // Update the role in the list
           setRoles(prev => 
-            prev.map(r => r.name === role.name ? role : r)
+            prev.map(r => r.id === role.id ? role : r)
           );
         }}
       />
