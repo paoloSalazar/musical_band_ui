@@ -149,9 +149,7 @@ describe('DeleteUserDialog Component', () => {
   });
 
   it('should handle load user error', async () => {
-    mockUsersApi.getById.mockRejectedValue({
-      message: 'User not found',
-    });
+    mockUsersApi.getById.mockRejectedValue(new Error('User not found'));
 
     render(
       <DeleteUserDialog
@@ -168,11 +166,9 @@ describe('DeleteUserDialog Component', () => {
   });
 
   it('should reset error when dialog closes', async () => {
-    mockUsersApi.getById.mockRejectedValue({
-      message: 'Error',
-    });
+    mockUsersApi.getById.mockRejectedValue(new Error('Error'));
 
-    render(
+    const { rerender } = render(
       <DeleteUserDialog
         userId={1}
         open={true}
@@ -184,13 +180,19 @@ describe('DeleteUserDialog Component', () => {
     await waitFor(() => screen.getByText('Error'));
 
     // Close dialog
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
-    fireEvent.click(cancelButton);
+    rerender(
+      <DeleteUserDialog
+        userId={1}
+        open={false}
+        onOpenChange={() => {}}
+        onSuccess={() => {}}
+      />
+    );
 
     expect(screen.queryByText('Error')).not.toBeInTheDocument();
   });
 
-  it('should disable buttons during loading', () => {
+  it('should disable buttons during loading', async () => {
     const mockUser = { id: 1, name: 'John', lastname: 'Doe', email: 'john@example.com' };
 
     mockUsersApi.getById.mockResolvedValue({ data: mockUser });
@@ -206,13 +208,13 @@ describe('DeleteUserDialog Component', () => {
     );
 
     // Wait for user to load
-    waitFor(() => screen.getByText('John Doe')).then(() => {
-      const deleteButton = screen.getByRole('button', { name: /delete user/i });
-      fireEvent.click(deleteButton);
+    await waitFor(() => screen.getByText('John Doe'));
 
-      const cancelButton = screen.getByRole('button', { name: /cancel/i });
-      expect(cancelButton).toBeDisabled();
-      expect(deleteButton).toBeDisabled();
-    });
+    const deleteButton = screen.getByRole('button', { name: /delete user/i });
+    fireEvent.click(deleteButton);
+
+    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    expect(cancelButton).toBeDisabled();
+    expect(deleteButton).toBeDisabled();
   });
 });

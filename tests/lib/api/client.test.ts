@@ -1,18 +1,21 @@
+// Mock localStorage before any imports
+Object.defineProperty(window, 'localStorage', {
+  value: {
+    getItem: vi.fn(() => null),
+    setItem: vi.fn(() => null),
+    removeItem: vi.fn(() => null),
+    clear: vi.fn(() => null),
+  },
+  writable: true,
+});
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { apiClient, API_BASE_URL, type ApiResponse, type ApiError } from '@/app/lib/api/client';
 
 // Mock fetch globally
 const mockFetch = vi.fn();
 globalThis.fetch = mockFetch;
 
-// Mock localStorage
-const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+import { apiClient, API_BASE_URL, type ApiResponse, type ApiError } from '@/app/lib/api/client';
 
 describe('api/client.ts - apiClient', () => {
   beforeEach(() => {
@@ -29,14 +32,14 @@ describe('api/client.ts - apiClient', () => {
     it('should set token and store in localStorage', () => {
       apiClient.setToken('new-token');
       expect(apiClient.getToken()).toBe('new-token');
-      expect(localStorageMock.setItem).toHaveBeenCalledWith('auth_token', 'new-token');
+      expect(localStorage.setItem).toHaveBeenCalledWith('auth_token', 'new-token');
     });
 
     it('should remove token from localStorage when set to null', () => {
       apiClient.setToken('some-token');
       apiClient.setToken(null);
       expect(apiClient.getToken()).toBe(null);
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('auth_token');
+      expect(localStorage.removeItem).toHaveBeenCalledWith('auth_token');
     });
   });
 

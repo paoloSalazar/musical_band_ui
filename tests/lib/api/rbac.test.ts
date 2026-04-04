@@ -2,6 +2,18 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+// Mock the apiClient before importing anything that uses it
+vi.mock('@/app/lib/api/client', () => ({
+  apiClient: {
+    get: vi.fn(),
+    post: vi.fn(),
+    patch: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+  },
+}));
+
 import { rolesApi, permissionsApi, usersApi } from '@/app/lib/api/rbac';
 import { apiClient } from '@/app/lib/api/client';
 import type { Role, RoleFormData, Permission, PermissionFormData, User, UserFormData } from '@/app/lib/types';

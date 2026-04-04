@@ -6,20 +6,17 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { LoginForm } from '@/app/components/login/LoginForm';
 import { UserProvider } from '@/app/contexts/UserContext';
 
-// Mock useUser but keep UserProvider from actual module
+// Mock useUser and UserProvider
 const mockLogin = vi.fn().mockResolvedValue(undefined);
 const mockIsLoading = false;
 
-vi.mock('@/app/contexts/UserContext', async () => {
-  const { UserProvider: ActualUserProvider } = await import('@/app/contexts/UserContext');
-  return {
-    UserProvider: ActualUserProvider,
-    useUser: () => ({
-      login: mockLogin,
-      isLoading: mockIsLoading,
-    }),
-  };
-});
+vi.mock('@/app/contexts/UserContext', () => ({
+  UserProvider: ({ children }) => <div data-testid="user-provider">{children}</div>,
+  useUser: () => ({
+    login: mockLogin,
+    isLoading: mockIsLoading,
+  }),
+}));
 
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({

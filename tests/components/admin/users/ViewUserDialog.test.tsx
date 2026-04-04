@@ -60,9 +60,7 @@ describe('ViewUserDialog Component', () => {
   });
 
   it('should show error state', async () => {
-    mockUsersApi.getById.mockRejectedValue({
-      message: 'User not found',
-    });
+    mockUsersApi.getById.mockRejectedValue(new Error('User not found'));
 
     render(<ViewUserDialog userId={1} open={true} onOpenChange={() => {}} />);
 

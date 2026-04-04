@@ -11,15 +11,12 @@ vi.mock('@/app/lib/api', () => ({
     getById: vi.fn(),
     update: vi.fn(),
   },
-}));
-vi.mock('@/app/lib/api/rbac', () => ({
   rolesApi: {
     list: vi.fn(),
   },
 }));
 
-import { usersApi } from '@/app/lib/api';
-import { rolesApi } from '@/app/lib/api/rbac';
+import { usersApi, rolesApi } from '@/app/lib/api';
 
 const mockUsersApi = usersApi as any;
 const mockRolesApi = rolesApi as any;
@@ -78,7 +75,7 @@ describe('EditUserDialog Component', () => {
     expect(screen.getByText('Loading user...')).toBeInTheDocument();
   });
 
-  it('should show loading while fetching roles', () => {
+  it('should show loading while fetching roles', async () => {
     const mockUser = { id: 1, name: 'John', lastname: 'Doe', role_id: 1 };
     mockUsersApi.getById.mockResolvedValue({ data: mockUser });
     mockRolesApi.list.mockImplementation(() => new Promise(() => {}));
@@ -91,6 +88,8 @@ describe('EditUserDialog Component', () => {
         onSuccess={() => {}}
       />
     );
+
+    await waitFor(() => screen.getByRole('button', { name: /save changes/i }));
 
     expect(screen.getByRole('button', { name: /save changes/i })).toBeDisabled();
   });

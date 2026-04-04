@@ -5,20 +5,28 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { UserFormDialog } from '@/app/components/admin/users/UserFormDialog';
 
+// Mock localStorage
+Object.defineProperty(window, 'localStorage', {
+  value: {
+    getItem: vi.fn(() => null),
+    setItem: vi.fn(() => null),
+    removeItem: vi.fn(() => null),
+    clear: vi.fn(() => null),
+  },
+  writable: true,
+});
+
 // Mock the APIs
 vi.mock('@/app/lib/api', () => ({
   usersApi: {
     create: vi.fn(),
   },
-}));
-vi.mock('@/app/lib/api/rbac', () => ({
   rolesApi: {
     list: vi.fn(),
   },
 }));
 
-import { usersApi } from '@/app/lib/api';
-import { rolesApi } from '@/app/lib/api/rbac';
+import { usersApi, rolesApi } from '@/app/lib/api';
 
 const mockUsersApi = usersApi as any;
 const mockRolesApi = rolesApi as any;

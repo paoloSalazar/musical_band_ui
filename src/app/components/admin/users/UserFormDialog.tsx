@@ -45,6 +45,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
 
   useEffect(() => {
     if (open) {
+      resetForm();
       loadRoles();
     }
   }, [open]);
