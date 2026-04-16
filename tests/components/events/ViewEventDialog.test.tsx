@@ -1,0 +1,737 @@
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { ViewEventDialog } from '@/app/components/events/ViewEventDialog';
+import { UserProvider } from '@/app/contexts/UserContext';
+
+// Mock the API
+vi.mock('@/app/lib/api', () => ({
+  eventsApi: {
+    getById: vi.fn(),
+    updatePrice: vi.fn(),
+  },
+}));
+
+// Mock timezone functions
+vi.mock('@/app/lib/timezone', () => ({
+  formatDate: vi.fn((date) => `formatted-date-${date}`),
+  formatTime: vi.fn((date) => `formatted-time-${date}`),
+}));
+
+// Mock useUser hook
+const mockUser = {
+  id: 1,
+  name: 'Test User',
+  hasRole: vi.fn(),
+};
+
+vi.mock('@/app/contexts/UserContext', () => ({
+  UserProvider: ({ children }) => <div data-testid="user-provider">{children}</div>,
+  useUser: () => ({
+    user: mockUser,
+    hasRole: mockUser.hasRole,
+  }),
+}));
+
+// Mock UI components
+vi.mock('@/app/components/ui/button', () => ({
+  Button: ({ children, onClick, disabled, ...props }) => (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      data-testid={`button-${props.variant || 'default'}-${props.size || 'default'}`}
+      {...props}
+    >
+      {children}
+    </button>
+  ),
+}));
+
+vi.mock('@/app/components/ui/input', () => ({
+  Input: ({ value, onChange, disabled, ...props }) => (
+    <input
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      data-testid="input"
+      {...props}
+    />
+  ),
+}));
+
+vi.mock('@/app/components/ui/dialog', () => ({
+  Dialog: ({ children, open, onOpenChange }) => (
+    open ? (
+      <div data-testid="dialog" data-open={open}>
+        <button onClick={() => onOpenChange(false)} data-testid="close-dialog">
+          Close
+        </button>
+        {children}
+      </div>
+    ) : null
+  ),
+  DialogContent: ({ children }) => <div data-testid="dialog-content">{children}</div>,
+  DialogDescription: ({ children }) => <div data-testid="dialog-description">{children}</div>,
+  DialogFooter: ({ children }) => <div data-testid="dialog-footer">{children}</div>,
+  DialogHeader: ({ children }) => <div data-testid="dialog-header">{children}</div>,
+  DialogTitle: ({ children }) => <div data-testid="dialog-title">{children}</div>,
+}));
+
+// Mock dialog components
+vi.mock('@/app/components/events/ViewPaymentDetailsDialog', () => ({
+  ViewPaymentDetailsDialog: ({ open }) => (
+    <div data-testid="view-payment-details-dialog" data-open={open}>
+      Payment Details Dialog
+    </div>
+  ),
+}));
+
+vi.mock('@/app/components/events/MakePaymentDialog', () => ({
+  MakePaymentDialog: ({ open }) => (
+    <div data-testid="make-payment-dialog" data-open={open}>
+      Make Payment Dialog
+    </div>
+  ),
+}));
+
+// Mock lucide-react icons
+vi.mock('lucide-react', () => ({
+  Pencil: () => <div data-testid="pencil-icon" />,
+  Calendar: () => <div data-testid="calendar-icon" />,
+  MapPin: () => <div data-testid="map-pin-icon" />,
+  Clock: () => <div data-testid="clock-icon" />,
+  User: () => <div data-testid="user-icon" />,
+  DollarSign: () => <div data-testid="dollar-sign-icon" />,
+  Save: () => <div data-testid="save-icon" />,
+  CreditCard: () => <div data-testid="credit-card-icon" />,
+  Wallet: () => <div data-testid="wallet-icon" />,
+  Loader2: () => <div data-testid="loader-icon" />,
+}));
+
+// Import after mocking to get the mocked version
+import { eventsApi } from '@/app/lib/api';
+const mockEventsApi = eventsApi;
+
+describe('ViewEventDialog', () => {
+  const mockEvent = {
+    id: 1,
+    name: 'Test Event',
+    description: 'Test event description',
+    place: 'Test Venue',
+    start_datetime: '2026-01-15T10:00:00Z',
+    end_datetime: '2026-01-15T12:00:00Z',
+    price: 25.50,
+    status: 'CONFIRMED',
+    user_id: 1,
+    is_all_day: false,
+    created_by: {
+      id: 1,
+      name: 'John',
+      lastname: 'Doe',
+      email: 'john@example.com',
+    },
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockEventsApi.getById.mockResolvedValue({
+      data: mockEvent,
+    });
+    mockEventsApi.updatePrice.mockResolvedValue({
+      data: { ...mockEvent, price: 30.00 },
+    });
+    mockUser.hasRole.mockReturnValue(false); // Regular user by default
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('should show loading state initially', () => {
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    expect(screen.getByTestId('loader-icon')).toBeTruthy();
+    expect(screen.getByText('Loading event...')).toBeTruthy();
+  });
+
+  it('should load and display event successfully', async () => {
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(mockEventsApi.getById).toHaveBeenCalledWith(1);
+    expect(screen.getByText('Test event description')).toBeTruthy();
+    expect(screen.getByText('Test Venue')).toBeTruthy();
+    expect(screen.getByText('CONFIRMED')).toBeTruthy();
+    expect(screen.getByText('25.50')).toBeTruthy();
+  });
+
+  it('should show error state when API fails', async () => {
+    mockEventsApi.getById.mockRejectedValue(new Error('API Error'));
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Error')).toBeTruthy();
+    });
+
+    expect(screen.getByText('API Error')).toBeTruthy();
+  });
+
+  it('should display event details correctly', async () => {
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    // Check all event details are displayed
+    expect(screen.getByText('Test event description')).toBeTruthy();
+    expect(screen.getByText('Test Venue')).toBeTruthy();
+    // expect(screen.getByText('formatted-date-2026-01-15T10:00:00Z')).toBeTruthy();
+    // expect(screen.getByText('formatted-time-2026-01-15T10:00:00Z - formatted-time-2026-01-15T12:00:00Z')).toBeTruthy();
+    expect(screen.getByText('25.50')).toBeTruthy();
+    expect(screen.getByText('John Doe')).toBeTruthy();
+    expect(screen.getByText('john@example.com')).toBeTruthy();
+  });
+
+  it('should show all day event correctly', async () => {
+    const allDayEvent = { ...mockEvent, is_all_day: true };
+    mockEventsApi.getById.mockResolvedValue({
+      data: allDayEvent,
+    });
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('All day event')).toBeTruthy();
+  });
+
+  it('should show different statuses with correct colors', async () => {
+    const pendingEvent = { ...mockEvent, status: 'PENDING' };
+    mockEventsApi.getById.mockResolvedValue({
+      data: pendingEvent,
+    });
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('PENDING')).toBeTruthy();
+  });
+
+  it('should show edit button when canEditEvent is true', async () => {
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+          canEditEvent={true}
+          onEdit={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('Edit Event')).toBeTruthy();
+  });
+
+  it('should hide edit button when canEditEvent is false', async () => {
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+          canEditEvent={false}
+          onEdit={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.queryByText('Edit Event')).toBeFalsy();
+  });
+
+  it('should call onEdit when edit button is clicked', async () => {
+    const mockOnEdit = vi.fn();
+    const mockOnOpenChange = vi.fn();
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={mockOnOpenChange}
+          canEditEvent={true}
+          onEdit={mockOnEdit}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    const editButton = screen.getByText('Edit Event');
+    fireEvent.click(editButton);
+
+    expect(mockOnEdit).toHaveBeenCalledWith(1);
+    expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('should show price editing UI for admin users', async () => {
+    mockUser.hasRole.mockReturnValue(true); // Admin user
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('Set Price')).toBeTruthy();
+  });
+
+  it('should hide price editing UI for non-admin users', async () => {
+    mockUser.hasRole.mockReturnValue(false); // Regular user
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.queryByText('Set Price')).toBeFalsy();
+    expect(screen.getByText('25.50')).toBeTruthy();
+  });
+
+  it('should handle price editing workflow', async () => {
+    mockUser.hasRole.mockReturnValue(true); // Admin user
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    // Click Set Price button
+    const setPriceButton = screen.getByText('Set Price');
+    fireEvent.click(setPriceButton);
+
+    // Input should appear
+    const input = screen.getByTestId('input');
+    expect(input).toBeTruthy();
+
+    // Enter new price
+    fireEvent.change(input, { target: { value: '30.00' } });
+
+    // Click save
+    const saveButton = screen.getByTestId('save-icon').parentElement!;
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(mockEventsApi.updatePrice).toHaveBeenCalledWith(1, 30);
+    });
+  });
+
+  it('should validate price input', async () => {
+    mockUser.hasRole.mockReturnValue(true); // Admin user
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    // Click Set Price button
+    const setPriceButton = screen.getByText('Set Price');
+    fireEvent.click(setPriceButton);
+
+    const input = screen.getByTestId('input');
+
+    // Enter invalid price (negative)
+    fireEvent.change(input, { target: { value: '-10' } });
+
+    // Click save
+    const saveButton = screen.getByTestId('save-icon').parentElement!;
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('Price cannot be negative')).toBeTruthy();
+    });
+
+    expect(mockEventsApi.updatePrice).not.toHaveBeenCalled();
+  });
+
+  it('should handle price update errors', async () => {
+    mockUser.hasRole.mockReturnValue(true); // Admin user
+    mockEventsApi.updatePrice.mockRejectedValue({
+      detail: 'Update failed',
+    });
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    // Click Set Price button
+    const setPriceButton = screen.getByText('Set Price');
+    fireEvent.click(setPriceButton);
+
+    const input = screen.getByTestId('input');
+    fireEvent.change(input, { target: { value: '30.00' } });
+
+    // Click save
+    const saveButton = screen.getByTestId('save-icon').parentElement!;
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('Update failed')).toBeTruthy();
+    });
+  });
+
+  it('should call onPriceUpdate when price is successfully updated', async () => {
+    mockUser.hasRole.mockReturnValue(true); // Admin user
+    const mockOnPriceUpdate = vi.fn();
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+          onPriceUpdate={mockOnPriceUpdate}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    // Click Set Price button
+    const setPriceButton = screen.getByText('Set Price');
+    fireEvent.click(setPriceButton);
+
+    const input = screen.getByTestId('input');
+    fireEvent.change(input, { target: { value: '30.00' } });
+
+    // Click save
+    const saveButton = screen.getByTestId('save-icon').parentElement!;
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(mockOnPriceUpdate).toHaveBeenCalledWith({ ...mockEvent, price: 30.00 });
+    });
+  });
+
+  it('should show payment buttons for event owner', async () => {
+    mockUser.hasRole.mockReturnValue(false); // Regular user (event owner)
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('Payment Details')).toBeTruthy();
+    expect(screen.getByText('Make Payment')).toBeTruthy();
+  });
+
+  it('should show payment buttons for admin', async () => {
+    mockUser.hasRole.mockReturnValue(true); // Admin user
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('Payment Details')).toBeTruthy();
+    expect(screen.queryByText('Make Payment')).toBeFalsy(); // Admin shouldn't see Make Payment
+  });
+
+  it('should hide payment buttons for non-owner users', async () => {
+    const nonOwnerEvent = { ...mockEvent, user_id: 2 }; // Different user ID
+    mockEventsApi.getById.mockResolvedValue({
+      data: nonOwnerEvent,
+    });
+    mockUser.hasRole.mockReturnValue(false); // Regular user, not owner
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.queryByText('Payment Details')).toBeFalsy();
+    expect(screen.queryByText('Make Payment')).toBeFalsy();
+  });
+
+  it('should open payment details dialog when button is clicked', async () => {
+    mockUser.hasRole.mockReturnValue(false); // Regular user (event owner)
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    const paymentDetailsButton = screen.getByText('Payment Details');
+    fireEvent.click(paymentDetailsButton);
+
+    expect(screen.getByTestId('view-payment-details-dialog')).toHaveAttribute('data-open', 'true');
+  });
+
+  it('should open make payment dialog when button is clicked', async () => {
+    mockUser.hasRole.mockReturnValue(false); // Regular user (event owner)
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    const makePaymentButton = screen.getByText('Make Payment');
+    fireEvent.click(makePaymentButton);
+
+    expect(screen.getByTestId('make-payment-dialog')).toHaveAttribute('data-open', 'true');
+  });
+
+  it('should handle event without description', async () => {
+    const eventWithoutDesc = { ...mockEvent, description: undefined };
+    mockEventsApi.getById.mockResolvedValue({
+      data: eventWithoutDesc,
+    });
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    // Should not show description section
+    expect(screen.queryByText('Description')).toBeFalsy();
+  });
+
+  it('should handle event without price', async () => {
+    const eventWithoutPrice = { ...mockEvent, price: null };
+    mockEventsApi.getById.mockResolvedValue({
+      data: eventWithoutPrice,
+    });
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('No price set')).toBeTruthy();
+  });
+
+  it('should handle event without created_by', async () => {
+    const eventWithoutCreator = { ...mockEvent, created_by: undefined };
+    mockEventsApi.getById.mockResolvedValue({
+      data: eventWithoutCreator,
+    });
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    // Should not show created by section
+    expect(screen.queryByText('Created by')).toBeFalsy();
+  });
+
+  it('should hide edit button when showEditButton is false', async () => {
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+          canEditEvent={true}
+          onEdit={() => {}}
+          showEditButton={false}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.queryByText('Edit Event')).toBeFalsy();
+  });
+});
