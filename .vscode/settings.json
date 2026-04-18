@@ -1,0 +1,5 @@
+{
+  "vitest.enable": true,
+  "vitest.config": "./vite.config.ts",
+  "testing.openTesting": "openOnTestStart"
+}

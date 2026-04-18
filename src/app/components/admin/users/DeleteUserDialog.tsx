@@ -28,7 +28,11 @@ export function DeleteUserDialog({ userId, open, onOpenChange, onSuccess }: Dele
 
   useEffect(() => {
     if (open && userId) {
+      setError(null);
       loadUser();
+    } else if (!open) {
+      setError(null);
+      setUser(null);
     }
   }, [open, userId]);
 

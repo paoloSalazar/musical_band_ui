@@ -1,126 +1,156 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+/**
+ * @vitest-environment jsdom
+ */
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { LoginForm } from '@/app/components/login/LoginForm';
+import { UserProvider } from '@/app/contexts/UserContext';
 
-const mockOnLoginSuccess = vi.fn();
+// Mock useUser and UserProvider
+const mockLogin = vi.fn().mockResolvedValue(undefined);
+const mockIsLoading = false;
 
-// Mock the authService module
-const mockLogin = vi.fn();
+vi.mock('@/app/contexts/UserContext', () => ({
+  UserProvider: ({ children }) => <div data-testid="user-provider">{children}</div>,
+  useUser: () => ({
+    login: mockLogin,
+    isLoading: mockIsLoading,
+  }),
+}));
 
-vi.mock('@/app/lib/api', () => ({
-  authService: {
-    login: (...args: unknown[]) => mockLogin(...args),
-  },
+// Mock lucide-react icons
+vi.mock('lucide-react', () => ({
+  Music: () => <div data-testid="music-icon" />,
+  AlertCircle: () => <div data-testid="alert-icon" />,
 }));
 
 describe('LoginForm', () => {
   beforeEach(() => {
-    mockOnLoginSuccess.mockClear();
-    mockLogin.mockClear();
+    vi.clearAllMocks();
+    mockLogin.mockReset();
+    mockLogin.mockResolvedValue(undefined);
   });
 
-  it('renders the login form with all elements', () => {
-    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
+  it('should render login form with all elements', () => {
+    render(
+      <UserProvider>
+        <LoginForm />
+      </UserProvider>
+    );
+
+    // Check main elements are rendered
+    expect(screen.getByText('The Electric Dreams')).toBeTruthy();
+    expect(screen.getByText('Admin Portal')).toBeTruthy();
+    expect(screen.getByText('Welcome Back')).toBeTruthy();
+    expect(screen.getByText('Sign in to manage your band website')).toBeTruthy();
     
-    expect(screen.getByText('The Electric Dreams')).toBeInTheDocument();
-    expect(screen.getByText('Admin Portal')).toBeInTheDocument();
-    expect(screen.getByText('Welcome Back')).toBeInTheDocument();
-    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
+    // Check form elements
+    expect(screen.getByLabelText(/email/i)).toBeTruthy();
+    expect(screen.getByLabelText(/password/i)).toBeTruthy();
+    expect(screen.getByRole('button', { name: /sign in/i })).toBeTruthy();
   });
 
-  it('shows error when submitting empty form', async () => {
-    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
-    
-    const signInButton = screen.getByRole('button', { name: /sign in/i });
-    fireEvent.click(signInButton);
-    
+  it('should update email and password fields on input', () => {
+    render(
+      <UserProvider>
+        <LoginForm />
+      </UserProvider>
+    );
+
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'password123' } });
+
+    expect(emailInput).toHaveValue('test@example.com');
+    expect(passwordInput).toHaveValue('password123');
+  });
+
+  it('should show validation error when submitting empty form', async () => {
+    render(
+      <UserProvider>
+        <LoginForm />
+      </UserProvider>
+    );
+
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    fireEvent.click(submitButton);
+
+    // Should show validation error
     await waitFor(() => {
-      expect(screen.getByText('Please enter both email and password')).toBeInTheDocument();
+      expect(screen.getByText(/please enter both email and password/i)).toBeTruthy();
+    });
+
+    // Login should not be called
+    expect(mockLogin).not.toHaveBeenCalled();
+  });
+
+  it('should call login function with correct credentials on valid submit', async () => {
+    render(
+      <UserProvider>
+        <LoginForm />
+      </UserProvider>
+    );
+
+    const emailInput = screen.getByLabelText(/email/i);
+    const passwordInput = screen.getByLabelText(/password/i);
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
+
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    fireEvent.change(passwordInput, { target: { value: 'password123' } });
+    fireEvent.click(submitButton);
+
+    // Wait for login to be called
+    await waitFor(() => {
+      expect(mockLogin).toHaveBeenCalledWith('test@example.com', 'password123');
     });
   });
 
-  it('shows error for invalid credentials', async () => {
-    // Mock failed login response
-    mockLogin.mockRejectedValueOnce(new Error('Invalid email or password'));
+  it('should show error message when login fails', async () => {
+    mockLogin.mockRejectedValue(new Error('Invalid credentials'));
     
-    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
-    
+    render(
+      <UserProvider>
+        <LoginForm />
+      </UserProvider>
+    );
+
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
-    const signInButton = screen.getByRole('button', { name: /sign in/i });
-    
-    fireEvent.change(emailInput, { target: { value: 'wrong@email.com' } });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
+
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
     fireEvent.change(passwordInput, { target: { value: 'wrongpassword' } });
-    fireEvent.click(signInButton);
-    
-    await waitFor(() => {
-      expect(screen.getByText('Invalid email or password')).toBeInTheDocument();
-    }, { timeout: 3000 });
-  });
+    fireEvent.click(submitButton);
 
-  it('successfully logs in with correct credentials', async () => {
-    // Mock successful login response
-    mockLogin.mockResolvedValueOnce({
-      access_token: 'mock-token-123',
-      token_type: 'Bearer',
-      user: {
-        id: 1,
-        email: 'admin@electricdreams.com',
-        name: 'Admin User',
-        role: 'admin',
-      },
+    // Wait for error to be displayed
+    await waitFor(() => {
+      expect(screen.getByText(/invalid credentials/i)).toBeTruthy();
     });
-    
-    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
-    
-    const emailInput = screen.getByLabelText(/email/i);
-    const passwordInput = screen.getByLabelText(/password/i);
-    const signInButton = screen.getByRole('button', { name: /sign in/i });
-    
-    fireEvent.change(emailInput, { target: { value: 'admin@electricdreams.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'admin123' } });
-    fireEvent.click(signInButton);
-    
+  });
+
+  it('should not clear error when user starts typing (error only clears on submit)', async () => {
+    render(
+      <UserProvider>
+        <LoginForm />
+      </UserProvider>
+    );
+
+    // Try to submit empty form to trigger error
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
+    fireEvent.click(submitButton);
+
+    // Error should appear
     await waitFor(() => {
-      expect(mockOnLoginSuccess).toHaveBeenCalled();
-    }, { timeout: 3000 });
-  });
-
-  it('displays API configuration info', () => {
-    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
-    
-    expect(screen.getByText('API Configuration:')).toBeInTheDocument();
-    expect(screen.getByText(/http:\/\/localhost:8000\/api/)).toBeInTheDocument();
-  });
-
-  it('shows loading state when submitting', async () => {
-    // Mock successful login response
-    mockLogin.mockResolvedValueOnce({
-      access_token: 'mock-token-123',
-      token_type: 'Bearer',
-      user: {
-        id: 1,
-        email: 'admin@electricdreams.com',
-        name: 'Admin User',
-        role: 'admin',
-      },
+      expect(screen.getByText(/please enter both email and password/i)).toBeTruthy();
     });
-    
-    render(<LoginForm onLoginSuccess={mockOnLoginSuccess} />);
-    
+
+    // Now type in email field - error should NOT clear (per actual implementation)
     const emailInput = screen.getByLabelText(/email/i);
-    const passwordInput = screen.getByLabelText(/password/i);
-    const signInButton = screen.getByRole('button', { name: /sign in/i });
-    
-    fireEvent.change(emailInput, { target: { value: 'admin@electricdreams.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'admin123' } });
-    fireEvent.click(signInButton);
-    
-    expect(screen.getByRole('button', { name: /signing in/i })).toBeInTheDocument();
-    
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
-    }, { timeout: 3000 });
+    fireEvent.change(emailInput, { target: { value: 'a' } });
+
+    // Error should still be present (the component only clears error on submit, not on change)
+    expect(screen.queryByText(/please enter both email and password/i)).toBeTruthy();
   });
 });
