@@ -1,14 +1,3 @@
-// Mock localStorage before any imports
-Object.defineProperty(window, 'localStorage', {
-  value: {
-    getItem: vi.fn(() => null),
-    setItem: vi.fn(() => null),
-    removeItem: vi.fn(() => null),
-    clear: vi.fn(() => null),
-  },
-  writable: true,
-});
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock fetch globally
@@ -127,7 +116,7 @@ describe('api/client.ts - apiClient', () => {
         json: () => Promise.resolve({ data: 'updated' }),
       });
 
-      const result = await apiClient.put<{ data: string }>('/test/1', requestBody);
+      await apiClient.put<{ data: string }>('/test/1', requestBody);
 
       expect(mockFetch).toHaveBeenCalledWith(
         'http://localhost:8000/api/test/1',
@@ -148,7 +137,7 @@ describe('api/client.ts - apiClient', () => {
         json: () => Promise.resolve({ data: 'patched' }),
       });
 
-      const result = await apiClient.patch<{ data: string }>('/test/1', requestBody);
+      await apiClient.patch<{ data: string }>('/test/1', requestBody);
 
       expect(mockFetch).toHaveBeenCalledWith(
         'http://localhost:8000/api/test/1',
