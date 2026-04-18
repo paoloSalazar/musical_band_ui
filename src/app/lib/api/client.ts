@@ -26,7 +26,7 @@ class ApiClient {
     this.baseURL = baseURL;
     // Initialize token from localStorage if available
     if (typeof window !== 'undefined') {
-      this.token = localStorage.getItem('auth_token');
+      this.token = window.localStorage.getItem('auth_token');
     }
   }
 
@@ -46,9 +46,9 @@ class ApiClient {
     this.token = token;
     if (typeof window !== 'undefined') {
       if (token) {
-        localStorage.setItem('auth_token', token);
+        window.localStorage.setItem('auth_token', token);
       } else {
-        localStorage.removeItem('auth_token');
+        window.localStorage.removeItem('auth_token');
       }
     }
   }
