@@ -84,7 +84,10 @@
     "users": "Usuarios",
     "roles": "Roles",
     "permissions": "Permisos",
-    "rolePermissions": "Permisos de Roles"
+    "rolePermissions": "Permisos de Roles",
+    "dashboard": "Panel de Control",
+    "home": "Inicio",
+    "logged_in_as": "Conectado como {{name}}"
   },
   "home": {
     "title": "The Electric Dreams",

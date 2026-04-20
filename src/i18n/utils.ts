@@ -1,7 +1,13 @@
 import i18n from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 // Simple cache for translation results to improve performance
 const translationCache = new Map<string, string>();
+
+// Listen for language changes and clear cache
+i18n.on('languageChanged', () => {
+  translationCache.clear();
+});
 
 /**
  * Internal helper function to perform translation with error handling and caching
@@ -130,5 +136,46 @@ export function clearTranslationCache(): void {
 export function getTranslationCacheStats(): { size: number } {
   return {
     size: translationCache.size,
+  };
+}
+
+/**
+ * React hook that provides reactive translation utilities
+ * Components using these functions will re-render when language changes
+ */
+export function useTranslationUtils() {
+  const { t } = useTranslation();
+
+  const translateEventStatus = (status: string): string => {
+    if (!status) return status;
+    return translateWithFallback(`events.status.${status}`, status, 'event status');
+  };
+
+  const translatePaymentType = (paymentType: string): string => {
+    if (!paymentType) return paymentType;
+    return translateWithFallback(`events.payment.${paymentType}`, paymentType, 'payment type');
+  };
+
+  const translateUserRole = (role: string): string => {
+    if (!role) return role;
+    return translateWithFallback(`roles.${role}`, role, 'user role');
+  };
+
+  const translatePermission = (permission: string): string => {
+    if (!permission) return permission;
+    return translateWithFallback(`permissions.${permission}`, permission, 'permission');
+  };
+
+  const translateBackendData = (value: string, keyPrefix: string): string => {
+    if (!value || !keyPrefix) return value;
+    return translateWithFallback(`${keyPrefix}.${value}`, value, `backend data with prefix ${keyPrefix}`);
+  };
+
+  return {
+    translateEventStatus,
+    translatePaymentType,
+    translateUserRole,
+    translatePermission,
+    translateBackendData,
   };
 }

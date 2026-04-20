@@ -7,6 +7,7 @@ import { CanRole } from "@/app/components/auth/CanRole";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSelector } from "@/app/components/i18n/LanguageSelector";
+import { useTranslationUtils } from "@/i18n/utils";
 
 interface HomePageProps {
   onLogout: () => void;
@@ -15,6 +16,7 @@ interface HomePageProps {
 export function HomePage({ onLogout }: HomePageProps) {
   const { user, logout } = useUser();
   const { t } = useTranslation();
+  const { translateUserRole } = useTranslationUtils();
 
   const handleLogout = () => {
     logout();
@@ -39,7 +41,7 @@ export function HomePage({ onLogout }: HomePageProps) {
               <User className="h-5 w-5" />
               <span>{user.name} {user.lastname}</span>
               <span className="px-2 py-1 bg-white/20 rounded text-sm capitalize">
-                {user.role}
+                {translateUserRole(user.role)}
               </span>
             </div>
           )}
@@ -186,7 +188,7 @@ export function HomePage({ onLogout }: HomePageProps) {
         {process.env.NODE_ENV === 'development' && user && (
           <div className="mt-12 p-4 bg-muted rounded-lg">
             <h3 className="font-medium mb-2">{t("home.debug.title")}</h3>
-            <p className="text-sm text-muted-foreground mb-2">{t("home.debug.role")} {user.role}</p>
+            <p className="text-sm text-muted-foreground mb-2">{t("home.debug.role")} {translateUserRole(user.role)}</p>
             <div className="flex flex-wrap gap-2">
               {user.permissions.map((perm) => (
                 <span key={perm} className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">

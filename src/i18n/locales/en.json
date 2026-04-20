@@ -84,7 +84,10 @@
     "users": "Users",
     "roles": "Roles",
     "permissions": "Permissions",
-    "rolePermissions": "Role Permissions"
+    "rolePermissions": "Role Permissions",
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "logged_in_as": "Logged in as {{name}}"
   },
   "home": {
     "title": "The Electric Dreams",
@@ -139,7 +142,11 @@
     "admin": "Administrator",
     "member": "Member",
     "moderator": "Moderator",
-    "user": "User"
+    "user": "User",
+    "musician": "Musician",
+    "client": "Client",
+    "manager": "Manager",
+    "staff": "Staff"
   },
   "permissions": {
     "read:events": "View Events",

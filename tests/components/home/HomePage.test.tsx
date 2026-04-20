@@ -40,13 +40,85 @@ const mockT = vi.fn((key: string) => key);
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: mockT,
+    i18n: {
+      changeLanguage: vi.fn(),
+      language: 'en',
+    },
   }),
 }));
 
+// Mock the i18n utils
+vi.mock('@/i18n/utils', () => ({
+  translateUserRole: vi.fn((role: string) => {
+    const translations: Record<string, string> = {
+      'admin': 'Administrator',
+      'member': 'Member',
+      'moderator': 'Moderator',
+      'user': 'User',
+      'musician': 'Musician',
+      'client': 'Client',
+      'manager': 'Manager',
+      'staff': 'Staff',
+    };
+    return translations[role] || role;
+  }),
+  useTranslationUtils: vi.fn(() => ({
+    translateUserRole: vi.fn((role: string) => {
+      const translations: Record<string, string> = {
+        'admin': 'Administrator',
+        'member': 'Member',
+        'moderator': 'Moderator',
+        'user': 'User',
+        'musician': 'Musician',
+        'client': 'Client',
+        'manager': 'Manager',
+        'staff': 'Staff',
+      };
+      return translations[role] || role;
+    }),
+  })),
+}));
+
+// Mock hooks
+vi.mock('@/app/contexts/UserContext', () => ({
+  UserProvider: ({ children }) => <div data-testid="user-provider">{children}</div>,
+  useUser: vi.fn(),
+}));
+
+vi.mock('@/app/components/ui/use-mobile', () => ({
+  useIsMobile: vi.fn(),
+}));
+
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useLocation: vi.fn(),
+  };
+});
+
+import { useUser } from '@/app/contexts/UserContext';
+import { useIsMobile } from '@/app/components/ui/use-mobile';
+import { useLocation } from 'react-router-dom';
+
+const mockUseUser = useUser as vi.MockedFunction<typeof useUser>;
+const mockUseIsMobile = useIsMobile as vi.MockedFunction<typeof useIsMobile>;
+const mockUseLocation = useLocation as vi.MockedFunction<typeof useLocation>;
+
 describe('HomePage', () => {
+  const mockLogout = vi.fn();
+  const mockUser = {
+    id: '1',
+    name: 'John',
+    lastname: 'Doe',
+    role: 'admin',
+    permissions: ['read:events', 'read:users', 'read:user_roles']
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
-    mockT.mockImplementation((key: string) => {
+    // Reset the t function mock with interpolation support
+    mockT.mockImplementation((key: string, options?: any) => {
       const translations = {
         'home.title': 'The Electric Dreams',
         'home.subtitle': 'Rock band creating unforgettable music experiences since 2015',
@@ -71,9 +143,49 @@ describe('HomePage', () => {
         'home.stats.admins.description': 'Active administrators',
         'home.debug.title': 'Debug: Your Permissions',
         'home.debug.role': 'Role:',
+        'language.english': 'English',
+        'language.spanish': 'Español',
+        'roles.admin': 'Administrator',
+        'roles.member': 'Member',
+        'roles.moderator': 'Moderator',
+        'roles.user': 'User',
+        'roles.musician': 'Musician',
+        'roles.client': 'Client',
+        'roles.manager': 'Manager',
+        'roles.staff': 'Staff',
       };
-      return translations[key] || key;
+
+      let result = translations[key] || key;
+
+      // Handle interpolation
+      if (options && typeof options === 'object') {
+        Object.keys(options).forEach(param => {
+          const placeholder = `{{${param}}}`;
+          result = result.replace(placeholder, options[param]);
+        });
+      }
+
+      return result;
     });
+
+    mockUseUser.mockReturnValue({
+      user: mockUser,
+      logout: mockLogout,
+      hasPermission: vi.fn((permission) => {
+        const userPermissions = ['read:events', 'read:users', 'read:user_roles'];
+        return userPermissions.includes(permission);
+      }),
+      hasRole: vi.fn((roles) => {
+        const userRole = 'admin';
+        if (Array.isArray(roles)) {
+          return roles.includes(userRole);
+        }
+        return userRole === roles;
+      }),
+    } as any);
+    mockUseLocation.mockReturnValue({
+      pathname: '/',
+    } as any);
   });
 
   it('should render homepage with all translated elements', () => {
@@ -165,7 +277,7 @@ describe('HomePage', () => {
 
     // Check user info is displayed
     expect(screen.getByText('John Doe')).toBeTruthy();
-    expect(screen.getByText('admin')).toBeTruthy();
+    expect(screen.getByText('Administrator')).toBeTruthy();
   });
 
   it('should handle logout button click', () => {
@@ -197,7 +309,7 @@ describe('HomePage', () => {
     );
 
     expect(screen.getByText('Debug: Your Permissions')).toBeTruthy();
-    expect(screen.getByText('Role: admin')).toBeTruthy();
+    expect(screen.getByText('Role: Administrator')).toBeTruthy();
 
     // Check permissions are displayed
     expect(screen.getByText('read:events')).toBeTruthy();

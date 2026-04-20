@@ -24,6 +24,9 @@ import {
   SheetTitle,
 } from '../ui/sheet';
 
+import { useTranslation } from "react-i18next";
+// import { LanguageSelector } from "@/app/components/i18n/LanguageSelector";
+
 /**
  * Admin Layout Component
  * Provides navigation sidebar for admin pages
@@ -33,35 +36,36 @@ export function AdminLayout() {
   const { user } = useUser();
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { t } = useTranslation();
 
   const navigation = [
     {
-      name: 'Dashboard',
+      name: t('admin.dashboard'),
       href: '/admin',
       icon: LayoutDashboard,
     },
     {
-      name: 'Users',
+      name: t('admin.users'),
       href: '/admin/users',
       icon: UserCircle,
     },
     {
-      name: 'User Roles',
+      name: t('admin.roles'),
       href: '/admin/roles',
       icon: Users,
     },
     {
-      name: 'Permissions',
+      name: t('admin.permissions'),
       href: '/admin/permissions',
       icon: Shield,
     },
     {
-      name: 'Role Permissions',
+      name: t('admin.rolePermissions'),
       href: '/admin/role-permissions',
       icon: Key,
     },
     {
-      name: 'Home',
+      name: t('admin.home'),
       href: '/',
       icon: HomeIcon,
     },
@@ -128,7 +132,7 @@ export function AdminLayout() {
                     <SheetHeader className="mb-4">
                       <SheetTitle className="flex items-center space-x-2">
                         <Settings className="h-6 w-6 text-blue-600" />
-                        <span>Admin Panel</span>
+                        <span>{t('admin.title')}</span>
                       </SheetTitle>
                     </SheetHeader>
                     <nav className="mt-4">
@@ -139,11 +143,11 @@ export function AdminLayout() {
               )}
               
               <Settings className="h-6 w-6 text-blue-600" />
-              <h1 className="text-xl font-semibold">Admin Panel</h1>
+              <h1 className="text-xl font-semibold">{t('admin.title')}</h1>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600 hidden sm:block">
-                Logged in as: <span className="font-medium">{user?.name}</span>
+                {t('admin.logged_in_as', { name: user?.name })}
               </span>
             </div>
           </div>

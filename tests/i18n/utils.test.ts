@@ -9,6 +9,7 @@ vi.mock('i18next', () => ({
     init: vi.fn(),
     use: vi.fn().mockReturnThis(),
     t: vi.fn(),
+    on: vi.fn(),
   },
 }));
 

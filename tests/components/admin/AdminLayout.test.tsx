@@ -6,11 +6,15 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { AdminLayout } from '@/app/components/admin/AdminLayout';
 
-// Mock hooks
-vi.mock('@/app/contexts/UserContext', () => ({
-  useUser: vi.fn(),
+// Mock react-i18next
+const mockT = vi.fn((key: string) => key);
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: mockT,
+  }),
 }));
 
+// Mock hooks
 vi.mock('@/app/contexts/UserContext', () => ({
   useUser: vi.fn(),
 }));
@@ -44,6 +48,31 @@ describe('AdminLayout Component', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset the t function mock with interpolation support
+    mockT.mockImplementation((key: string, options?: any) => {
+      const translations = {
+        'admin.title': 'Admin Panel',
+        'admin.dashboard': 'Dashboard',
+        'admin.users': 'Users',
+        'admin.roles': 'User Roles',
+        'admin.permissions': 'Permissions',
+        'admin.rolePermissions': 'Role Permissions',
+        'admin.home': 'Home',
+        'admin.logged_in_as': 'Logged in as {{name}}',
+      };
+
+      let result = translations[key] || key;
+
+      // Handle interpolation if options are provided
+      if (options && typeof options === 'object') {
+        Object.keys(options).forEach(param => {
+          const placeholder = `{{${param}}}`;
+          result = result.replace(placeholder, options[param]);
+        });
+      }
+
+      return result;
+    });
     mockUseUser.mockReturnValue({
       user: mockUser,
     } as any);
@@ -62,7 +91,7 @@ describe('AdminLayout Component', () => {
     );
 
     expect(screen.getByText('Admin Panel')).toBeInTheDocument();
-    expect(screen.getByText('Test Admin')).toBeInTheDocument();
+    expect(screen.getByText('Logged in as Test Admin')).toBeInTheDocument();
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Users')).toBeInTheDocument();
     expect(screen.getByText('User Roles')).toBeInTheDocument();
@@ -203,6 +232,6 @@ describe('AdminLayout Component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Test Admin')).toBeInTheDocument();
+    expect(screen.getByText('Logged in as Test Admin')).toBeInTheDocument();
   });
 });
