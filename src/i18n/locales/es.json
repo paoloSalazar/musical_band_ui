@@ -1,0 +1,73 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "yes": "Sí",
+    "no": "No",
+    "ok": "Aceptar"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "email": "Correo electrónico",
+    "rememberMe": "Recordarme",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "loginError": "Nombre de usuario o contraseña inválidos",
+    "loginSuccess": "Inicio de sesión exitoso"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "profile": "Perfil",
+    "events": "Eventos",
+    "admin": "Administrador",
+    "dashboard": "Panel de Control"
+  },
+  "events": {
+    "title": "Eventos",
+    "create": "Crear Evento",
+    "edit": "Editar Evento",
+    "delete": "Eliminar Evento",
+    "view": "Ver Evento",
+    "status": {
+      "PENDING": "Pendiente",
+      "CONFIRMED": "Confirmado",
+      "CANCELLED": "Cancelado"
+    },
+    "payment": {
+      "ADVANCE": "Pago Anticipado",
+      "REMAINING": "Saldo Restante",
+      "TOTAL": "Pago Total"
+    }
+  },
+  "profile": {
+    "title": "Perfil",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "bio": "Biografía",
+    "updateProfile": "Actualizar Perfil",
+    "changePassword": "Cambiar Contraseña"
+  },
+  "admin": {
+    "title": "Panel de Administrador",
+    "users": "Usuarios",
+    "roles": "Roles",
+    "permissions": "Permisos",
+    "rolePermissions": "Permisos de Roles"
+  }
+}

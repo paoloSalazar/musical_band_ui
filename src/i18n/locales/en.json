@@ -1,0 +1,73 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "loginError": "Invalid username or password",
+    "loginSuccess": "Login successful"
+  },
+  "navigation": {
+    "home": "Home",
+    "profile": "Profile",
+    "events": "Events",
+    "admin": "Admin",
+    "dashboard": "Dashboard"
+  },
+  "events": {
+    "title": "Events",
+    "create": "Create Event",
+    "edit": "Edit Event",
+    "delete": "Delete Event",
+    "view": "View Event",
+    "status": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "CANCELLED": "Cancelled"
+    },
+    "payment": {
+      "ADVANCE": "Advance Payment",
+      "REMAINING": "Remaining Balance",
+      "TOTAL": "Total Payment"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "name": "Name",
+    "phone": "Phone",
+    "bio": "Bio",
+    "updateProfile": "Update Profile",
+    "changePassword": "Change Password"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": "Users",
+    "roles": "Roles",
+    "permissions": "Permissions",
+    "rolePermissions": "Role Permissions"
+  }
+}
