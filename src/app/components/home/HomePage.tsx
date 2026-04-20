@@ -6,6 +6,7 @@ import { Can } from "@/app/components/auth/Can";
 import { CanRole } from "@/app/components/auth/CanRole";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { LanguageSelector } from "@/app/components/i18n/LanguageSelector";
 
 interface HomePageProps {
   onLogout: () => void;
@@ -43,7 +44,7 @@ export function HomePage({ onLogout }: HomePageProps) {
             </div>
           )}
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <Link to="/profile">
               <Button
                 variant="outline"
@@ -61,6 +62,7 @@ export function HomePage({ onLogout }: HomePageProps) {
               <LogOut className="h-4 w-4 mr-2" />
               {t("home.logout")}
             </Button>
+            <LanguageSelector />
           </div>
         </div>
       </div>

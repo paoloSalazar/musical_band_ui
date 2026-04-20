@@ -129,6 +129,12 @@
       "role": "Rol:"
     }
   },
+  "language": {
+    "current": "Idioma",
+    "select": "Seleccionar Idioma",
+    "english": "Inglés",
+    "spanish": "Español"
+  },
   "roles": {
     "admin": "Administrador",
     "member": "Miembro",
