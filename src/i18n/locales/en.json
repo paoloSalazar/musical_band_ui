@@ -69,5 +69,29 @@
     "roles": "Roles",
     "permissions": "Permissions",
     "rolePermissions": "Role Permissions"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "member": "Member",
+    "moderator": "Moderator",
+    "user": "User"
+  },
+  "permissions": {
+    "read:events": "View Events",
+    "create:events": "Create Events",
+    "update:events": "Edit Events",
+    "delete:events": "Delete Events",
+    "read:user_roles": "View User Roles",
+    "create:user_roles": "Create User Roles",
+    "update:user_roles": "Edit User Roles",
+    "delete:user_roles": "Delete User Roles",
+    "read:permissions": "View Permissions",
+    "create:permissions": "Create Permissions",
+    "update:permissions": "Edit Permissions",
+    "delete:permissions": "Delete Permissions",
+    "read:users": "View Users",
+    "create:users": "Create Users",
+    "update:users": "Edit Users",
+    "delete:users": "Delete Users"
   }
 }
