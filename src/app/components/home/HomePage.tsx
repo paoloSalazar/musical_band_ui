@@ -5,6 +5,7 @@ import { useUser } from "@/app/contexts/UserContext";
 import { Can } from "@/app/components/auth/Can";
 import { CanRole } from "@/app/components/auth/CanRole";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface HomePageProps {
   onLogout: () => void;
@@ -12,6 +13,7 @@ interface HomePageProps {
 
 export function HomePage({ onLogout }: HomePageProps) {
   const { user, logout } = useUser();
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     logout();
@@ -25,9 +27,9 @@ export function HomePage({ onLogout }: HomePageProps) {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative h-full max-w-7xl mx-auto px-6 flex flex-col items-center justify-center text-center">
           <Music className="h-16 w-16 mb-4 text-white" />
-          <h1 className="text-5xl mb-4 text-white">The Electric Dreams</h1>
+          <h1 className="text-5xl mb-4 text-white">{t("home.title")}</h1>
           <p className="text-xl text-white/90 max-w-2xl mb-6">
-            Rock band creating unforgettable music experiences since 2015
+            {t("home.subtitle")}
           </p>
           
           {/* User Info */}
@@ -43,21 +45,21 @@ export function HomePage({ onLogout }: HomePageProps) {
           
           <div className="flex gap-2">
             <Link to="/profile">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="text-black border-white hover:bg-white hover:text-gray-400"
               >
                 <User className="h-4 w-4 mr-2" />
-                My Profile
+                {t("home.profile")}
               </Button>
             </Link>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
                 className="text-black border-white hover:bg-white hover:text-gray-400"
               onClick={handleLogout}
             >
               <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              {t("home.logout")}
             </Button>
           </div>
         </div>
@@ -66,9 +68,9 @@ export function HomePage({ onLogout }: HomePageProps) {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-12">
-          <h2 className="mb-2">Welcome to Admin Dashboard</h2>
+          <h2 className="mb-2">{t("home.welcome")}</h2>
           <p className="text-muted-foreground">
-            Manage your band website from here
+            {t("home.description")}
           </p>
         </div>
 
@@ -81,14 +83,14 @@ export function HomePage({ onLogout }: HomePageProps) {
                 <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center mb-4">
                   <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
-                <CardTitle>Band Members</CardTitle>
+                <CardTitle>{t("home.cards.members.title")}</CardTitle>
                 <CardDescription>
-                  Manage band member profiles and bios
+                  {t("home.cards.members.description")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button variant="secondary" className="w-full">
-                  Manage Members
+                  {t("home.cards.members.button")}
                 </Button>
               </CardContent>
             </Card>
@@ -102,14 +104,14 @@ export function HomePage({ onLogout }: HomePageProps) {
                   <div className="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
                     <Calendar className="h-6 w-6 text-green-600 dark:text-green-400" />
                   </div>
-                  <CardTitle>Events</CardTitle>
+                  <CardTitle>{t("home.cards.events.title")}</CardTitle>
                   <CardDescription>
-                    Schedule and manage upcoming shows
+                    {t("home.cards.events.description")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button variant="secondary" className="w-full">
-                    Manage Events
+                    {t("home.cards.events.button")}
                   </Button>
                 </CardContent>
               </Card>
@@ -124,14 +126,14 @@ export function HomePage({ onLogout }: HomePageProps) {
                   <div className="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center mb-4">
                     <Shield className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <CardTitle>Admin Panel</CardTitle>
+                  <CardTitle>{t("home.cards.admin.title")}</CardTitle>
                   <CardDescription>
-                    User management and permissions
+                    {t("home.cards.admin.description")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button variant="secondary" className="w-full">
-                    Manage Admin
+                    {t("home.cards.admin.button")}
                   </Button>
                 </CardContent>
               </Card>
@@ -144,11 +146,11 @@ export function HomePage({ onLogout }: HomePageProps) {
           <Can permission="read:users">
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Total Band Members</CardDescription>
+                <CardDescription>{t("home.stats.members.title")}</CardDescription>
                 <CardTitle className="text-4xl">2</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Active members</p>
+                <p className="text-sm text-muted-foreground">{t("home.stats.members.description")}</p>
               </CardContent>
             </Card>
           </Can>
@@ -156,11 +158,11 @@ export function HomePage({ onLogout }: HomePageProps) {
           <Can permission="read:events">
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Upcoming Events</CardDescription>
+                <CardDescription>{t("home.stats.events.title")}</CardDescription>
                 <CardTitle className="text-4xl">1</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Scheduled shows</p>
+                <p className="text-sm text-muted-foreground">{t("home.stats.events.description")}</p>
               </CardContent>
             </Card>
           </Can>
@@ -168,11 +170,11 @@ export function HomePage({ onLogout }: HomePageProps) {
           <CanRole roles="admin">
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Admin Users</CardDescription>
+                <CardDescription>{t("home.stats.admins.title")}</CardDescription>
                 <CardTitle className="text-4xl">2</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Active administrators</p>
+                <p className="text-sm text-muted-foreground">{t("home.stats.admins.description")}</p>
               </CardContent>
             </Card>
           </CanRole>
@@ -181,8 +183,8 @@ export function HomePage({ onLogout }: HomePageProps) {
         {/* User Permissions Debug - Useful for development */}
         {process.env.NODE_ENV === 'development' && user && (
           <div className="mt-12 p-4 bg-muted rounded-lg">
-            <h3 className="font-medium mb-2">Debug: Your Permissions</h3>
-            <p className="text-sm text-muted-foreground mb-2">Role: {user.role}</p>
+            <h3 className="font-medium mb-2">{t("home.debug.title")}</h3>
+            <p className="text-sm text-muted-foreground mb-2">{t("home.debug.role")} {user.role}</p>
             <div className="flex flex-wrap gap-2">
               {user.permissions.map((perm) => (
                 <span key={perm} className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">

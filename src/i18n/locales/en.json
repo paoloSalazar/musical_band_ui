@@ -27,9 +27,25 @@
     "password": "Password",
     "email": "Email",
     "rememberMe": "Remember me",
-    "forgotPassword": "Forgot password?",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
     "loginError": "Invalid username or password",
     "loginSuccess": "Login successful"
+  },
+  "login": {
+    "title": "The Electric Dreams",
+    "subtitle": "Admin Portal",
+    "welcomeBack": "Welcome Back",
+    "description": "Sign in to manage your band website",
+    "email": "Email",
+    "emailPlaceholder": "admin@electricdreams.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "validation": {
+      "required": "Please enter both email and password"
+    },
+    "footer": "© 2026 The Electric Dreams. All rights reserved."
   },
   "navigation": {
     "home": "Home",
@@ -69,6 +85,49 @@
     "roles": "Roles",
     "permissions": "Permissions",
     "rolePermissions": "Role Permissions"
+  },
+  "home": {
+    "title": "The Electric Dreams",
+    "subtitle": "Rock band creating unforgettable music experiences since 2015",
+    "profile": "My Profile",
+    "logout": "Logout",
+    "welcome": "Welcome to Admin Dashboard",
+    "description": "Manage your band website from here",
+    "cards": {
+      "members": {
+        "title": "Band Members",
+        "description": "Manage band member profiles and bios",
+        "button": "Manage Members"
+      },
+      "events": {
+        "title": "Events",
+        "description": "Schedule and manage upcoming shows",
+        "button": "Manage Events"
+      },
+      "admin": {
+        "title": "Admin Panel",
+        "description": "User management and permissions",
+        "button": "Manage Admin"
+      }
+    },
+    "stats": {
+      "members": {
+        "title": "Total Band Members",
+        "description": "Active members"
+      },
+      "events": {
+        "title": "Upcoming Events",
+        "description": "Scheduled shows"
+      },
+      "admins": {
+        "title": "Admin Users",
+        "description": "Active administrators"
+      }
+    },
+    "debug": {
+      "title": "Debug: Your Permissions",
+      "role": "Role:"
+    }
   },
   "roles": {
     "admin": "Administrator",

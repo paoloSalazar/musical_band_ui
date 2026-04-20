@@ -31,6 +31,22 @@
     "loginError": "Nombre de usuario o contraseña inválidos",
     "loginSuccess": "Inicio de sesión exitoso"
   },
+  "login": {
+    "title": "The Electric Dreams",
+    "subtitle": "Portal de Administrador",
+    "welcomeBack": "Bienvenido de Vuelta",
+    "description": "Inicia sesión para administrar tu sitio web de banda",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "admin@electricdreams.com",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "signIn": "Iniciar Sesión",
+    "signingIn": "Iniciando sesión...",
+    "validation": {
+      "required": "Por favor ingresa tanto el correo electrónico como la contraseña"
+    },
+    "footer": "© 2026 The Electric Dreams. Todos los derechos reservados."
+  },
   "navigation": {
     "home": "Inicio",
     "profile": "Perfil",
@@ -69,6 +85,49 @@
     "roles": "Roles",
     "permissions": "Permisos",
     "rolePermissions": "Permisos de Roles"
+  },
+  "home": {
+    "title": "The Electric Dreams",
+    "subtitle": "Banda de rock creando experiencias musicales inolvidables desde 2015",
+    "profile": "Mi Perfil",
+    "logout": "Cerrar Sesión",
+    "welcome": "Bienvenido al Panel de Administrador",
+    "description": "Administra tu sitio web de banda desde aquí",
+    "cards": {
+      "members": {
+        "title": "Miembros de la Banda",
+        "description": "Administra perfiles y biografías de miembros de la banda",
+        "button": "Administrar Miembros"
+      },
+      "events": {
+        "title": "Eventos",
+        "description": "Programa y administra próximos shows",
+        "button": "Administrar Eventos"
+      },
+      "admin": {
+        "title": "Panel de Administrador",
+        "description": "Gestión de usuarios y permisos",
+        "button": "Administrar Admin"
+      }
+    },
+    "stats": {
+      "members": {
+        "title": "Total de Miembros de la Banda",
+        "description": "Miembros activos"
+      },
+      "events": {
+        "title": "Próximos Eventos",
+        "description": "Shows programados"
+      },
+      "admins": {
+        "title": "Usuarios Administradores",
+        "description": "Administradores activos"
+      }
+    },
+    "debug": {
+      "title": "Depuración: Tus Permisos",
+      "role": "Rol:"
+    }
   },
   "roles": {
     "admin": "Administrador",
