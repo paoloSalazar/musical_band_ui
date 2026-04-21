@@ -142,7 +142,10 @@
     "admin": "Administrador",
     "member": "Miembro",
     "moderator": "Moderador",
-    "user": "Usuario"
+    "user": "Usuario",
+    "client": "Cliente",
+    "musician": "Músico",
+    "auxiliar_musician": "Músico Auxiliar"
   },
   "permissions": {
     "read:events": "Ver Eventos",
@@ -161,5 +164,105 @@
     "create:users": "Crear Usuarios",
     "update:users": "Editar Usuarios",
     "delete:users": "Eliminar Usuarios"
+  },
+  "users": {
+    "title": "Usuarios",
+    "subtitle": "Administrar usuarios del sistema y sus roles",
+    "createUser": "Crear Usuario",
+    "allUsers": "Todos los Usuarios",
+    "totalUsers": "Total: {{count}} usuario(s)",
+    "noUsers": "No se encontraron usuarios",
+    "noUsersMessage": "Crea tu primer usuario para comenzar",
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "lastName": "Apellido",
+      "phoneNumber": "Número de Teléfono",
+      "email": "Correo Electrónico",
+      "role": "Rol",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "loading": "Cargando usuarios...",
+    "error": "Error al cargar usuarios",
+    "tryAgain": "Intentar de Nuevo",
+    "pagination": {
+      "showing": "Mostrando {{from}} a {{to}} de {{total}} usuarios",
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "form": {
+      "create": {
+        "title": "Crear Nuevo Usuario",
+        "description": "Agregue un nuevo usuario al sistema. Haga clic en guardar cuando haya terminado."
+      },
+      "edit": {
+        "title": "Editar Usuario",
+        "description": "Actualizar nombre, apellido y rol del usuario."
+      },
+      "fields": {
+        "name": "Nombre",
+        "lastName": "Apellido",
+        "secondLastName": "Segundo Apellido",
+        "email": "Correo Electrónico",
+        "phoneNumber": "Número de Teléfono",
+        "password": "Contraseña",
+        "role": "Rol",
+        "selectRole": "Seleccionar un rol"
+      },
+      "validation": {
+        "nameRequired": "El nombre es obligatorio",
+        "lastNameRequired": "El apellido es obligatorio",
+        "emailRequired": "El correo electrónico es obligatorio",
+        "passwordRequired": "La contraseña es obligatoria",
+        "roleRequired": "El rol es obligatorio"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveUser": "Guardar Usuario",
+        "saveChanges": "Guardar Cambios"
+      },
+      "loadingUser": "Cargando usuario...",
+      "failedToCreate": "Error al crear usuario",
+      "failedToUpdate": "Error al actualizar usuario"
+    },
+    "dialog": {
+      "view": {
+        "title": "Detalles del Usuario",
+        "description": "Ver información del usuario",
+        "email": "Correo Electrónico",
+        "phoneNumber": "Número de Teléfono",
+        "role": "Rol",
+        "createdAt": "Creado En",
+        "updatedAt": "Actualizado En",
+        "permissions": "Permisos",
+        "close": "Cerrar",
+        "noData": "No hay datos de usuario disponibles"
+      },
+      "delete": {
+        "title": "Eliminar Usuario",
+        "description": "¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.",
+        "loadingUser": "Cargando usuario...",
+        "deleteUser": "Eliminar Usuario",
+        "failedToDelete": "Error al eliminar usuario"
+      }
+    },
+    "errors": {
+      "userAlreadyExists": "El usuario {{email}} ya existe",
+      "emailAlreadyInUse": "El correo electrónico {{email}} ya está en uso",
+      "invalidEmail": "Dirección de correo electrónico inválida: {{email}}",
+      "permissionDenied": "No tienes permiso para realizar esta acción",
+      "userNotFound": "Usuario con ID {{id}} no encontrado",
+      "roleNotFound": "Rol {{role}} no encontrado",
+      "cannotDeleteOwnAccount": "No puedes eliminar tu propia cuenta",
+      "cannotDeleteUserWithAssociations": "Este usuario no puede ser eliminado porque tiene eventos, asignaciones de músicos o registros de pago asociados. Por favor, elimine estas asociaciones primero o contacte a un administrador.",
+      "validationError": "Error de validación",
+      "networkError": "Ocurrió un error de red",
+      "serverError": "Ocurrió un error del servidor"
+    }
   }
 }

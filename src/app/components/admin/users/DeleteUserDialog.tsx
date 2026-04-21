@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { translateApiError, capitalizeFirstLetter } from '../../../../i18n/utils';
 import { usersApi } from '../../../lib/api';
 import type { User } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
@@ -21,6 +23,7 @@ interface DeleteUserDialogProps {
 }
 
 export function DeleteUserDialog({ userId, open, onOpenChange, onSuccess }: DeleteUserDialogProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,7 +70,8 @@ export function DeleteUserDialog({ userId, open, onOpenChange, onSuccess }: Dele
       }
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to delete user');
+      const rawErrorMessage = error.detail || error.message;
+      setError(rawErrorMessage ? translateApiError(rawErrorMessage, 'user deletion') : t('users.dialog.delete.failedToDelete'));
     } finally {
       setIsLoading(false);
     }
@@ -77,16 +81,16 @@ export function DeleteUserDialog({ userId, open, onOpenChange, onSuccess }: Dele
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
-          <DialogTitle>Delete User</DialogTitle>
+          <DialogTitle>{t('users.dialog.delete.title')}</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this user? This action cannot be undone.
+            {t('users.dialog.delete.description')}
           </DialogDescription>
         </DialogHeader>
         
         {isLoadingData ? (
           <div className="flex items-center justify-center py-4">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading user...</span>
+            <span className="ml-2 text-gray-600">{t('users.dialog.delete.loadingUser')}</span>
           </div>
         ) : error ? (
           <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
@@ -102,7 +106,7 @@ export function DeleteUserDialog({ userId, open, onOpenChange, onSuccess }: Dele
             {user && (
               <div className="text-center">
                 <p className="font-medium text-gray-900">
-                  {user.name} {user.lastname}
+                  {capitalizeFirstLetter(user.name)} {capitalizeFirstLetter(user.lastname)}
                 </p>
                 <p className="text-sm text-gray-500">
                   {user.email}
@@ -122,16 +126,16 @@ export function DeleteUserDialog({ userId, open, onOpenChange, onSuccess }: Dele
         
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
-            Cancel
+            {t('users.form.buttons.cancel')}
           </Button>
-          <Button 
-            type="submit" 
-            variant="destructive" 
+          <Button
+            type="submit"
+            variant="destructive"
             disabled={isLoading || isLoadingData}
             onClick={handleSubmit}
           >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Delete User
+            {t('users.dialog.delete.deleteUser')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -140,6 +140,113 @@ export function getTranslationCacheStats(): { size: number } {
 }
 
 /**
+ * Translates API error messages by matching common patterns and extracting dynamic values
+ * @param errorMessage - The raw error message from the API
+ * @param context - Context for logging (e.g., 'user creation', 'login')
+ * @returns Translated error message with proper interpolation
+ */
+export function translateApiError(errorMessage: string, context?: string): string {
+  if (!errorMessage) return errorMessage;
+
+  // Check if i18n is available
+  if (!i18n?.t) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('i18n not available for API error translation, returning original message');
+    }
+    return errorMessage;
+  }
+
+  // Common API error patterns with regex to extract dynamic values
+  const errorPatterns = [
+    {
+      regex: /^User (.+@.+\..+) already exists$/i,
+      key: 'users.errors.userAlreadyExists',
+      extractor: (match: RegExpMatchArray) => ({ email: match[1] })
+    },
+    {
+      regex: /^Email (.+@.+\..+) is already in use$/i,
+      key: 'users.errors.emailAlreadyInUse',
+      extractor: (match: RegExpMatchArray) => ({ email: match[1] })
+    },
+    {
+      regex: /^Invalid email address: (.+@.+\..+)$/i,
+      key: 'users.errors.invalidEmail',
+      extractor: (match: RegExpMatchArray) => ({ email: match[1] })
+    },
+    {
+      regex: /^User with ID (\d+) not found$/i,
+      key: 'users.errors.userNotFound',
+      extractor: (match: RegExpMatchArray) => ({ id: match[1] })
+    },
+    {
+      regex: /^Role (.+) not found$/i,
+      key: 'users.errors.roleNotFound',
+      extractor: (match: RegExpMatchArray) => ({ role: match[1] })
+    }
+  ];
+
+  // Try to match against known error patterns
+  for (const pattern of errorPatterns) {
+    const match = errorMessage.match(pattern.regex);
+    if (match) {
+      const params = pattern.extractor(match);
+      try {
+        const translated = i18n.t(pattern.key, params);
+        if (translated !== pattern.key) {
+          return translated;
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`Failed to translate API error "${errorMessage}" with key "${pattern.key}":`, error);
+        }
+      }
+    }
+  }
+
+  // Fallback: try to translate common generic error messages
+  const genericErrors = [
+    { pattern: /^Permission denied$/i, key: 'users.errors.permissionDenied' },
+    { pattern: /^Cannot delete your own account$/i, key: 'users.errors.cannotDeleteOwnAccount' },
+    { pattern: /^This user cannot be deleted because they have associated events, musician assignments, or payment records\. Please remove these associations first or contact an administrator\.$/i, key: 'users.errors.cannotDeleteUserWithAssociations' },
+    { pattern: /^Validation error$/i, key: 'users.errors.validationError' },
+    { pattern: /^Network error$/i, key: 'users.errors.networkError' },
+    { pattern: /^Server error$/i, key: 'users.errors.serverError' }
+  ];
+
+  for (const { pattern, key } of genericErrors) {
+    if (pattern.test(errorMessage)) {
+      try {
+        const translated = i18n.t(key);
+        if (translated !== key) {
+          return translated;
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(`Failed to translate generic error "${errorMessage}" with key "${key}":`, error);
+        }
+      }
+    }
+  }
+
+  // If no pattern matches, return the original message
+  if (process.env.NODE_ENV === 'development') {
+    console.warn(`No translation found for API error "${errorMessage}" in context "${context || 'unknown'}"`);
+  }
+  return errorMessage;
+}
+
+/**
+ * Capitalizes the first letter of a string and converts the rest to lowercase
+ * Useful for proper names and titles
+ * @param value - The string to capitalize
+ * @returns The capitalized string or original value if empty
+ */
+export function capitalizeFirstLetter(value: string): string {
+  if (!value) return value;
+  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+}
+
+/**
  * React hook that provides reactive translation utilities
  * Components using these functions will re-render when language changes
  */
@@ -171,11 +278,16 @@ export function useTranslationUtils() {
     return translateWithFallback(`${keyPrefix}.${value}`, value, `backend data with prefix ${keyPrefix}`);
   };
 
+  const translateApiErrorMessage = (errorMessage: string, context?: string): string => {
+    return translateApiError(errorMessage, context);
+  };
+
   return {
     translateEventStatus,
     translatePaymentType,
     translateUserRole,
     translatePermission,
     translateBackendData,
+    translateApiErrorMessage,
   };
 }

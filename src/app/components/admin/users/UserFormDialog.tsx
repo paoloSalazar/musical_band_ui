@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { translateApiError, translateUserRole, capitalizeFirstLetter } from '../../../../i18n/utils';
 import { usersApi, rolesApi } from '../../../lib/api';
 import type { User, UserFormData, Role } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
@@ -29,6 +31,7 @@ interface UserFormDialogProps {
 }
 
 export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
@@ -84,23 +87,23 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
     e.preventDefault();
     
     if (!name.trim()) {
-      setError('Name is required');
+      setError(t('users.form.validation.nameRequired'));
       return;
     }
     if (!lastname.trim()) {
-      setError('Last name is required');
+      setError(t('users.form.validation.lastNameRequired'));
       return;
     }
     if (!email.trim()) {
-      setError('Email is required');
+      setError(t('users.form.validation.emailRequired'));
       return;
     }
     if (!password.trim()) {
-      setError('Password is required');
+      setError(t('users.form.validation.passwordRequired'));
       return;
     }
     if (!roleId) {
-      setError('Role is required');
+      setError(t('users.form.validation.roleRequired'));
       return;
     }
 
@@ -130,7 +133,8 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
       }
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to create user');
+      const rawErrorMessage = error.detail || error.message;
+      setError(rawErrorMessage ? translateApiError(rawErrorMessage, 'user creation') : t('users.form.failedToCreate'));
     } finally {
       setIsLoading(false);
     }
@@ -142,15 +146,15 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
         {trigger || (
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Create User
+            {t('users.createUser')}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create New User</DialogTitle>
+          <DialogTitle>{t('users.form.create.title')}</DialogTitle>
           <DialogDescription>
-            Add a new user to the system. Click save when you're done.
+            {t('users.form.create.description')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -164,7 +168,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
             {/* Name */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                Name *
+                {t('users.form.fields.name')} *
               </Label>
               <Input
                 id="name"
@@ -179,7 +183,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
             {/* Lastname */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="lastname" className="text-right">
-                Last Name *
+                {t('users.form.fields.lastName')} *
               </Label>
               <Input
                 id="lastname"
@@ -194,7 +198,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
             {/* Second Lastname */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="secondLastname" className="text-right">
-                Second Last Name
+                {t('users.form.fields.secondLastName')}
               </Label>
               <Input
                 id="secondLastname"
@@ -209,7 +213,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
             {/* Email */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
-                Email *
+                {t('users.form.fields.email')} *
               </Label>
               <Input
                 id="email"
@@ -225,7 +229,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
             {/* Phone Number */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="phoneNumber" className="text-right">
-                Phone Number
+                {t('users.form.fields.phoneNumber')}
               </Label>
               <Input
                 id="phoneNumber"
@@ -240,14 +244,14 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
             {/* Password */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="password" className="text-right">
-                Password *
+                {t('users.form.fields.password')} *
               </Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
+                placeholder={t('users.form.fields.password')}
                 className="col-span-3"
                 disabled={isLoading}
               />
@@ -256,16 +260,16 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
             {/* Role */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="role" className="text-right">
-                Role *
+                {t('users.form.fields.role')} *
               </Label>
               <Select value={roleId} onValueChange={setRoleId} disabled={isLoading || isLoadingRoles}>
                 <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue placeholder={t('users.form.fields.selectRole')} />
                 </SelectTrigger>
                 <SelectContent>
                   {roles.map((role) => (
                     <SelectItem key={role.id} value={role.id.toString()}>
-                      {role.name}
+                      {translateUserRole(role.name)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -274,11 +278,11 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isLoading}>
-              Cancel
+              {t('users.form.buttons.cancel')}
             </Button>
             <Button type="submit" disabled={isLoading || isLoadingRoles}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save User
+              {t('users.form.buttons.saveUser')}
             </Button>
           </DialogFooter>
         </form>

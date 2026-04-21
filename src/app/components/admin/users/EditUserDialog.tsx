@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { translateApiError, capitalizeFirstLetter } from '../../../../i18n/utils';
 import { usersApi, rolesApi } from '../../../lib/api';
 import type { User, UserFormData, Role } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
@@ -30,12 +32,13 @@ interface EditUserDialogProps {
 }
 
 export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUserDialogProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
-  
+
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
   const [secondLastname, setSecondLastname] = useState('');
@@ -100,15 +103,15 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
     e.preventDefault();
     
     if (!name.trim()) {
-      setError('Name is required');
+      setError(t('users.form.validation.nameRequired'));
       return;
     }
     if (!lastname.trim()) {
-      setError('Last name is required');
+      setError(t('users.form.validation.lastNameRequired'));
       return;
     }
     if (!roleId) {
-      setError('Role is required');
+      setError(t('users.form.validation.roleRequired'));
       return;
     }
 
@@ -135,7 +138,8 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
       }
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to update user');
+      const rawErrorMessage = error.detail || error.message;
+      setError(rawErrorMessage ? translateApiError(rawErrorMessage, 'user update') : t('users.form.failedToUpdate'));
     } finally {
       setIsLoading(false);
     }
@@ -145,16 +149,16 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Edit User</DialogTitle>
+          <DialogTitle>{t('users.form.edit.title')}</DialogTitle>
           <DialogDescription>
-            Update user name, last name, and role.
+            {t('users.form.edit.description')}
           </DialogDescription>
         </DialogHeader>
         
         {isLoadingData ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading user...</span>
+            <span className="ml-2 text-gray-600">{t('users.form.loadingUser')}</span>
           </div>
         ) : error && !isLoading ? (
           <div className="text-red-600 text-center py-4">
@@ -173,7 +177,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
               {/* Name */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-name" className="text-right">
-                  Name *
+                  {t('users.form.fields.name')} *
                 </Label>
                 <Input
                   id="edit-name"
@@ -188,7 +192,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
               {/* Lastname */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-lastname" className="text-right">
-                  Last Name *
+                  {t('users.form.fields.lastName')} *
                 </Label>
                 <Input
                   id="edit-lastname"
@@ -203,7 +207,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
               {/* Second Lastname */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-secondLastname" className="text-right">
-                  Second Last Name
+                  {t('users.form.fields.secondLastName')}
                 </Label>
                 <Input
                   id="edit-secondLastname"
@@ -218,7 +222,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
               {/* Phone Number */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-phoneNumber" className="text-right">
-                  Phone Number
+                  {t('users.form.fields.phoneNumber')}
                 </Label>
                 <Input
                   id="edit-phoneNumber"
@@ -233,11 +237,11 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
               {/* Role */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-role" className="text-right">
-                  Role *
+                  {t('users.form.fields.role')} *
                 </Label>
                 <Select value={roleId} onValueChange={setRoleId} disabled={isLoading || isLoadingRoles}>
                   <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select a role" />
+                    <SelectValue placeholder={t('users.form.fields.selectRole')} />
                   </SelectTrigger>
                   <SelectContent>
                     {roles.map((role) => (
@@ -251,11 +255,11 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isLoading}>
-                Cancel
+                {t('users.form.buttons.cancel')}
               </Button>
               <Button type="submit" disabled={isLoading || isLoadingRoles}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Save Changes
+                {t('users.form.buttons.saveChanges')}
               </Button>
             </DialogFooter>
           </form>
