@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { rolesApi, permissionsApi } from '../../../lib/api/rbac';
 import type { Role, Permission } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
@@ -18,11 +19,9 @@ import {
   CardHeader, 
   CardTitle 
 } from '../../ui/card';
-import { 
+import {
   Shield,
   Loader2,
-  Plus,
-  X,
   Settings
 } from 'lucide-react';
 import {
@@ -41,6 +40,7 @@ import { Badge } from '../../ui/badge';
  * Allows assigning/removing permissions to/from roles
  */
 export function RolePermissionsPage() {
+  const { t } = useTranslation();
   const [roles, setRoles] = useState<Role[]>([]);
   const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
   const [rolePermissions, setRolePermissions] = useState<Record<string, Permission[]>>({});
@@ -83,7 +83,7 @@ export function RolePermissionsPage() {
       setRolePermissions(permissionsMap);
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to load data');
+      setError(error.detail || error.message || t('rolePermissions.errors.failedToLoad'));
     } finally {
       setIsLoading(false);
     }
@@ -163,7 +163,7 @@ export function RolePermissionsPage() {
       setDialogOpen(false);
     } catch (err) {
       const error = err as ApiError;
-      alert(error.detail || error.message || 'Failed to save permissions');
+      alert(error.detail || error.message || t('rolePermissions.errors.failedToSave'));
     } finally {
       setIsSaving(false);
     }
@@ -173,7 +173,7 @@ export function RolePermissionsPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-gray-600">Loading...</span>
+        <span className="ml-2 text-gray-600">{t('rolePermissions.loading')}</span>
       </div>
     );
   }
@@ -183,10 +183,10 @@ export function RolePermissionsPage() {
       <Card className="border-red-200">
         <CardContent className="pt-6">
           <div className="text-red-600 text-center">
-            <p className="font-medium">Error loading data</p>
+            <p className="font-medium">{t('rolePermissions.errorLoading')}</p>
             <p className="text-sm">{error}</p>
             <Button onClick={loadData} variant="outline" className="mt-4">
-              Try Again
+              {t('rolePermissions.tryAgain')}
             </Button>
           </div>
         </CardContent>
@@ -199,9 +199,9 @@ export function RolePermissionsPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Role Permissions</h2>
+          <h2 className="text-2xl font-bold">{t('rolePermissions.title')}</h2>
           <p className="text-gray-600 mt-1">
-            Assign and manage permissions for each role
+            {t('rolePermissions.subtitle')}
           </p>
         </div>
       </div>
@@ -211,25 +211,25 @@ export function RolePermissionsPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Shield className="mr-2 h-5 w-5" />
-            Roles & Permissions
+            {t('rolePermissions.rolesAndPermissions')}
           </CardTitle>
           <CardDescription>
-            Total: {roles.length} role(s)
+            {t('rolePermissions.totalRoles', { count: roles.length })}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {roles.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <Shield className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-              <p>No roles found</p>
-            </div>
+            {roles.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <Shield className="mx-auto h-12 w-12 text-gray-300 mb-4" />
+                <p>{t('rolePermissions.noRoles')}</p>
+              </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Permissions</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t('rolePermissions.table.role')}</TableHead>
+                  <TableHead>{t('rolePermissions.table.permissions')}</TableHead>
+                  <TableHead className="text-right">{t('rolePermissions.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -249,7 +249,7 @@ export function RolePermissionsPage() {
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
                           {permissions.length === 0 ? (
-                            <span className="text-gray-400 text-sm">No permissions</span>
+                            <span className="text-gray-400 text-sm">{t('rolePermissions.table.noPermissions')}</span>
                           ) : (
                             permissions.slice(0, 5).map(perm => (
                               <Badge key={perm.id} variant="secondary" className="text-xs">
@@ -259,7 +259,7 @@ export function RolePermissionsPage() {
                           )}
                           {permissions.length > 5 && (
                             <Badge variant="outline" className="text-xs">
-                              +{permissions.length - 5} more
+                              {t('rolePermissions.table.morePermissions', { count: permissions.length - 5 })}
                             </Badge>
                           )}
                         </div>
@@ -271,7 +271,7 @@ export function RolePermissionsPage() {
                           onClick={() => openPermissionDialog(role)}
                         >
                           <Settings className="h-4 w-4 mr-1" />
-                          Manage
+                          {t('rolePermissions.actions.manage')}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -288,16 +288,16 @@ export function RolePermissionsPage() {
         <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              Manage Permissions for {selectedRole?.name}
+              {t('rolePermissions.dialog.managePermissions', { roleName: selectedRole?.name })}
             </DialogTitle>
             <DialogDescription>
-              Select the permissions to assign to this role
+              {t('rolePermissions.dialog.selectPermissions')}
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             {allPermissions.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">No permissions available</p>
+              <p className="text-gray-500 text-center py-4">{t('rolePermissions.dialog.noPermissionsAvailable')}</p>
             ) : (
               <div className="space-y-2">
                 {allPermissions.map(permission => (
@@ -326,11 +326,11 @@ export function RolePermissionsPage() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={isSaving}>
-              Cancel
+              {t('rolePermissions.dialog.cancel')}
             </Button>
             <Button onClick={savePermissions} disabled={isSaving}>
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Changes
+              {isSaving ? t('rolePermissions.dialog.saving') : t('rolePermissions.dialog.saveChanges')}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -241,6 +241,38 @@
       "serverError": "Ocurrió un error del servidor"
     }
   },
+  "rolePermissions": {
+    "title": "Permisos de Roles",
+    "subtitle": "Asignar y administrar permisos para cada rol",
+    "rolesAndPermissions": "Roles y Permisos",
+    "totalRoles": "Total: {{count}} rol(es)",
+    "noRoles": "No se encontraron roles",
+    "loading": "Cargando...",
+    "errorLoading": "Error al cargar datos",
+    "tryAgain": "Intentar de Nuevo",
+    "table": {
+      "role": "Rol",
+      "permissions": "Permisos",
+      "actions": "Acciones",
+      "noPermissions": "Sin permisos",
+      "morePermissions": "+{{count}} más"
+    },
+    "actions": {
+      "manage": "Administrar"
+    },
+    "dialog": {
+      "managePermissions": "Administrar Permisos para {{roleName}}",
+      "selectPermissions": "Selecciona los permisos para asignar a este rol",
+      "noPermissionsAvailable": "No hay permisos disponibles",
+      "cancel": "Cancelar",
+      "saveChanges": "Guardar Cambios",
+      "saving": "Guardando..."
+    },
+    "errors": {
+      "failedToSave": "Error al guardar permisos",
+      "failedToLoad": "Error al cargar datos"
+    }
+  },
   "users": {
     "title": "Usuarios",
     "subtitle": "Administrar usuarios del sistema y sus roles",

@@ -242,6 +242,38 @@
       "serverError": "Server error occurred"
     }
   },
+  "rolePermissions": {
+    "title": "Role Permissions",
+    "subtitle": "Assign and manage permissions for each role",
+    "rolesAndPermissions": "Roles & Permissions",
+    "totalRoles": "Total: {{count}} role(s)",
+    "noRoles": "No roles found",
+    "loading": "Loading...",
+    "errorLoading": "Error loading data",
+    "tryAgain": "Try Again",
+    "table": {
+      "role": "Role",
+      "permissions": "Permissions",
+      "actions": "Actions",
+      "noPermissions": "No permissions",
+      "morePermissions": "+{{count}} more"
+    },
+    "actions": {
+      "manage": "Manage"
+    },
+    "dialog": {
+      "managePermissions": "Manage Permissions for {{roleName}}",
+      "selectPermissions": "Select the permissions to assign to this role",
+      "noPermissionsAvailable": "No permissions available",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "saving": "Saving..."
+    },
+    "errors": {
+      "failedToSave": "Failed to save permissions",
+      "failedToLoad": "Failed to load data"
+    }
+  },
   "roles": {
     "title": "User Roles",
     "subtitle": "Manage user roles and their permissions",
