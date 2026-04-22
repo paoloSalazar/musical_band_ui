@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle 
+import { useTranslation } from 'react-i18next';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from '../../ui/dialog';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
@@ -30,13 +31,14 @@ interface EditPermissionDialogProps {
  * Edit Permission Dialog
  * Allows editing permission name and description via PATCH endpoint
  */
-export function EditPermissionDialog({ 
-  permissionId, 
+export function EditPermissionDialog({
+  permissionId,
   permissionName,
-  open, 
+  open,
   onOpenChange,
   onSuccess
 }: EditPermissionDialogProps) {
+  const { t } = useTranslation();
   const [description, setDescription] = useState('');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -113,17 +115,17 @@ export function EditPermissionDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Pencil className="mr-2 h-5 w-5" />
-            Edit Permission
+            {t('permissions.form.edit.title')}
           </DialogTitle>
           <DialogDescription>
-            Update the permission details below.
+            {t('permissions.form.edit.description')}
           </DialogDescription>
         </DialogHeader>
         
         {isFetching ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading permission...</span>
+            <span className="ml-2 text-gray-600">{t('permissions.form.loadingPermission')}</span>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -137,7 +139,7 @@ export function EditPermissionDialog({
               {/* Permission Name (read-only) */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Name
+                  {t('permissions.form.fields.name')}
                 </Label>
                 <Input
                   id="name"
@@ -146,34 +148,34 @@ export function EditPermissionDialog({
                   disabled
                 />
               </div>
-              
+
               {/* Permission Description (editable) */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="description" className="text-right">
-                  Description
+                  {t('permissions.form.fields.description')}
                 </Label>
                 <Input
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter description"
+                  placeholder={t('permissions.form.fields.descriptionPlaceholder')}
                   className="col-span-3"
                   disabled={isLoading}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => handleOpenChange(false)} 
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleOpenChange(false)}
                 disabled={isLoading}
               >
-                Cancel
+                {t('permissions.form.buttons.cancel')}
               </Button>
               <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Save Changes
+                {t('permissions.form.buttons.saveChanges')}
               </Button>
             </DialogFooter>
           </form>

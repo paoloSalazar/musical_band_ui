@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle 
+import { useTranslation } from 'react-i18next';
+import { translateApiError } from '../../../../i18n/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from '../../ui/dialog';
 import { Button } from '../../ui/button';
 import { permissionsApi } from '../../../lib/api';
@@ -27,13 +29,14 @@ interface DeletePermissionDialogProps {
  * Delete Permission Dialog
  * Shows confirmation dialog and handles delete via name endpoint
  */
-export function DeletePermissionDialog({ 
-  permissionId, 
+export function DeletePermissionDialog({
+  permissionId,
   permissionName,
-  open, 
+  open,
   onOpenChange,
   onSuccess
 }: DeletePermissionDialogProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,8 +55,8 @@ export function DeletePermissionDialog({
       onSuccess();
     } catch (err) {
       const apiError = err as ApiError;
-      // Show the error message from the API response
-      setError(apiError.detail || apiError.message || 'Failed to delete permission');
+      const rawErrorMessage = apiError.detail || apiError.message;
+      setError(rawErrorMessage ? translateApiError(rawErrorMessage, 'permission deletion') : t('permissions.dialog.delete.failedToDelete'));
     } finally {
       setIsLoading(false);
     }
@@ -72,10 +75,10 @@ export function DeletePermissionDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center text-red-600">
             <Trash2 className="mr-2 h-5 w-5" />
-            Delete Permission
+            {t('permissions.dialog.delete.title')}
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this permission? This action cannot be undone.
+            {t('permissions.dialog.delete.description')}
           </DialogDescription>
         </DialogHeader>
         
@@ -89,26 +92,26 @@ export function DeletePermissionDialog({
             )}
             
             <div className="text-sm text-gray-600">
-              <p>You are about to delete the permission:</p>
+              <p>{t('permissions.dialog.delete.confirmationText')}</p>
               <p className="font-mono font-medium text-gray-900 mt-1">{permissionName}</p>
             </div>
           </div>
           <DialogFooter>
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => handleOpenChange(false)} 
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleOpenChange(false)}
               disabled={isLoading}
             >
-              Cancel
+              {t('permissions.form.buttons.cancel')}
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               variant="destructive"
               disabled={isLoading}
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Delete
+              {t('permissions.actions.delete')}
             </Button>
           </DialogFooter>
         </form>

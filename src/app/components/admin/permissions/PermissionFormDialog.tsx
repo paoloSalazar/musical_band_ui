@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { permissionsApi } from '../../../lib/api';
 import type { Permission } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
@@ -22,6 +23,7 @@ interface PermissionFormDialogProps {
 }
 
 export function PermissionFormDialog({ onSuccess, trigger }: PermissionFormDialogProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +47,7 @@ export function PermissionFormDialog({ onSuccess, trigger }: PermissionFormDialo
     e.preventDefault();
     
     if (!name.trim()) {
-      setError('Permission name is required');
+      setError(t('permissions.form.validation.nameRequired'));
       return;
     }
 
@@ -77,15 +79,15 @@ export function PermissionFormDialog({ onSuccess, trigger }: PermissionFormDialo
         {trigger || (
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Create Permission
+            {t('permissions.createPermission')}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Permission</DialogTitle>
+          <DialogTitle>{t('permissions.form.create.title')}</DialogTitle>
           <DialogDescription>
-            Add a new permission to the system. Click save when you're done.
+            {t('permissions.form.create.description')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -97,26 +99,26 @@ export function PermissionFormDialog({ onSuccess, trigger }: PermissionFormDialo
             )}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                Name
+                {t('permissions.form.fields.name')}
               </Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., read:events"
+                placeholder={t('permissions.form.fields.namePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="description" className="text-right">
-                Description
+                {t('permissions.form.fields.description')}
               </Label>
               <Input
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Optional description"
+                placeholder={t('permissions.form.fields.descriptionPlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
               />
@@ -124,11 +126,11 @@ export function PermissionFormDialog({ onSuccess, trigger }: PermissionFormDialo
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isLoading}>
-              Cancel
+              {t('permissions.form.buttons.cancel')}
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Permission
+              {t('permissions.form.buttons.savePermission')}
             </Button>
           </DialogFooter>
         </form>

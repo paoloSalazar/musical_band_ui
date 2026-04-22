@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle 
+import { useTranslation } from 'react-i18next';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
 } from '../../ui/dialog';
 import { Button } from '../../ui/button';
 import { permissionsApi } from '../../../lib/api';
@@ -25,11 +26,12 @@ interface ViewPermissionDialogProps {
  * View Permission Dialog
  * Displays permission details in a popup
  */
-export function ViewPermissionDialog({ 
-  permissionId, 
-  open, 
-  onOpenChange 
+export function ViewPermissionDialog({
+  permissionId,
+  open,
+  onOpenChange
 }: ViewPermissionDialogProps) {
+  const { t } = useTranslation();
   const [permission, setPermission] = useState<Permission | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -64,27 +66,27 @@ export function ViewPermissionDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Eye className="mr-2 h-5 w-5" />
-            Permission Details
+            {t('permissions.dialog.view.title')}
           </DialogTitle>
           <DialogDescription>
-            View permission information
+            {t('permissions.dialog.view.description')}
           </DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading permission...</span>
+            <span className="ml-2 text-gray-600">{t('permissions.form.loadingPermission')}</span>
           </div>
         ) : error ? (
           <div className="text-center py-8">
             <p className="text-red-600">{error}</p>
-            <Button 
-              onClick={() => permissionId && loadPermission(permissionId)} 
-              variant="outline" 
+            <Button
+              onClick={() => permissionId && loadPermission(permissionId)}
+              variant="outline"
               className="mt-4"
             >
-              Try Again
+              {t('permissions.tryAgain')}
             </Button>
           </div>
         ) : permission ? (
@@ -95,7 +97,7 @@ export function ViewPermissionDialog({
                 <Hash className="h-5 w-5 text-blue-600" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500">ID</p>
+                <p className="text-sm font-medium text-gray-500">{t('permissions.dialog.view.id')}</p>
                 <p className="text-lg font-semibold">{permission.id}</p>
               </div>
             </div>
@@ -106,7 +108,7 @@ export function ViewPermissionDialog({
                 <Tag className="h-5 w-5 text-green-600" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500">Name</p>
+                <p className="text-sm font-medium text-gray-500">{t('permissions.dialog.view.name')}</p>
                 <p className="text-lg font-mono font-semibold">{permission.name}</p>
               </div>
             </div>
@@ -117,9 +119,9 @@ export function ViewPermissionDialog({
                 <FileText className="h-5 w-5 text-purple-600" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500">Description</p>
+                <p className="text-sm font-medium text-gray-500">{t('permissions.dialog.view.description')}</p>
                 <p className="text-base">
-                  {permission.description || <span className="italic text-gray-400">No description</span>}
+                  {permission.description || <span className="italic text-gray-400">{t('permissions.dialog.view.noDescription')}</span>}
                 </p>
               </div>
             </div>

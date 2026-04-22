@@ -202,6 +202,31 @@ export function translateApiError(errorMessage: string, context?: string): strin
       regex: /^This role cannot be deleted because (\d+) users? are assigned to it\. Please reassign these users to another role first\.$/i,
       key: 'roles.errors.cannotDeleteRoleWithUsers',
       extractor: (match: RegExpMatchArray) => ({ count: parseInt(match[1], 10) })
+    },
+    {
+      regex: /^Permission (.+) already exists$/i,
+      key: 'permissions.errors.permissionAlreadyExists',
+      extractor: (match: RegExpMatchArray) => ({ name: match[1] })
+    },
+    {
+      regex: /^Permission (.+) not found$/i,
+      key: 'permissions.errors.permissionNotFound',
+      extractor: (match: RegExpMatchArray) => ({ name: match[1] })
+    },
+    {
+      regex: /^Permission (.+) is currently in use and cannot be deleted$/i,
+      key: 'permissions.errors.permissionInUse',
+      extractor: (match: RegExpMatchArray) => ({ name: match[1] })
+    },
+    {
+      regex: /^This permission cannot be deleted because it is assigned to (\d+) role \('([^']+)'\)\. Please remove this permission from the role first\.$/i,
+      key: 'permissions.errors.cannotDeletePermissionWithRoles',
+      extractor: (match: RegExpMatchArray) => ({ count: parseInt(match[1], 10), role: match[2] })
+    },
+    {
+      regex: /^This permission cannot be deleted because it is assigned to (\d+) roles \('([^']+)'\)\. Please remove this permission from the roles first\.$/i,
+      key: 'permissions.errors.cannotDeletePermissionWithRoles',
+      extractor: (match: RegExpMatchArray) => ({ count: parseInt(match[1], 10), role: match[2] })
     }
   ];
 

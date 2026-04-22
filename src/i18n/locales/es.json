@@ -163,7 +163,83 @@
     "read:users": "Ver Usuarios",
     "create:users": "Crear Usuarios",
     "update:users": "Editar Usuarios",
-    "delete:users": "Eliminar Usuarios"
+    "delete:users": "Eliminar Usuarios",
+    "title": "Permisos",
+    "subtitle": "Administrar permisos del sistema",
+    "createPermission": "Crear Permiso",
+    "allPermissions": "Todos los Permisos",
+    "totalPermissions": "Mostrando {{from}} a {{to}} de {{total}} permiso(s)",
+    "noPermissions": "No se encontraron permisos",
+    "noPermissionsMessage": "Crea tu primer permiso para comenzar",
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "description": "Descripción",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "loading": "Cargando permisos...",
+    "error": "Error al cargar permisos",
+    "tryAgain": "Intentar de Nuevo",
+    "form": {
+      "create": {
+        "title": "Crear Nuevo Permiso",
+        "description": "Agregue un nuevo permiso al sistema. Haga clic en guardar cuando haya terminado."
+      },
+      "edit": {
+        "title": "Editar Permiso",
+        "description": "Actualizar los detalles del permiso a continuación."
+      },
+      "fields": {
+        "name": "Nombre",
+        "description": "Descripción",
+        "namePlaceholder": "ej. read:events",
+        "descriptionPlaceholder": "Descripción opcional"
+      },
+      "validation": {
+        "nameRequired": "El nombre del permiso es obligatorio"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "savePermission": "Guardar Permiso",
+        "saveChanges": "Guardar Cambios"
+      },
+      "loadingPermission": "Cargando permiso...",
+      "failedToCreate": "Error al crear permiso",
+      "failedToUpdate": "Error al actualizar permiso"
+    },
+    "dialog": {
+      "view": {
+        "title": "Detalles del Permiso",
+        "description": "Ver información del permiso",
+        "id": "ID",
+        "name": "Nombre",
+        "description": "Descripción",
+        "noDescription": "Sin descripción",
+        "close": "Cerrar"
+      },
+      "delete": {
+        "title": "Eliminar Permiso",
+        "description": "¿Está seguro de que desea eliminar este permiso? Esta acción no se puede deshacer.",
+        "confirmationText": "Está a punto de eliminar el permiso:",
+        "deletePermission": "Eliminar Permiso",
+        "failedToDelete": "Error al eliminar permiso"
+      }
+    },
+    "errors": {
+      "permissionAlreadyExists": "El permiso {{name}} ya existe",
+      "permissionNotFound": "Permiso {{name}} no encontrado",
+      "permissionInUse": "El permiso {{name}} está actualmente en uso y no puede ser eliminado",
+      "cannotDeletePermissionWithRoles": "Este permiso no puede ser eliminado porque está asignado a {{count}} rol ('{{role}}'). Por favor, elimine este permiso del rol primero.",
+      "permissionDenied": "No tienes permiso para realizar esta acción",
+      "validationError": "Error de validación",
+      "networkError": "Ocurrió un error de red",
+      "serverError": "Ocurrió un error del servidor"
+    }
   },
   "users": {
     "title": "Usuarios",
