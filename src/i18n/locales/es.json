@@ -259,7 +259,85 @@
       "userNotFound": "Usuario con ID {{id}} no encontrado",
       "roleNotFound": "Rol {{role}} no encontrado",
       "cannotDeleteOwnAccount": "No puedes eliminar tu propia cuenta",
-      "cannotDeleteUserWithAssociations": "Este usuario no puede ser eliminado porque tiene eventos, asignaciones de músicos o registros de pago asociados. Por favor, elimine estas asociaciones primero o contacte a un administrador.",
+      "cannotDeleteUserWithAssociations": "Este usuario no puede ser eliminado porque ha creado {{count}} eventos. Por favor, reasigne o elimine estos eventos primero.",
+      "validationError": "Error de validación",
+      "networkError": "Ocurrió un error de red",
+      "serverError": "Ocurrió un error del servidor"
+    }
+  },
+  "roles": {
+    "title": "Roles de Usuario",
+    "subtitle": "Administrar roles de usuario y sus permisos",
+    "createRole": "Crear Rol",
+    "allRoles": "Todos los Roles",
+    "totalRoles": "Total: {{count}} rol(es)",
+    "noRoles": "No se encontraron roles",
+    "noRolesMessage": "Crea tu primer rol para comenzar",
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "description": "Descripción",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "loading": "Cargando roles...",
+    "error": "Error al cargar roles",
+    "tryAgain": "Intentar de Nuevo",
+    "form": {
+      "create": {
+        "title": "Crear Nuevo Rol",
+        "description": "Agregue un nuevo rol de usuario al sistema. Haga clic en guardar cuando haya terminado."
+      },
+      "edit": {
+        "title": "Editar Rol",
+        "description": "Actualizar los detalles del rol a continuación."
+      },
+      "fields": {
+        "name": "Nombre",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Descripción opcional",
+        "namePlaceholder": "ej. moderador"
+      },
+      "validation": {
+        "nameRequired": "El nombre del rol es obligatorio"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveRole": "Guardar Rol",
+        "saveChanges": "Guardar Cambios"
+      },
+      "loadingRole": "Cargando rol...",
+      "failedToCreate": "Error al crear rol",
+      "failedToUpdate": "Error al actualizar rol"
+    },
+    "dialog": {
+      "view": {
+        "title": "Detalles del Rol",
+        "description": "Ver información del rol",
+        "id": "ID",
+        "name": "Nombre",
+        "description": "Descripción",
+        "noDescription": "Sin descripción",
+        "close": "Cerrar"
+      },
+      "delete": {
+        "title": "Eliminar Rol",
+        "description": "¿Está seguro de que desea eliminar este rol? Esta acción no se puede deshacer.",
+        "confirmationText": "Está a punto de eliminar el rol:",
+        "delete": "Eliminar",
+        "failedToDelete": "Error al eliminar rol"
+      }
+    },
+    "errors": {
+      "roleAlreadyExists": "El rol {{name}} ya existe",
+      "roleNotFound": "Rol {{name}} no encontrado",
+      "roleInUse": "El rol {{name}} está actualmente en uso y no puede ser eliminado",
+      "cannotDeleteRoleWithUsers": "Este rol no puede ser eliminado porque {{count}} usuarios están asignados a él. Por favor, reasigne estos usuarios a otro rol primero.",
+      "permissionDenied": "No tienes permiso para realizar esta acción",
       "validationError": "Error de validación",
       "networkError": "Ocurrió un error de red",
       "serverError": "Ocurrió un error del servidor"

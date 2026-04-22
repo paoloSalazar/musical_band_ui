@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { rolesApi } from '../../../lib/api';
+import { translateApiError } from '../../../../i18n/utils';
 import type { Role } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
 import { Button } from '../../ui/button';
@@ -22,6 +24,7 @@ interface RoleFormDialogProps {
 }
 
 export function RoleFormDialog({ onSuccess, trigger }: RoleFormDialogProps) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +48,7 @@ export function RoleFormDialog({ onSuccess, trigger }: RoleFormDialogProps) {
     e.preventDefault();
     
     if (!name.trim()) {
-      setError('Role name is required');
+      setError(t('roles.form.validation.nameRequired'));
       return;
     }
 
@@ -65,7 +68,8 @@ export function RoleFormDialog({ onSuccess, trigger }: RoleFormDialogProps) {
       }
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to create role');
+      const rawErrorMessage = error.detail || error.message;
+      setError(rawErrorMessage ? translateApiError(rawErrorMessage, 'role creation') : t('roles.form.failedToCreate'));
     } finally {
       setIsLoading(false);
     }
@@ -77,15 +81,15 @@ export function RoleFormDialog({ onSuccess, trigger }: RoleFormDialogProps) {
         {trigger || (
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Create Role
+            {t('roles.createRole')}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Role</DialogTitle>
+          <DialogTitle>{t('roles.form.create.title')}</DialogTitle>
           <DialogDescription>
-            Add a new user role to the system. Click save when you're done.
+            {t('roles.form.create.description')}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -97,26 +101,26 @@ export function RoleFormDialog({ onSuccess, trigger }: RoleFormDialogProps) {
             )}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                Name
+                {t('roles.form.fields.name')}
               </Label>
               <Input
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., moderator"
+                placeholder={t('roles.form.fields.namePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="description" className="text-right">
-                Description
+                {t('roles.form.fields.description')}
               </Label>
               <Input
                 id="description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Optional description"
+                placeholder={t('roles.form.fields.descriptionPlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
               />
@@ -124,11 +128,11 @@ export function RoleFormDialog({ onSuccess, trigger }: RoleFormDialogProps) {
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isLoading}>
-              Cancel
+              {t('roles.form.buttons.cancel')}
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Role
+              {t('roles.form.buttons.saveRole')}
             </Button>
           </DialogFooter>
         </form>

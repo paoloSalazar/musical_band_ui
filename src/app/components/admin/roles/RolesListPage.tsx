@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { rolesApi } from '../../../lib/api/rbac';
+import { translateApiError } from '../../../../i18n/utils';
 import type { Role } from '../../../lib/types';
 import { 
   Table, 
@@ -35,6 +36,7 @@ import { DeleteRoleDialog } from './DeleteRoleDialog';
  * Displays all user roles in a table
  */
 export function RolesListPage() {
+  const { t } = useTranslation();
   const [roles, setRoles] = useState<Role[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +59,8 @@ export function RolesListPage() {
       const response = await rolesApi.list();
       setRoles(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load roles');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load roles';
+      setError(translateApiError(errorMessage, 'role listing'));
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +86,7 @@ export function RolesListPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-gray-600">Loading roles...</span>
+        <span className="ml-2 text-gray-600">{t('roles.loading')}</span>
       </div>
     );
   }
@@ -93,10 +96,10 @@ export function RolesListPage() {
       <Card className="border-red-200">
         <CardContent className="pt-6">
           <div className="text-red-600 text-center">
-            <p className="font-medium">Error loading roles</p>
+            <p className="font-medium">{t('roles.error')}</p>
             <p className="text-sm">{error}</p>
             <Button onClick={loadRoles} variant="outline" className="mt-4">
-              Try Again
+              {t('roles.tryAgain')}
             </Button>
           </div>
         </CardContent>
@@ -109,9 +112,9 @@ export function RolesListPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">User Roles</h2>
+          <h2 className="text-2xl font-bold">{t('roles.title')}</h2>
           <p className="text-gray-600 mt-1">
-            Manage user roles and their permissions
+            {t('roles.subtitle')}
           </p>
         </div>
         <RoleFormDialog
@@ -126,28 +129,28 @@ export function RolesListPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Shield className="mr-2 h-5 w-5" />
-            All Roles
+            {t('roles.allRoles')}
           </CardTitle>
           <CardDescription>
-            Total: {roles.length} role(s)
+            {t('roles.totalRoles', { count: roles.length })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {roles.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <Shield className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-              <p>No roles found</p>
-              <p className="text-sm">Create your first role to get started</p>
+              <p>{t('roles.noRoles')}</p>
+              <p className="text-sm">{t('roles.noRolesMessage')}</p>
             </div>
           ) : (
             <div className="overflow-x-auto -mx-4 sm:mx-0">
               <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t('roles.table.id')}</TableHead>
+                  <TableHead>{t('roles.table.name')}</TableHead>
+                  <TableHead>{t('roles.table.description')}</TableHead>
+                  <TableHead className="text-right">{t('roles.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -162,26 +165,26 @@ export function RolesListPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          title="View"
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          title={t('roles.actions.view')}
                           onClick={() => handleView(role.name)}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          title="Edit"
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          title={t('roles.actions.edit')}
                           onClick={() => handleEdit(role.id, role.name)}
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          title="Delete"
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          title={t('roles.actions.delete')}
                           onClick={() => handleDelete(role.name)}
                           className="text-red-600 hover:text-red-700 hover:bg-red-50"
                         >

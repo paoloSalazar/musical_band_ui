@@ -182,6 +182,26 @@ export function translateApiError(errorMessage: string, context?: string): strin
       regex: /^Role (.+) not found$/i,
       key: 'users.errors.roleNotFound',
       extractor: (match: RegExpMatchArray) => ({ role: match[1] })
+    },
+    {
+      regex: /^Role (.+) already exists$/i,
+      key: 'roles.errors.roleAlreadyExists',
+      extractor: (match: RegExpMatchArray) => ({ name: match[1] })
+    },
+    {
+      regex: /^Role (.+) is currently in use and cannot be deleted$/i,
+      key: 'roles.errors.roleInUse',
+      extractor: (match: RegExpMatchArray) => ({ name: match[1] })
+    },
+    {
+      regex: /^This user cannot be deleted because they have created (\d+) events?\. Please reassign or delete these events first\.$/i,
+      key: 'users.errors.cannotDeleteUserWithAssociations',
+      extractor: (match: RegExpMatchArray) => ({ count: parseInt(match[1], 10) })
+    },
+    {
+      regex: /^This role cannot be deleted because (\d+) users? are assigned to it\. Please reassign these users to another role first\.$/i,
+      key: 'roles.errors.cannotDeleteRoleWithUsers',
+      extractor: (match: RegExpMatchArray) => ({ count: parseInt(match[1], 10) })
     }
   ];
 

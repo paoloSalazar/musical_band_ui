@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogHeader, 
-  DialogTitle 
+import { useTranslation } from 'react-i18next';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
 } from '../../ui/dialog';
+import { translateApiError } from '../../../../i18n/utils';
 import { Button } from '../../ui/button';
 import { rolesApi } from '../../../lib/api/rbac';
 import type { Role } from '../../../lib/types';
@@ -25,11 +27,12 @@ interface ViewRoleDialogProps {
  * View Role Dialog
  * Displays role details in a popup
  */
-export function ViewRoleDialog({ 
-  roleName, 
-  open, 
-  onOpenChange 
+export function ViewRoleDialog({
+  roleName,
+  open,
+  onOpenChange
 }: ViewRoleDialogProps) {
+  const { t } = useTranslation();
   const [role, setRole] = useState<Role | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +55,8 @@ export function ViewRoleDialog({
       setRole(response.data);
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to load role');
+      const rawErrorMessage = error.detail || error.message;
+      setError(rawErrorMessage ? translateApiError(rawErrorMessage, 'role view') : 'Failed to load role');
     } finally {
       setIsLoading(false);
     }
@@ -64,17 +68,17 @@ export function ViewRoleDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Eye className="mr-2 h-5 w-5" />
-            Role Details
+            {t('roles.dialog.view.title')}
           </DialogTitle>
           <DialogDescription>
-            View role information
+            {t('roles.dialog.view.description')}
           </DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading role...</span>
+            <span className="ml-2 text-gray-600">{t('roles.form.loadingRole')}</span>
           </div>
         ) : error ? (
           <div className="text-center py-8">
@@ -95,7 +99,7 @@ export function ViewRoleDialog({
                 <Hash className="h-5 w-5 text-blue-600" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500">ID</p>
+                <p className="text-sm font-medium text-gray-500">{t('roles.dialog.view.id')}</p>
                 <p className="text-lg font-semibold">{role.id}</p>
               </div>
             </div>
@@ -106,7 +110,7 @@ export function ViewRoleDialog({
                 <Tag className="h-5 w-5 text-green-600" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500">Name</p>
+                <p className="text-sm font-medium text-gray-500">{t('roles.dialog.view.name')}</p>
                 <p className="text-lg font-mono font-semibold">{role.name}</p>
               </div>
             </div>
@@ -117,10 +121,10 @@ export function ViewRoleDialog({
                 <FileText className="h-5 w-5 text-purple-600" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-500">Description</p>
-                <p className="text-base">
-                  {role.description || <span className="italic text-gray-400">No description</span>}
-                </p>
+                 <p className="text-sm font-medium text-gray-500">{t('roles.dialog.view.description')}</p>
+                 <p className="text-base">
+                   {role.description || <span className="italic text-gray-400">{t('roles.dialog.view.noDescription')}</span>}
+                 </p>
               </div>
             </div>
           </div>

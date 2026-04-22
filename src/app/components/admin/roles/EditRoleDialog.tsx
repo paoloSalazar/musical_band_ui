@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle 
+import { useTranslation } from 'react-i18next';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from '../../ui/dialog';
+import { translateApiError } from '../../../../i18n/utils';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
@@ -30,13 +32,14 @@ interface EditRoleDialogProps {
  * Edit Role Dialog
  * Allows editing role description via PATCH endpoint
  */
-export function EditRoleDialog({ 
+export function EditRoleDialog({
   roleId,
   roleName,
-  open, 
+  open,
   onOpenChange,
   onSuccess
 }: EditRoleDialogProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +66,8 @@ export function EditRoleDialog({
       setName(response.data.name || '');
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to load role');
+      const rawErrorMessage = error.detail || error.message;
+      setError(rawErrorMessage ? translateApiError(rawErrorMessage, 'role loading') : 'Failed to load role');
     } finally {
       setIsFetching(false);
     }
@@ -89,7 +93,8 @@ export function EditRoleDialog({
       onSuccess(response.data);
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to update role');
+      const rawErrorMessage = error.detail || error.message;
+      setError(rawErrorMessage ? translateApiError(rawErrorMessage, 'role update') : t('roles.form.failedToUpdate'));
     } finally {
       setIsLoading(false);
     }
@@ -109,17 +114,17 @@ export function EditRoleDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Pencil className="mr-2 h-5 w-5" />
-            Edit Role
+            {t('roles.form.edit.title')}
           </DialogTitle>
           <DialogDescription>
-            Update the role details below.
+            {t('roles.form.edit.description')}
           </DialogDescription>
         </DialogHeader>
         
         {isFetching ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading role...</span>
+            <span className="ml-2 text-gray-600">{t('roles.form.loadingRole')}</span>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -132,9 +137,9 @@ export function EditRoleDialog({
               
               {/* Role Name (read-only) */}
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
+                 <Label htmlFor="name" className="text-right">
+                   {t('roles.form.fields.name')}
+                 </Label>
                 <Input
                   id="name"
                   value={name}
@@ -145,31 +150,31 @@ export function EditRoleDialog({
               
               {/* Role Description (editable) */}
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="description" className="text-right">
-                  Description
-                </Label>
-                <Input
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter description"
-                  className="col-span-3"
-                  disabled={isLoading}
-                />
+                 <Label htmlFor="description" className="text-right">
+                   {t('roles.form.fields.description')}
+                 </Label>
+                 <Input
+                   id="description"
+                   value={description}
+                   onChange={(e) => setDescription(e.target.value)}
+                   placeholder={t('roles.form.fields.descriptionPlaceholder')}
+                   className="col-span-3"
+                   disabled={isLoading}
+                 />
               </div>
             </div>
             <DialogFooter>
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => handleOpenChange(false)} 
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleOpenChange(false)}
                 disabled={isLoading}
               >
-                Cancel
+                {t('roles.form.buttons.cancel')}
               </Button>
               <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Save Changes
+                {t('roles.form.buttons.saveChanges')}
               </Button>
             </DialogFooter>
           </form>
