@@ -37,7 +37,7 @@ describe('RolePermissionsPage Component', () => {
 
     render(<RolePermissionsPage />);
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByText('rolePermissions.loading')).toBeInTheDocument();
     expect(document.querySelector('.animate-spin')).toBeInTheDocument();
   });
 
@@ -79,7 +79,7 @@ describe('RolePermissionsPage Component', () => {
     render(<RolePermissionsPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('No roles found')).toBeInTheDocument();
+      expect(screen.getByText('rolePermissions.noRoles')).toBeInTheDocument();
     });
   });
 
@@ -89,7 +89,7 @@ describe('RolePermissionsPage Component', () => {
     render(<RolePermissionsPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Error loading data')).toBeInTheDocument();
+      expect(screen.getByText('rolePermissions.errorLoading')).toBeInTheDocument();
       expect(screen.getByText('Network error')).toBeInTheDocument();
     });
   });
@@ -108,15 +108,15 @@ describe('RolePermissionsPage Component', () => {
 
     await waitFor(() => screen.getByText('admin'));
 
-    const manageButton = screen.getByRole('button', { name: /manage/i });
+    const manageButton = screen.getByRole('button', { name: /rolePermissions\.actions\.manage/i });
     fireEvent.click(manageButton);
 
-    await waitFor(() => screen.getByText('Manage Permissions for admin'));
+    await waitFor(() => screen.getByText('rolePermissions.dialog.managePermissions'));
 
     const readCheckbox = document.querySelector('[id="perm-1"]');
     fireEvent.click(readCheckbox);
 
-    const saveButton = screen.getByRole('button', { name: /save changes/i });
+    const saveButton = screen.getByRole('button', { name: /rolePermissions\.dialog\.saveChanges/i });
     fireEvent.click(saveButton);
 
     await waitFor(() => {
