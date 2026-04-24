@@ -63,7 +63,7 @@ describe('DeleteUserDialog Component', () => {
       />
     );
 
-    expect(screen.getByText('Loading user...')).toBeInTheDocument();
+    expect(screen.getByText('users.dialog.delete.loadingUser')).toBeInTheDocument();
   });
 
   it('should submit delete successfully', async () => {
@@ -86,7 +86,7 @@ describe('DeleteUserDialog Component', () => {
 
     await waitFor(() => screen.getByText('John Doe'));
 
-    const deleteButton = screen.getByRole('button', { name: /delete user/i });
+    const deleteButton = screen.getByRole('button', { name: /users\.dialog\.delete\.deleteUser/i });
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
@@ -114,7 +114,7 @@ describe('DeleteUserDialog Component', () => {
 
     await waitFor(() => screen.getByText('John Doe'));
 
-    const deleteButton = screen.getByRole('button', { name: /delete user/i });
+    const deleteButton = screen.getByRole('button', { name: /users\.dialog\.delete\.deleteUser/i });
     fireEvent.click(deleteButton);
 
     expect(deleteButton).toBeDisabled();
@@ -140,7 +140,7 @@ describe('DeleteUserDialog Component', () => {
 
     await waitFor(() => screen.getByText('John Doe'));
 
-    const deleteButton = screen.getByRole('button', { name: /delete user/i });
+    const deleteButton = screen.getByRole('button', { name: /users\.dialog\.delete\.deleteUser/i });
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
@@ -210,7 +210,7 @@ describe('DeleteUserDialog Component', () => {
     // Wait for user to load
     await waitFor(() => screen.getByText('John Doe'));
 
-    const deleteButton = screen.getByRole('button', { name: /delete user/i });
+    const deleteButton = screen.getByRole('button', { name: /users\.dialog\.delete\.deleteUser/i });
     fireEvent.click(deleteButton);
 
     const cancelButton = screen.getByRole('button', { name: /cancel/i });

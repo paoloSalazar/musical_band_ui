@@ -39,7 +39,7 @@ describe('UserFormDialog Component', () => {
   it('should render trigger button', () => {
     render(<UserFormDialog />);
 
-    expect(screen.getByRole('button', { name: /create user/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /users\.createUser/i })).toBeInTheDocument();
   });
 
   it('should open dialog when trigger clicked', async () => {
@@ -48,11 +48,11 @@ describe('UserFormDialog Component', () => {
 
     render(<UserFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create user/i });
+    const triggerButton = screen.getByRole('button', { name: /users\.createUser/i });
     fireEvent.click(triggerButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Create New User')).toBeInTheDocument();
+      expect(screen.getByText('users.form.create.title')).toBeInTheDocument();
     });
   });
 
@@ -62,7 +62,7 @@ describe('UserFormDialog Component', () => {
 
     render(<UserFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create user/i });
+    const triggerButton = screen.getByRole('button', { name: /users\.createUser/i });
     fireEvent.click(triggerButton);
 
     await waitFor(() => {
@@ -76,15 +76,15 @@ describe('UserFormDialog Component', () => {
 
     render(<UserFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create user/i });
+    const triggerButton = screen.getByRole('button', { name: /users\.createUser/i });
     fireEvent.click(triggerButton);
 
-    await waitFor(() => screen.getByText('Create New User'));
+    await waitFor(() => screen.getByText('users.form.create.title'));
 
-    const submitButton = screen.getByRole('button', { name: /save user/i });
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveUser/i });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Name is required')).toBeInTheDocument();
+    expect(screen.getByText('users.form.validation.nameRequired')).toBeInTheDocument();
   });
 
   it('should validate all required fields', async () => {
@@ -93,37 +93,37 @@ describe('UserFormDialog Component', () => {
 
     render(<UserFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create user/i });
+    const triggerButton = screen.getByRole('button', { name: /users\.createUser/i });
     fireEvent.click(triggerButton);
 
-    await waitFor(() => screen.getByText('Create New User'));
+    await waitFor(() => screen.getByText('users.form.create.title'));
 
     // Fill some fields but miss required ones
     const lastnameInput = screen.getByPlaceholderText('e.g., Perez');
     fireEvent.change(lastnameInput, { target: { value: 'Doe' } });
 
-    const submitButton = screen.getByRole('button', { name: /save user/i });
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveUser/i });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Name is required')).toBeInTheDocument();
+    expect(screen.getByText('users.form.validation.nameRequired')).toBeInTheDocument();
 
     const nameInput = screen.getByPlaceholderText('e.g., Juan');
     fireEvent.change(nameInput, { target: { value: 'John' } });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Email is required')).toBeInTheDocument();
+    expect(screen.getByText('users.form.validation.emailRequired')).toBeInTheDocument();
 
     const emailInput = screen.getByPlaceholderText('e.g., juan.perez@example.com');
     fireEvent.change(emailInput, { target: { value: 'john@example.com' } });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Password is required')).toBeInTheDocument();
+    expect(screen.getByText('users.form.validation.passwordRequired')).toBeInTheDocument();
 
-    const passwordInput = screen.getByPlaceholderText('Enter password');
+    const passwordInput = screen.getByPlaceholderText('users.form.fields.password');
     fireEvent.change(passwordInput, { target: { value: 'password123' } });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Role is required')).toBeInTheDocument();
+    expect(screen.getByText('users.form.validation.roleRequired')).toBeInTheDocument();
   });
 
   it('should submit form successfully', async () => {
@@ -138,16 +138,16 @@ describe('UserFormDialog Component', () => {
 
     render(<UserFormDialog onSuccess={onSuccess} />);
 
-    const triggerButton = screen.getByRole('button', { name: /create user/i });
+    const triggerButton = screen.getByRole('button', { name: /users\.createUser/i });
     fireEvent.click(triggerButton);
 
-    await waitFor(() => screen.getByText('Create New User'));
+    await waitFor(() => screen.getByText('users.form.create.title'));
 
     const nameInput = screen.getByPlaceholderText('e.g., Juan');
     const lastnameInput = screen.getByPlaceholderText('e.g., Perez');
     const emailInput = screen.getByPlaceholderText('e.g., juan.perez@example.com');
-    const passwordInput = screen.getByPlaceholderText('Enter password');
-    const submitButton = screen.getByRole('button', { name: /save user/i });
+    const passwordInput = screen.getByPlaceholderText('users.form.fields.password');
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveUser/i });
 
     fireEvent.change(nameInput, { target: { value: 'John' } });
     fireEvent.change(lastnameInput, { target: { value: 'Doe' } });
@@ -187,16 +187,16 @@ describe('UserFormDialog Component', () => {
 
     render(<UserFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create user/i });
+    const triggerButton = screen.getByRole('button', { name: /users\.createUser/i });
     fireEvent.click(triggerButton);
 
-    await waitFor(() => screen.getByText('Create New User'));
+    await waitFor(() => screen.getByText('users.form.create.title'));
 
     const nameInput = screen.getByPlaceholderText('e.g., Juan');
     const lastnameInput = screen.getByPlaceholderText('e.g., Perez');
     const emailInput = screen.getByPlaceholderText('e.g., juan.perez@example.com');
-    const passwordInput = screen.getByPlaceholderText('Enter password');
-    const submitButton = screen.getByRole('button', { name: /save user/i });
+    const passwordInput = screen.getByPlaceholderText('users.form.fields.password');
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveUser/i });
 
     fireEvent.change(nameInput, { target: { value: 'John' } });
     fireEvent.change(lastnameInput, { target: { value: 'Doe' } });
@@ -211,7 +211,7 @@ describe('UserFormDialog Component', () => {
 
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Save User')).toBeDisabled();
+    expect(screen.getByText('users.form.buttons.saveUser')).toBeDisabled();
     expect(document.querySelector('.animate-spin')).toBeInTheDocument();
   });
 
@@ -224,16 +224,16 @@ describe('UserFormDialog Component', () => {
 
     render(<UserFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create user/i });
+    const triggerButton = screen.getByRole('button', { name: /users\.createUser/i });
     fireEvent.click(triggerButton);
 
-    await waitFor(() => screen.getByText('Create New User'));
+    await waitFor(() => screen.getByText('users.form.create.title'));
 
     const nameInput = screen.getByPlaceholderText('e.g., Juan');
     const lastnameInput = screen.getByPlaceholderText('e.g., Perez');
     const emailInput = screen.getByPlaceholderText('e.g., juan.perez@example.com');
-    const passwordInput = screen.getByPlaceholderText('Enter password');
-    const submitButton = screen.getByRole('button', { name: /save user/i });
+    const passwordInput = screen.getByPlaceholderText('users.form.fields.password');
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveUser/i });
 
     fireEvent.change(nameInput, { target: { value: 'John' } });
     fireEvent.change(lastnameInput, { target: { value: 'Doe' } });
@@ -259,10 +259,10 @@ describe('UserFormDialog Component', () => {
 
     render(<UserFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create user/i });
+    const triggerButton = screen.getByRole('button', { name: /users\.createUser/i });
     fireEvent.click(triggerButton);
 
-    await waitFor(() => screen.getByText('Create New User'));
+    await waitFor(() => screen.getByText('users.form.create.title'));
 
     const nameInput = screen.getByPlaceholderText('e.g., Juan');
     fireEvent.change(nameInput, { target: { value: 'test' } });
@@ -274,7 +274,7 @@ describe('UserFormDialog Component', () => {
     // Reopen
     fireEvent.click(triggerButton);
 
-    await waitFor(() => screen.getByText('Create New User'));
+    await waitFor(() => screen.getByText('users.form.create.title'));
 
     const newNameInput = screen.getByPlaceholderText('e.g., Juan');
     await waitFor(() => {
@@ -292,16 +292,16 @@ describe('UserFormDialog Component', () => {
 
     render(<UserFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create user/i });
+    const triggerButton = screen.getByRole('button', { name: /users\.createUser/i });
     fireEvent.click(triggerButton);
 
-    await waitFor(() => screen.getByText('Create New User'));
+    await waitFor(() => screen.getByText('users.form.create.title'));
 
     const nameInput = screen.getByPlaceholderText('e.g., Juan');
     const lastnameInput = screen.getByPlaceholderText('e.g., Perez');
     const emailInput = screen.getByPlaceholderText('e.g., juan.perez@example.com');
-    const passwordInput = screen.getByPlaceholderText('Enter password');
-    const submitButton = screen.getByRole('button', { name: /save user/i });
+    const passwordInput = screen.getByPlaceholderText('users.form.fields.password');
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveUser/i });
 
     fireEvent.change(nameInput, { target: { value: '  John  ' } });
     fireEvent.change(lastnameInput, { target: { value: '  Doe  ' } });

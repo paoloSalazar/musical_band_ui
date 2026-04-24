@@ -56,7 +56,7 @@ describe('ViewUserDialog Component', () => {
 
     render(<ViewUserDialog userId={1} open={true} onOpenChange={() => {}} />);
 
-    expect(screen.getByText('Loading user...')).toBeInTheDocument();
+    expect(screen.getByText('users.form.loadingUser')).toBeInTheDocument();
   });
 
   it('should show error state', async () => {
