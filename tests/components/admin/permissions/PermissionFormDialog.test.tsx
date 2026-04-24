@@ -24,28 +24,28 @@ describe('PermissionFormDialog Component', () => {
   it('should render trigger button', () => {
     render(<PermissionFormDialog />);
 
-    expect(screen.getByRole('button', { name: /create permission/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /permissions\.createPermission/i })).toBeInTheDocument();
   });
 
   it('should open dialog when trigger clicked', () => {
     render(<PermissionFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create permission/i });
+    const triggerButton = screen.getByRole('button', { name: /permissions\.createPermission/i });
     fireEvent.click(triggerButton);
 
-    expect(screen.getByText('Create New Permission')).toBeInTheDocument();
+    expect(screen.getByText('permissions.form.create.title')).toBeInTheDocument();
   });
 
   it('should show validation error for empty name', async () => {
     render(<PermissionFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create permission/i });
+    const triggerButton = screen.getByRole('button', { name: /permissions\.createPermission/i });
     fireEvent.click(triggerButton);
 
-    const submitButton = screen.getByRole('button', { name: /save permission/i });
+    const submitButton = screen.getByRole('button', { name: /permissions\.form\.buttons\.savePermission/i });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Permission name is required')).toBeInTheDocument();
+    expect(screen.getByText('permissions.form.validation.nameRequired')).toBeInTheDocument();
   });
 
   it('should submit form successfully', async () => {
@@ -58,12 +58,12 @@ describe('PermissionFormDialog Component', () => {
 
     render(<PermissionFormDialog onSuccess={onSuccess} />);
 
-    const triggerButton = screen.getByRole('button', { name: /create permission/i });
+    const triggerButton = screen.getByRole('button', { name: /permissions\.createPermission/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., read:events');
-    const descriptionInput = screen.getByPlaceholderText('Optional description');
-    const submitButton = screen.getByRole('button', { name: /save permission/i });
+    const nameInput = screen.getByPlaceholderText('permissions.form.fields.namePlaceholder');
+    const descriptionInput = screen.getByPlaceholderText('permissions.form.fields.descriptionPlaceholder');
+    const submitButton = screen.getByRole('button', { name: /permissions\.form\.buttons\.savePermission/i });
 
     fireEvent.change(nameInput, { target: { value: 'read:events' } });
     fireEvent.change(descriptionInput, { target: { value: 'Can read events' } });
@@ -87,16 +87,16 @@ describe('PermissionFormDialog Component', () => {
 
     render(<PermissionFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create permission/i });
+    const triggerButton = screen.getByRole('button', { name: /permissions\.createPermission/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., read:events');
-    const submitButton = screen.getByRole('button', { name: /save permission/i });
+    const nameInput = screen.getByPlaceholderText('permissions.form.fields.namePlaceholder');
+    const submitButton = screen.getByRole('button', { name: /permissions\.form\.buttons\.savePermission/i });
 
     fireEvent.change(nameInput, { target: { value: 'read' } });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Save Permission')).toBeDisabled();
+    expect(screen.getByText('permissions.form.buttons.savePermission')).toBeDisabled();
     expect(document.querySelector('.animate-spin')).toBeInTheDocument();
   });
 
@@ -107,11 +107,11 @@ describe('PermissionFormDialog Component', () => {
 
     render(<PermissionFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create permission/i });
+    const triggerButton = screen.getByRole('button', { name: /permissions\.createPermission/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., read:events');
-    const submitButton = screen.getByRole('button', { name: /save permission/i });
+    const nameInput = screen.getByPlaceholderText('permissions.form.fields.namePlaceholder');
+    const submitButton = screen.getByRole('button', { name: /permissions\.form\.buttons\.savePermission/i });
 
     fireEvent.change(nameInput, { target: { value: 'read' } });
     fireEvent.click(submitButton);
@@ -124,20 +124,20 @@ describe('PermissionFormDialog Component', () => {
   it('should reset form when dialog closes', async () => {
     render(<PermissionFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create permission/i });
+    const triggerButton = screen.getByRole('button', { name: /permissions\.createPermission/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., read:events');
+    const nameInput = screen.getByPlaceholderText('permissions.form.fields.namePlaceholder');
     fireEvent.change(nameInput, { target: { value: 'test' } });
 
     // Close dialog
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    const cancelButton = screen.getByRole('button', { name: /permissions\.form\.buttons\.cancel/i });
     fireEvent.click(cancelButton);
 
     // Reopen
     fireEvent.click(triggerButton);
 
-    const newNameInput = screen.getByPlaceholderText('e.g., read:events');
+    const newNameInput = screen.getByPlaceholderText('permissions.form.fields.namePlaceholder');
     await waitFor(() => {
       expect(newNameInput).toHaveValue('');
     });
@@ -151,12 +151,12 @@ describe('PermissionFormDialog Component', () => {
 
     render(<PermissionFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create permission/i });
+    const triggerButton = screen.getByRole('button', { name: /permissions\.createPermission/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., read:events');
-    const descriptionInput = screen.getByPlaceholderText('Optional description');
-    const submitButton = screen.getByRole('button', { name: /save permission/i });
+    const nameInput = screen.getByPlaceholderText('permissions.form.fields.namePlaceholder');
+    const descriptionInput = screen.getByPlaceholderText('permissions.form.fields.descriptionPlaceholder');
+    const submitButton = screen.getByRole('button', { name: /permissions\.form\.buttons\.savePermission/i });
 
     fireEvent.change(nameInput, { target: { value: '  read  ' } });
     fireEvent.change(descriptionInput, { target: { value: '  desc  ' } });
