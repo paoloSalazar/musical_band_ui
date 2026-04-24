@@ -24,28 +24,28 @@ describe('RoleFormDialog Component', () => {
   it('should render trigger button', () => {
     render(<RoleFormDialog />);
 
-    expect(screen.getByRole('button', { name: /create role/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /roles\.createRole/i })).toBeInTheDocument();
   });
 
   it('should open dialog when trigger clicked', () => {
     render(<RoleFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create role/i });
+    const triggerButton = screen.getByRole('button', { name: /roles\.createRole/i });
     fireEvent.click(triggerButton);
 
-    expect(screen.getByText('Create New Role')).toBeInTheDocument();
+    expect(screen.getByText('roles.form.create.title')).toBeInTheDocument();
   });
 
   it('should show validation error for empty name', async () => {
     render(<RoleFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create role/i });
+    const triggerButton = screen.getByRole('button', { name: /roles\.createRole/i });
     fireEvent.click(triggerButton);
 
-    const submitButton = screen.getByRole('button', { name: /save role/i });
+    const submitButton = screen.getByRole('button', { name: /roles\.form\.buttons\.saveRole/i });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Role name is required')).toBeInTheDocument();
+    expect(screen.getByText('roles.form.validation.nameRequired')).toBeInTheDocument();
   });
 
   it('should submit form successfully', async () => {
@@ -58,12 +58,12 @@ describe('RoleFormDialog Component', () => {
 
     render(<RoleFormDialog onSuccess={onSuccess} />);
 
-    const triggerButton = screen.getByRole('button', { name: /create role/i });
+    const triggerButton = screen.getByRole('button', { name: /roles\.createRole/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., moderator');
-    const descriptionInput = screen.getByPlaceholderText('Optional description');
-    const submitButton = screen.getByRole('button', { name: /save role/i });
+    const nameInput = screen.getByPlaceholderText('roles.form.fields.namePlaceholder');
+    const descriptionInput = screen.getByPlaceholderText('roles.form.fields.descriptionPlaceholder');
+    const submitButton = screen.getByRole('button', { name: /roles\.form\.buttons\.saveRole/i });
 
     fireEvent.change(nameInput, { target: { value: 'moderator' } });
     fireEvent.change(descriptionInput, { target: { value: 'Can moderate' } });
@@ -79,7 +79,7 @@ describe('RoleFormDialog Component', () => {
     expect(onSuccess).toHaveBeenCalledWith(mockRole);
 
     // Dialog should be closed
-    expect(screen.queryByText('Create New Role')).not.toBeInTheDocument();
+    expect(screen.queryByText('roles.form.create.title')).not.toBeInTheDocument();
   });
 
   it('should show loading state during submit', async () => {
@@ -87,16 +87,16 @@ describe('RoleFormDialog Component', () => {
 
     render(<RoleFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create role/i });
+    const triggerButton = screen.getByRole('button', { name: /roles\.createRole/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., moderator');
-    const submitButton = screen.getByRole('button', { name: /save role/i });
+    const nameInput = screen.getByPlaceholderText('roles.form.fields.namePlaceholder');
+    const submitButton = screen.getByRole('button', { name: /roles\.form\.buttons\.saveRole/i });
 
     fireEvent.change(nameInput, { target: { value: 'moderator' } });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Save Role')).toBeDisabled();
+    expect(screen.getByText('roles.form.buttons.saveRole')).toBeDisabled();
     expect(document.querySelector('.animate-spin')).toBeInTheDocument();
   });
 
@@ -107,11 +107,11 @@ describe('RoleFormDialog Component', () => {
 
     render(<RoleFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create role/i });
+    const triggerButton = screen.getByRole('button', { name: /roles\.createRole/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., moderator');
-    const submitButton = screen.getByRole('button', { name: /save role/i });
+    const nameInput = screen.getByPlaceholderText('roles.form.fields.namePlaceholder');
+    const submitButton = screen.getByRole('button', { name: /roles\.form\.buttons\.saveRole/i });
 
     fireEvent.change(nameInput, { target: { value: 'moderator' } });
     fireEvent.click(submitButton);
@@ -124,20 +124,20 @@ describe('RoleFormDialog Component', () => {
   it('should reset form when dialog closes', async () => {
     render(<RoleFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create role/i });
+    const triggerButton = screen.getByRole('button', { name: /roles\.createRole/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., moderator');
+    const nameInput = screen.getByPlaceholderText('roles.form.fields.namePlaceholder');
     fireEvent.change(nameInput, { target: { value: 'test' } });
 
     // Close dialog
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    const cancelButton = screen.getByRole('button', { name: /roles\.form\.buttons\.cancel/i });
     fireEvent.click(cancelButton);
 
     // Reopen
     fireEvent.click(triggerButton);
 
-    const newNameInput = screen.getByPlaceholderText('e.g., moderator');
+    const newNameInput = screen.getByPlaceholderText('roles.form.fields.namePlaceholder');
     await waitFor(() => {
       expect(newNameInput).toHaveValue('');
     });
@@ -151,12 +151,12 @@ describe('RoleFormDialog Component', () => {
 
     render(<RoleFormDialog />);
 
-    const triggerButton = screen.getByRole('button', { name: /create role/i });
+    const triggerButton = screen.getByRole('button', { name: /roles\.createRole/i });
     fireEvent.click(triggerButton);
 
-    const nameInput = screen.getByPlaceholderText('e.g., moderator');
-    const descriptionInput = screen.getByPlaceholderText('Optional description');
-    const submitButton = screen.getByRole('button', { name: /save role/i });
+    const nameInput = screen.getByPlaceholderText('roles.form.fields.namePlaceholder');
+    const descriptionInput = screen.getByPlaceholderText('roles.form.fields.descriptionPlaceholder');
+    const submitButton = screen.getByRole('button', { name: /roles\.form\.buttons\.saveRole/i });
 
     fireEvent.change(nameInput, { target: { value: '  moderator  ' } });
     fireEvent.change(descriptionInput, { target: { value: '  desc  ' } });

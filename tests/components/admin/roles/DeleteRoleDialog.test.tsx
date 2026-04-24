@@ -32,7 +32,7 @@ describe('DeleteRoleDialog Component', () => {
     );
 
     expect(screen.getByText('admin')).toBeInTheDocument();
-    expect(screen.getByText('Delete Role')).toBeInTheDocument();
+    expect(screen.getByText('roles.dialog.delete.title')).toBeInTheDocument();
   });
 
   it('should submit delete successfully', async () => {
@@ -50,7 +50,7 @@ describe('DeleteRoleDialog Component', () => {
       />
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /roles\.dialog\.delete\.delete/i });
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
@@ -73,7 +73,7 @@ describe('DeleteRoleDialog Component', () => {
       />
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /roles\.dialog\.delete\.delete/i });
     fireEvent.click(deleteButton);
 
     expect(deleteButton).toBeDisabled();
@@ -94,7 +94,7 @@ describe('DeleteRoleDialog Component', () => {
       />
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /roles\.dialog\.delete\.delete/i });
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
@@ -116,13 +116,13 @@ describe('DeleteRoleDialog Component', () => {
       />
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /roles\.dialog\.delete\.delete/i });
     fireEvent.click(deleteButton);
 
     await waitFor(() => screen.getByText('Error'));
 
     // Close dialog
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    const cancelButton = screen.getByRole('button', { name: /roles\.form\.buttons\.cancel/i });
     fireEvent.click(cancelButton);
 
     expect(screen.queryByText('Error')).not.toBeInTheDocument();
@@ -140,10 +140,10 @@ describe('DeleteRoleDialog Component', () => {
       />
     );
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: /roles\.dialog\.delete\.delete/i });
     fireEvent.click(deleteButton);
 
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    const cancelButton = screen.getByRole('button', { name: /roles\.form\.buttons\.cancel/i });
     expect(cancelButton).toBeDisabled();
     expect(deleteButton).toBeDisabled();
   });

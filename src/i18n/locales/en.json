@@ -1,5 +1,5 @@
 {
-  "common": {
+   "common": {
     "loading": "Loading...",
     "error": "Error",
     "success": "Success",
@@ -18,7 +18,8 @@
     "sort": "Sort",
     "yes": "Yes",
     "no": "No",
-    "ok": "OK"
+    "ok": "OK",
+    "tryAgain": "Try Again"
   },
   "auth": {
     "login": "Login",

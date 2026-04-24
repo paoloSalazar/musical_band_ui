@@ -10,7 +10,7 @@ import {
 } from '../../ui/dialog';
 import { translateApiError } from '../../../../i18n/utils';
 import { Button } from '../../ui/button';
-import { rolesApi } from '../../../lib/api/rbac';
+import { rolesApi } from '../../../lib/api';
 import type { ApiError } from '../../../lib/api/client';
 import { Loader2, Trash2, AlertTriangle } from 'lucide-react';
 

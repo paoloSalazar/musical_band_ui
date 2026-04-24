@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { rolesApi } from '../../../lib/api/rbac';
+import { rolesApi } from '../../../lib/api';
 import { translateApiError } from '../../../../i18n/utils';
 import type { Role } from '../../../lib/types';
 import { 

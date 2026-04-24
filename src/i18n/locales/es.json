@@ -1,5 +1,5 @@
 {
-  "common": {
+   "common": {
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito",
@@ -18,7 +18,8 @@
     "sort": "Ordenar",
     "yes": "Sí",
     "no": "No",
-    "ok": "Aceptar"
+    "ok": "Aceptar",
+    "tryAgain": "Intentar de Nuevo"
   },
   "auth": {
     "login": "Iniciar Sesión",

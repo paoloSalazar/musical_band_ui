@@ -12,7 +12,7 @@ import { translateApiError } from '../../../../i18n/utils';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
 import { Label } from '../../ui/label';
-import { rolesApi } from '../../../lib/api/rbac';
+import { rolesApi } from '../../../lib/api';
 import type { Role } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
 import { Loader2, Pencil } from 'lucide-react';

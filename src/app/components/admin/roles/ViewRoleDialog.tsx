@@ -9,7 +9,7 @@ import {
 } from '../../ui/dialog';
 import { translateApiError } from '../../../../i18n/utils';
 import { Button } from '../../ui/button';
-import { rolesApi } from '../../../lib/api/rbac';
+import { rolesApi } from '../../../lib/api';
 import type { Role } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
 import { Loader2, Eye, Tag, FileText, Hash } from 'lucide-react';
@@ -83,12 +83,12 @@ export function ViewRoleDialog({
         ) : error ? (
           <div className="text-center py-8">
             <p className="text-red-600">{error}</p>
-            <Button 
-              onClick={() => roleName && loadRole(roleName)} 
-              variant="outline" 
+            <Button
+              onClick={() => roleName && loadRole(roleName)}
+              variant="outline"
               className="mt-4"
             >
-              Try Again
+              {t('common.tryAgain')}
             </Button>
           </div>
         ) : role ? (
