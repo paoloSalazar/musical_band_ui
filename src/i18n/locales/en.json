@@ -19,7 +19,15 @@
     "yes": "Yes",
     "no": "No",
     "ok": "OK",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "this": "this",
+    "these": "these",
+    "user": "user",
+    "users": "users",
+    "verbs": {
+      "is": "is",
+      "are": "are"
+    }
   },
   "auth": {
     "login": "Login",
@@ -139,17 +147,6 @@
     "english": "English",
     "spanish": "Español"
   },
-  "roles": {
-    "admin": "Administrator",
-    "member": "Member",
-    "moderator": "Moderator",
-    "user": "User",
-    "musician": "Musician",
-    "client": "Client",
-    "manager": "Manager",
-    "staff": "Staff",
-    "auxiliar_musician": "Auxiliar Musician"
-  },
   "permissions": {
     "read:events": "View Events",
     "create:events": "Create Events",
@@ -237,7 +234,7 @@
       "permissionAlreadyExists": "Permission {{name}} already exists",
       "permissionNotFound": "Permission {{name}} not found",
       "permissionInUse": "Permission {{name}} is currently in use and cannot be deleted",
-      "cannotDeletePermissionWithRoles": "This permission cannot be deleted because it is assigned to {{count}} role ('{{role}}'). Please remove this permission from the role first.",
+      "cannotDeletePermissionWithRoles": "This permission cannot be deleted because it is assigned to {{count}} role ('{{roles}}'). Please remove this permission from the role first.",
       "validationError": "Validation error",
       "networkError": "Network error occurred",
       "serverError": "Server error occurred"
@@ -276,6 +273,15 @@
     }
   },
   "roles": {
+    "admin": "Administrator",
+    "member": "Member",
+    "moderator": "Moderator",
+    "user": "User",
+    "musician": "Musician",
+    "client": "Client",
+    "manager": "Manager",
+    "staff": "Staff",
+    "auxiliar_musician": "Auxiliar Musician",
     "title": "User Roles",
     "subtitle": "Manage user roles and their permissions",
     "createRole": "Create Role",
@@ -346,12 +352,16 @@
       "roleAlreadyExists": "Role {{name}} already exists",
       "roleNotFound": "Role {{name}} not found",
       "roleInUse": "Role {{name}} is currently in use and cannot be deleted",
-      "cannotDeleteRoleWithUsers": "This role cannot be deleted because {{count}} users are assigned to it. Please reassign these users to another role first.",
+      "cannotDeleteRoleWithUsers": "This role cannot be deleted because {{count}} {{noun}} {{verb}} assigned to it. Please reassign {{determiner}} {{noun}} to another role first.",
       "permissionDenied": "You don't have permission to perform this action",
       "validationError": "Validation error",
       "networkError": "Network error occurred",
       "serverError": "Server error occurred"
     }
+  },
+  "types": {
+    "musician_payment_records": "musician payment records",
+    "musician_assignment_to_an_event": "musician assignment to an event"
   },
   "users": {
     "title": "Users",
@@ -448,6 +458,7 @@
       "roleNotFound": "Role {{role}} not found",
       "cannotDeleteOwnAccount": "Cannot delete your own account",
       "cannotDeleteUserWithAssociations": "This user cannot be deleted because they have created {{count}} events. Please reassign or delete these events first.",
+      "cannotDeleteUserWithPaymentRecords": "This user cannot be deleted because they have {{count}} {{type}}. Please remove {{determiner}} {{type}} first.",
       "validationError": "Validation error",
       "networkError": "Network error occurred",
       "serverError": "Server error occurred"

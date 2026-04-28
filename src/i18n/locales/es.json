@@ -1,5 +1,5 @@
 {
-   "common": {
+  "common": {
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito",
@@ -18,8 +18,16 @@
     "sort": "Ordenar",
     "yes": "Sí",
     "no": "No",
-    "ok": "Aceptar",
-    "tryAgain": "Intentar de Nuevo"
+    "ok": "OK",
+    "tryAgain": "Intentar de Nuevo",
+    "this": "este",
+    "these": "estos",
+    "user": "usuario",
+    "users": "usuarios",
+    "verbs": {
+      "is": "está",
+      "are": "están"
+    }
   },
   "auth": {
     "login": "Iniciar Sesión",
@@ -139,15 +147,6 @@
     "english": "Inglés",
     "spanish": "Español"
   },
-  "roles": {
-    "admin": "Administrador",
-    "member": "Miembro",
-    "moderator": "Moderador",
-    "user": "Usuario",
-    "client": "Cliente",
-    "musician": "Músico",
-    "auxiliar_musician": "Músico Auxiliar"
-  },
   "permissions": {
     "read:events": "Ver Eventos",
     "create:events": "Crear Eventos",
@@ -235,7 +234,7 @@
       "permissionAlreadyExists": "El permiso {{name}} ya existe",
       "permissionNotFound": "Permiso {{name}} no encontrado",
       "permissionInUse": "El permiso {{name}} está actualmente en uso y no puede ser eliminado",
-      "cannotDeletePermissionWithRoles": "Este permiso no puede ser eliminado porque está asignado a {{count}} rol ('{{role}}'). Por favor, elimine este permiso del rol primero.",
+      "cannotDeletePermissionWithRoles": "Este permiso no puede ser eliminado porque está asignado a {{count}} rol ('{{roles}}'). Por favor, elimine este permiso del rol primero.",
       "permissionDenied": "No tienes permiso para realizar esta acción",
       "validationError": "Error de validación",
       "networkError": "Ocurrió un error de red",
@@ -273,6 +272,10 @@
       "failedToSave": "Error al guardar permisos",
       "failedToLoad": "Error al cargar datos"
     }
+  },
+  "types": {
+    "musician_payment_records": "registros de pago de músico",
+    "musician_assignment_to_an_event": "asignación de músico a un evento"
   },
   "users": {
     "title": "Usuarios",
@@ -369,12 +372,22 @@
       "roleNotFound": "Rol {{role}} no encontrado",
       "cannotDeleteOwnAccount": "No puedes eliminar tu propia cuenta",
       "cannotDeleteUserWithAssociations": "Este usuario no puede ser eliminado porque ha creado {{count}} eventos. Por favor, reasigne o elimine estos eventos primero.",
+      "cannotDeleteUserWithPaymentRecords": "Este usuario no puede ser eliminado porque tiene {{count}} {{type}}. Por favor, elimine {{determiner}} {{type}} primero.",
       "validationError": "Error de validación",
       "networkError": "Ocurrió un error de red",
       "serverError": "Ocurrió un error del servidor"
     }
   },
   "roles": {
+    "admin": "Administrador",
+    "member": "Miembro",
+    "moderator": "Moderador",
+    "user": "Usuario",
+    "musician": "Músico",
+    "client": "Cliente",
+    "manager": "Gerente",
+    "staff": "Personal",
+    "auxiliar_musician": "Músico Auxiliar",
     "title": "Roles de Usuario",
     "subtitle": "Administrar roles de usuario y sus permisos",
     "createRole": "Crear Rol",
@@ -445,7 +458,7 @@
       "roleAlreadyExists": "El rol {{name}} ya existe",
       "roleNotFound": "Rol {{name}} no encontrado",
       "roleInUse": "El rol {{name}} está actualmente en uso y no puede ser eliminado",
-      "cannotDeleteRoleWithUsers": "Este rol no puede ser eliminado porque {{count}} usuarios están asignados a él. Por favor, reasigne estos usuarios a otro rol primero.",
+      "cannotDeleteRoleWithUsers": "Este rol no puede ser eliminado porque {{count}} {{noun}} {{verb}} asignado{{plural}} a él. Por favor, reasigne {{determiner}} {{noun}} a otro rol primero.",
       "permissionDenied": "No tienes permiso para realizar esta acción",
       "validationError": "Error de validación",
       "networkError": "Ocurrió un error de red",

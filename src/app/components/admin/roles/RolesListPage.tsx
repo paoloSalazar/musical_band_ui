@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { rolesApi } from '../../../lib/api';
-import { translateApiError } from '../../../../i18n/utils';
+import { translateApiError, translateUserRole } from '../../../../i18n/utils';
 import type { Role } from '../../../lib/types';
 import { 
   Table, 
@@ -157,9 +157,9 @@ export function RolesListPage() {
                 {roles.map((role) => (
                   <TableRow key={role.id}>
                     <TableCell className="font-medium">{role.id}</TableCell>
-                    <TableCell>
-                      <span className="font-medium">{role.name}</span>
-                    </TableCell>
+                     <TableCell>
+                       <span className="font-medium">{translateUserRole(role.name)}</span>
+                     </TableCell>
                     <TableCell className="text-gray-600">
                       {role.description || '-'}
                     </TableCell>

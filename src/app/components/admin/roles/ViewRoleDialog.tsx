@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '../../ui/dialog';
-import { translateApiError } from '../../../../i18n/utils';
+import { translateApiError, translateUserRole } from '../../../../i18n/utils';
 import { Button } from '../../ui/button';
 import { rolesApi } from '../../../lib/api';
 import type { Role } from '../../../lib/types';
@@ -111,7 +111,7 @@ export function ViewRoleDialog({
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium text-gray-500">{t('roles.dialog.view.name')}</p>
-                <p className="text-lg font-mono font-semibold">{role.name}</p>
+                <p className="text-lg font-mono font-semibold">{translateUserRole(role.name)}</p>
               </div>
             </div>
 

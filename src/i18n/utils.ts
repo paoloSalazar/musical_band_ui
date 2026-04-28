@@ -199,9 +199,32 @@ export function translateApiError(errorMessage: string, context?: string): strin
       extractor: (match: RegExpMatchArray) => ({ count: parseInt(match[1], 10) })
     },
     {
-      regex: /^This role cannot be deleted because (\d+) users? are assigned to it\. Please reassign these users to another role first\.$/i,
+      regex: /^This user cannot be deleted because they have (\d+) (.+)\. Please remove (this|these) (.+) first\.$/i,
+      key: 'users.errors.cannotDeleteUserWithPaymentRecords',
+      extractor: (match: RegExpMatchArray) => {
+        const count = parseInt(match[1], 10);
+        const rawType = match[2];
+        const determinerKey = match[3]; // "this" or "these"
+        const typeKey = rawType.replace(/\s+/g, '_').toLowerCase();
+        const translatedType = i18n.t(`types.${typeKey}`, { defaultValue: rawType });
+        const determiner = i18n.t(`common.${determinerKey}`, { defaultValue: determinerKey });
+        return { count, type: translatedType, determiner };
+      }
+    },
+    {
+      regex: /^This role cannot be deleted because (\d+) user(?:s)? (?:is|are) assigned to it\. Please reassign (this|these) user(?:s)? to another role first\.$/i,
       key: 'roles.errors.cannotDeleteRoleWithUsers',
-      extractor: (match: RegExpMatchArray) => ({ count: parseInt(match[1], 10) })
+      extractor: (match: RegExpMatchArray) => {
+        const count = parseInt(match[1], 10);
+        const determinerKey = match[2]; // "this" or "these"
+        const nounKey = count === 1 ? 'user' : 'users';
+        const verbKey = count === 1 ? 'is' : 'are';
+        const noun = i18n.t(`common.${nounKey}`, { defaultValue: nounKey });
+        const determiner = i18n.t(`common.${determinerKey}`, { defaultValue: determinerKey });
+        const verb = i18n.t(`common.verbs.${verbKey}`, { defaultValue: verbKey });
+        const plural = count === 1 ? '' : 's';
+        return { count, noun, determiner, verb, plural };
+      }
     },
     {
       regex: /^Permission (.+) already exists$/i,
@@ -221,7 +244,41 @@ export function translateApiError(errorMessage: string, context?: string): strin
     {
       regex: /^This permission cannot be deleted because it is assigned to (\d+) role \('([^']+)'\)\. Please remove this permission from the role first\.$/i,
       key: 'permissions.errors.cannotDeletePermissionWithRoles',
-      extractor: (match: RegExpMatchArray) => ({ count: parseInt(match[1], 10), role: match[2] })
+      extractor: (match: RegExpMatchArray) => {
+        const count = parseInt(match[1], 10);
+        const role = match[2];
+        const roles = translateUserRole(role);
+        const determiner = 'this';
+        const verb = 'is';
+        const plural = '';
+        return { count, roles, determiner, verb, plural };
+      }
+    },
+    {
+      regex: /^Este permiso no puede ser eliminado porque está asignado a (\d+) rol \('([^']+)'\)\. Por favor, elimine este permiso del rol primero\.$/i,
+      key: 'permissions.errors.cannotDeletePermissionWithRoles',
+      extractor: (match: RegExpMatchArray) => {
+        const count = parseInt(match[1], 10);
+        const role = match[2];
+        const roles = translateUserRole(role);
+        const determiner = 'este';
+        const verb = 'está';
+        const plural = '';
+        return { count, roles, determiner, verb, plural };
+      }
+    },
+    {
+      regex: /^Este permiso no puede ser eliminado porque están asignados a (\d+) roles \((.+)\)\. Por favor, elimine este permiso de estos roles primero\.$/i,
+      key: 'permissions.errors.cannotDeletePermissionWithRoles',
+      extractor: (match: RegExpMatchArray) => {
+        const count = parseInt(match[1], 10);
+        const rolesString = match[2];
+        const roles = rolesString.split(',').map(r => translateUserRole(r.trim().replace(/'/g, ''))).join(', ');
+        const determiner = 'estos';
+        const verb = 'están';
+        const plural = 'es';
+        return { count, roles, determiner, verb, plural };
+      }
     },
     {
       regex: /^This permission cannot be deleted because it is assigned to (\d+) roles \('([^']+)'\)\. Please remove this permission from the roles first\.$/i,
