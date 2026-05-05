@@ -77,7 +77,219 @@
     "payment": {
       "ADVANCE": "Pago Anticipado",
       "REMAINING": "Saldo Restante",
-      "TOTAL": "Pago Total"
+      "TOTAL": "Pago Total",
+      "title": "Detalles de Pago",
+      "description": "{{eventName}} - Historial de pagos y resumen",
+      "loading": "Cargando detalles de pago...",
+      "error": "Error",
+      "failedToLoad": "Error al cargar detalles de pago",
+      "summary": {
+        "title": "Resumen de Pago",
+        "finalPrice": "Precio Final",
+        "totalPaid": "Total Pagado",
+        "remaining": "Restante"
+      },
+      "history": {
+        "title": "Historial de Pagos",
+        "noPayments": "Aún no se han realizado pagos."
+      },
+      "buttons": {
+        "close": "Cerrar"
+      }
+    },
+    "makePayment": {
+      "title": "Realizar Pago",
+      "description": "{{eventName}} - Registrar un pago para este evento",
+      "loadingSummary": "Cargando resumen...",
+      "summary": {
+        "finalPrice": "Precio Final:",
+        "totalPaid": "Total Pagado:",
+        "remainingBalance": "Saldo Restante:"
+      },
+      "warning": "Resumen de pago no disponible. Asegúrese de que el precio del evento haya sido establecido.",
+      "form": {
+        "paymentType": "Tipo de Pago",
+        "paymentTypePlaceholder": "Seleccionar tipo de pago",
+        "amount": "Monto ($)",
+        "notes": "Notas (opcional)",
+        "notesPlaceholder": "Agregar notas sobre este pago..."
+      },
+      "paymentTypes": {
+        "ADVANCE": "Pago Anticipado",
+        "REMAINING": "Saldo Restante",
+        "TOTAL": "Pago Completo"
+      },
+      "descriptions": {
+        "TOTAL": "Paga todo el saldo restante",
+        "REMAINING": "Paga todo el saldo restante",
+        "ADVANCE": "Un pago parcial hacia el total"
+      },
+      "validation": {
+        "invalidAmount": "Por favor ingresa un monto válido mayor a 0",
+        "exceedsBalance": "El monto no puede exceder el saldo restante de ${{balance}}"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "submitPayment": "Enviar Pago"
+      },
+      "failedToCreate": "Error al crear pago"
+    },
+    "dialog": {
+      "view": {
+        "title": "Detalles del Evento",
+        "description": "Ver información del evento",
+        "loading": "Cargando evento...",
+        "error": "Error",
+        "description": "Descripción",
+        "date": "Fecha",
+        "time": "Hora",
+        "allDay": "Evento de todo el día",
+        "location": "Ubicación",
+        "price": "Precio",
+        "enterPrice": "Ingresar precio",
+        "setPrice": "Establecer Precio",
+        "noPrice": "Sin precio establecido",
+        "createdBy": "Creado por",
+        "editEvent": "Editar Evento",
+        "paymentDetails": "Detalles de Pago",
+        "makePayment": "Realizar Pago",
+        "validation": {
+          "invalidAmount": "Por favor ingresa un número válido",
+          "priceNegative": "El precio no puede ser negativo"
+        },
+        "failedToUpdate": "Error al actualizar el precio"
+      }
+    },
+    "list": {
+      "title": "Todos los Eventos",
+      "totalEvents": "Total: {{total}} evento(s) - Página {{current}} de {{totalPages}}",
+      "createEvent": "Crear Evento",
+      "noEvents": "No se encontraron eventos",
+      "noEventsMessage": "Crea tu primer evento para comenzar",
+      "table": {
+        "name": "Nombre",
+        "place": "Lugar",
+        "startDate": "Fecha de Inicio",
+        "endDate": "Fecha de Fin",
+        "price": "Precio",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "actions": {
+        "view": "Ver Detalles",
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "loading": "Cargando eventos...",
+      "error": "Error al cargar eventos",
+      "tryAgain": "Intentar de Nuevo",
+      "pagination": {
+        "showing": "Mostrando {{from}} a {{to}} de {{total}} eventos",
+        "previous": "Anterior",
+        "next": "Siguiente"
+      },
+      "failedToLoad": "Error al cargar eventos"
+    },
+    "calendar": {
+      "loading": "Cargando calendario...",
+      "error": "Error al cargar eventos",
+      "tryAgain": "Intentar de Nuevo",
+      "today": "Hoy",
+      "dayNames": {
+        "sunday": "Dom",
+        "monday": "Lun",
+        "tuesday": "Mar",
+        "wednesday": "Mié",
+        "thursday": "Jue",
+        "friday": "Vie",
+        "saturday": "Sáb"
+      },
+      "moreEvents": "+{{count}} más",
+      "failedToLoad": "Error al cargar eventos"
+    },
+    "create": {
+      "title": "Crear Evento Nuevo",
+      "description": "Agrega un nuevo evento a tu horario.",
+      "failedToCreate": "Error al crear evento",
+      "form": {
+        "name": "Nombre",
+        "namePlaceholder": "ej. Cumpleaños de Maria",
+        "place": "Lugar",
+        "placePlaceholder": "ej. Calle Calama y San Martin, Cochabamba",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Descripción del evento...",
+        "allDay": "Todo el Día",
+        "allDayLabel": "Este es un evento de todo el día",
+        "startDate": "Fecha de Inicio",
+        "startTime": "Hora de Inicio",
+        "endDate": "Fecha de Fin",
+        "endTime": "Hora de Fin"
+      },
+      "validation": {
+        "nameRequired": "El nombre es obligatorio",
+        "placeRequired": "El lugar es obligatorio",
+        "startDateRequired": "La fecha de inicio es obligatoria",
+        "startTimeRequired": "La hora de inicio es obligatoria",
+        "endDateRequired": "La fecha de fin es obligatoria",
+        "endTimeRequired": "La hora de fin es obligatoria"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "createEvent": "Crear Evento"
+      }
+    },
+    "delete": {
+      "title": "Eliminar Evento",
+      "description": "¿Estás seguro de que quieres eliminar este evento? Esta acción no se puede deshacer.",
+      "failedToDelete": "Error al eliminar evento",
+      "eventLabel": "Evento: {{eventName}}",
+      "warning": "Esto eliminará permanentemente el evento y toda su información.",
+      "buttons": {
+        "cancel": "Cancelar",
+        "deleteEvent": "Eliminar Evento"
+      }
+    },
+    "edit": {
+      "title": "Editar Evento",
+      "description": "Actualizar información del evento.",
+      "loading": "Cargando evento...",
+      "failedToLoad": "Error al cargar evento",
+      "failedToUpdate": "Error al actualizar evento",
+      "form": {
+        "name": "Nombre",
+        "namePlaceholder": "ej. Cumpleaños de Maria",
+        "place": "Lugar",
+        "placePlaceholder": "ej. Calle Calama y San Martin, Cochabamba",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Descripción del evento...",
+        "allDay": "Todo el Día",
+        "allDayLabel": "Este es un evento de todo el día",
+        "startDate": "Fecha de Inicio",
+        "startTime": "Hora de Inicio",
+        "endDate": "Fecha de Fin",
+        "endTime": "Hora de Fin"
+      },
+      "validation": {
+        "nameRequired": "El nombre es obligatorio",
+        "placeRequired": "El lugar es obligatorio",
+        "startDateRequired": "La fecha de inicio es obligatoria",
+        "startTimeRequired": "La hora de inicio es obligatoria",
+        "endDateRequired": "La fecha de fin es obligatoria",
+        "endTimeRequired": "La hora de fin es obligatoria"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveChanges": "Guardar Cambios"
+      }
+    },
+    "page": {
+      "title": "Eventos",
+      "loggedInAs": "Conectado como: {{name}}",
+      "description": "Gestiona los eventos y horarios de tu banda",
+      "views": {
+        "list": "Vista de Lista",
+        "calendar": "Vista de Calendario"
+      }
     }
   },
   "profile": {

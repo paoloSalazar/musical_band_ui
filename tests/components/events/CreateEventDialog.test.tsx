@@ -96,6 +96,45 @@ vi.mock('lucide-react', () => ({
   Loader2: () => <div data-testid="loader-icon" />,
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.create.title': 'Create New Event',
+        'events.create.description': 'Add a new event to your schedule.',
+        'events.create.failedToCreate': 'Failed to create event',
+        'events.create.form.name': 'Name',
+        'events.create.form.namePlaceholder': 'e.g., Cumpleaños de Maria',
+        'events.create.form.place': 'Place',
+        'events.create.form.placePlaceholder': 'e.g., Calle Calama y San Martin, Cochabamba',
+        'events.create.form.description': 'Description',
+        'events.create.form.descriptionPlaceholder': 'Event description...',
+        'events.create.form.allDay': 'All Day',
+        'events.create.form.allDayLabel': 'This is an all-day event',
+        'events.create.form.startDate': 'Start Date',
+        'events.create.form.startTime': 'Start Time',
+        'events.create.form.endDate': 'End Date',
+        'events.create.form.endTime': 'End Time',
+        'events.create.validation.nameRequired': 'Name is required',
+        'events.create.validation.placeRequired': 'Place is required',
+        'events.create.validation.startDateRequired': 'Start date is required',
+        'events.create.validation.startTimeRequired': 'Start time is required',
+        'events.create.validation.endDateRequired': 'End date is required',
+        'events.create.validation.endTimeRequired': 'End time is required',
+        'events.create.buttons.cancel': 'Cancel',
+        'events.create.buttons.createEvent': 'Create Event',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string') {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, key) => options[key] || match);
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Import after mocking to get the mocked version
 import { eventsApi } from '@/app/lib/api';
 import { convertToUTC } from '@/app/lib/timezone';

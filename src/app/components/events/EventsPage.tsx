@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { Calendar, List } from 'lucide-react';
 import { useUser } from '../../contexts/UserContext';
@@ -8,6 +9,7 @@ import { CalendarView } from './CalendarView';
 type ViewMode = 'list' | 'calendar';
 
 export function EventsPage() {
+  const { t } = useTranslation();
   const { user } = useUser();
   const [currentView, setCurrentView] = useState<ViewMode>('list');
   const [refreshKey, setRefreshKey] = useState(0);
@@ -24,11 +26,11 @@ export function EventsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Calendar className="h-6 w-6 text-green-600" />
-              <h1 className="text-xl font-semibold">Events</h1>
+              <h1 className="text-xl font-semibold">{t('events.page.title')}</h1>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600 hidden sm:block">
-                Logged in as: <span className="font-medium">{user?.name}</span>
+                {t('events.page.loggedInAs', { name: user?.name })}
               </span>
             </div>
           </div>
@@ -41,7 +43,7 @@ export function EventsPage() {
           {/* Page Description */}
           <div>
             <p className="text-gray-600">
-              Manage your band events and schedule
+              {t('events.page.description')}
             </p>
           </div>
 
@@ -52,16 +54,16 @@ export function EventsPage() {
               onValueChange={(value) => setCurrentView(value as ViewMode)}
               className="w-full"
             >
-              <TabsList className="w-full sm:w-auto">
-                <TabsTrigger value="list" className="flex-1 sm:flex-none items-center gap-2">
-                  <List className="h-4 w-4" />
-                  List View
-                </TabsTrigger>
-                <TabsTrigger value="calendar" className="flex-1 sm:flex-none items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Calendar View
-                </TabsTrigger>
-              </TabsList>
+               <TabsList className="w-full sm:w-auto">
+                 <TabsTrigger value="list" className="flex-1 sm:flex-none items-center gap-2">
+                   <List className="h-4 w-4" />
+                   {t('events.page.views.list')}
+                 </TabsTrigger>
+                 <TabsTrigger value="calendar" className="flex-1 sm:flex-none items-center gap-2">
+                   <Calendar className="h-4 w-4" />
+                   {t('events.page.views.calendar')}
+                 </TabsTrigger>
+               </TabsList>
             </Tabs>
           </div>
 

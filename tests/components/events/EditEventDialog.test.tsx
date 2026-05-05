@@ -25,6 +25,47 @@ vi.mock('@/app/lib/timezone', () => ({
   }),
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.edit.title': 'Edit Event',
+        'events.edit.description': 'Update event information.',
+        'events.edit.loading': 'Loading event...',
+        'events.edit.failedToLoad': 'Failed to load event',
+        'events.edit.failedToUpdate': 'Failed to update event',
+        'events.edit.form.name': 'Name',
+        'events.edit.form.namePlaceholder': 'e.g., Cumpleaños de Maria',
+        'events.edit.form.place': 'Place',
+        'events.edit.form.placePlaceholder': 'e.g., Calle Calama y San Martin, Cochabamba',
+        'events.edit.form.description': 'Description',
+        'events.edit.form.descriptionPlaceholder': 'Event description...',
+        'events.edit.form.allDay': 'All Day',
+        'events.edit.form.allDayLabel': 'This is an all-day event',
+        'events.edit.form.startDate': 'Start Date',
+        'events.edit.form.startTime': 'Start Time',
+        'events.edit.form.endDate': 'End Date',
+        'events.edit.form.endTime': 'End Time',
+        'events.edit.validation.nameRequired': 'Name is required',
+        'events.edit.validation.placeRequired': 'Place is required',
+        'events.edit.validation.startDateRequired': 'Start date is required',
+        'events.edit.validation.startTimeRequired': 'Start time is required',
+        'events.edit.validation.endDateRequired': 'End date is required',
+        'events.edit.validation.endTimeRequired': 'End time is required',
+        'events.edit.buttons.cancel': 'Cancel',
+        'events.edit.buttons.saveChanges': 'Save Changes',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string') {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, key) => options[key] || match);
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Mock UI components
 vi.mock('@/app/components/ui/button', () => ({
   Button: ({ children, onClick, disabled, ...props }) => (
@@ -101,6 +142,47 @@ vi.mock('@/app/components/ui/dialog', () => ({
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
   Loader2: () => <div data-testid="loader-icon" />,
+}));
+
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.edit.title': 'Edit Event',
+        'events.edit.description': 'Update event information.',
+        'events.edit.loading': 'Loading event...',
+        'events.edit.failedToLoad': 'Failed to load event',
+        'events.edit.failedToUpdate': 'Failed to update event',
+        'events.edit.form.name': 'Name',
+        'events.edit.form.namePlaceholder': 'e.g., Cumpleaños de Maria',
+        'events.edit.form.place': 'Place',
+        'events.edit.form.placePlaceholder': 'e.g., Calle Calama y San Martin, Cochabamba',
+        'events.edit.form.description': 'Description',
+        'events.edit.form.descriptionPlaceholder': 'Event description...',
+        'events.edit.form.allDay': 'All Day',
+        'events.edit.form.allDayLabel': 'This is an all-day event',
+        'events.edit.form.startDate': 'Start Date',
+        'events.edit.form.startTime': 'Start Time',
+        'events.edit.form.endDate': 'End Date',
+        'events.edit.form.endTime': 'End Time',
+        'events.edit.validation.nameRequired': 'Name is required',
+        'events.edit.validation.placeRequired': 'Place is required',
+        'events.edit.validation.startDateRequired': 'Start date is required',
+        'events.edit.validation.startTimeRequired': 'Start time is required',
+        'events.edit.validation.endDateRequired': 'End date is required',
+        'events.edit.validation.endTimeRequired': 'End time is required',
+        'events.edit.buttons.cancel': 'Cancel',
+        'events.edit.buttons.saveChanges': 'Save Changes',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string') {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, key) => options[key] || match);
+      }
+      return translation;
+    }),
+  }),
 }));
 
 // Import after mocking to get the mocked version

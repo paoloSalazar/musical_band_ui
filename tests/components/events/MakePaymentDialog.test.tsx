@@ -104,6 +104,45 @@ vi.mock('lucide-react', () => ({
   AlertCircle: () => <div data-testid="alert-circle-icon" />,
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.makePayment.title': 'Make Payment',
+        'events.makePayment.description': '{{eventName}} - Record a payment for this event',
+        'events.makePayment.loadingSummary': 'Loading summary...',
+        'events.makePayment.summary.finalPrice': 'Final Price:',
+        'events.makePayment.summary.totalPaid': 'Total Paid:',
+        'events.makePayment.summary.remainingBalance': 'Remaining Balance:',
+        'events.makePayment.warning': 'Payment summary not available. Please ensure the event price has been set.',
+        'events.makePayment.form.paymentType': 'Payment Type',
+        'events.makePayment.form.paymentTypePlaceholder': 'Select payment type',
+        'events.makePayment.form.amount': 'Amount ($)',
+        'events.makePayment.form.notes': 'Notes (optional)',
+        'events.makePayment.form.notesPlaceholder': 'Add any notes about this payment...',
+        'events.makePayment.paymentTypes.ADVANCE': 'Advance Payment',
+        'events.makePayment.paymentTypes.REMAINING': 'Remaining Balance',
+        'events.makePayment.paymentTypes.TOTAL': 'Full Payment',
+        'events.makePayment.descriptions.ADVANCE': 'A partial payment towards the total',
+        'events.makePayment.descriptions.REMAINING': 'Pays the full remaining balance',
+        'events.makePayment.descriptions.TOTAL': 'Pays the entire remaining balance',
+        'events.makePayment.validation.invalidAmount': 'Please enter a valid amount greater than 0',
+        'events.makePayment.validation.exceedsBalance': 'Amount cannot exceed the remaining balance of ${{balance}}',
+        'events.makePayment.buttons.cancel': 'Cancel',
+        'events.makePayment.buttons.submitPayment': 'Submit Payment',
+        'events.makePayment.failedToCreate': 'Failed to create payment',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string') {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, key) => options[key] || match);
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Import after mocking to get the mocked version
 import { eventsApi } from '@/app/lib/api';
 

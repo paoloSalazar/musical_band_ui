@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { eventsApi } from '../../lib/api';
 import type { Payment, PaymentSummary } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
@@ -27,6 +28,7 @@ export function ViewPaymentDetailsDialog({
   open,
   onOpenChange,
 }: ViewPaymentDetailsDialogProps) {
+  const { t } = useTranslation();
   const [payments, setPayments] = useState<Payment[]>([]);
   const [summary, setSummary] = useState<PaymentSummary | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +55,7 @@ export function ViewPaymentDetailsDialog({
       setSummary(summaryResponse.data);
     } catch (err) {
       const apiError = err as ApiError;
-      setError(apiError.detail || apiError.message || 'Failed to load payment details');
+      setError(apiError.detail || apiError.message || t('events.payment.failedToLoad'));
     } finally {
       setIsLoading(false);
     }
@@ -78,11 +80,11 @@ export function ViewPaymentDetailsDialog({
   const getPaymentTypeLabel = (type: string) => {
     switch (type) {
       case 'ADVANCE':
-        return 'Advance';
+        return t('events.payment.ADVANCE');
       case 'REMAINING':
-        return 'Remaining';
+        return t('events.payment.REMAINING');
       case 'FULL':
-        return 'Full Payment';
+        return t('events.payment.TOTAL');
       default:
         return type;
     }
@@ -92,20 +94,20 @@ export function ViewPaymentDetailsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Payment Details</DialogTitle>
+          <DialogTitle>{t('events.payment.title')}</DialogTitle>
           <DialogDescription>
-            {eventName} - Payment history and summary
+            {t('events.payment.description', { eventName })}
           </DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading payment details...</span>
+            <span className="ml-2 text-gray-600">{t('events.payment.loading')}</span>
           </div>
         ) : error ? (
           <div className="text-red-600 text-center py-4">
-            <p className="font-medium">Error</p>
+            <p className="font-medium">{t('events.payment.error')}</p>
             <p className="text-sm">{error}</p>
           </div>
         ) : (
@@ -115,21 +117,21 @@ export function ViewPaymentDetailsDialog({
               <div className="bg-gray-50 rounded-lg p-4 space-y-3">
                 <h4 className="font-medium text-gray-900 flex items-center">
                   <DollarSign className="h-4 w-4 mr-2" />
-                  Payment Summary
+                  {t('events.payment.summary.title')}
                 </h4>
                 <div className="grid grid-cols-3 gap-4 text-sm">
                   <div>
-                    <p className="text-gray-500">Final Price</p>
+                    <p className="text-gray-500">{t('events.payment.summary.finalPrice')}</p>
                     <p className="font-medium">${formatAmount(summary.final_price)}</p>
                   </div>
                   <div>
-                    <p className="text-gray-500">Total Paid</p>
+                    <p className="text-gray-500">{t('events.payment.summary.totalPaid')}</p>
                     <p className="font-medium text-green-600">
                       ${formatAmount(summary.total_paid)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-500">Remaining</p>
+                    <p className="text-gray-500">{t('events.payment.summary.remaining')}</p>
                     <p className={`font-medium ${
                       parseFloat(summary.pending_balance) > 0
                         ? 'text-red-600'
@@ -146,11 +148,11 @@ export function ViewPaymentDetailsDialog({
             <div>
               <h4 className="font-medium text-gray-900 mb-3 flex items-center">
                 <CreditCard className="h-4 w-4 mr-2" />
-                Payment History
+                {t('events.payment.history.title')}
               </h4>
               {payments.length === 0 ? (
                 <p className="text-gray-500 text-sm text-center py-4">
-                  No payments have been made yet.
+                  {t('events.payment.history.noPayments')}
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -200,7 +202,7 @@ export function ViewPaymentDetailsDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Close
+            {t('events.payment.buttons.close')}
           </Button>
         </DialogFooter>
       </DialogContent>

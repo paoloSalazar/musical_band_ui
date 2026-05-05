@@ -77,7 +77,219 @@
     "payment": {
       "ADVANCE": "Advance Payment",
       "REMAINING": "Remaining Balance",
-      "TOTAL": "Total Payment"
+      "TOTAL": "Total Payment",
+      "title": "Payment Details",
+      "description": "{{eventName}} - Payment history and summary",
+      "loading": "Loading payment details...",
+      "error": "Error",
+      "failedToLoad": "Failed to load payment details",
+      "summary": {
+        "title": "Payment Summary",
+        "finalPrice": "Final Price",
+        "totalPaid": "Total Paid",
+        "remaining": "Remaining"
+      },
+      "history": {
+        "title": "Payment History",
+        "noPayments": "No payments have been made yet."
+      },
+      "buttons": {
+        "close": "Close"
+      }
+    },
+    "makePayment": {
+      "title": "Make Payment",
+      "description": "{{eventName}} - Record a payment for this event",
+      "loadingSummary": "Loading summary...",
+      "summary": {
+        "finalPrice": "Final Price:",
+        "totalPaid": "Total Paid:",
+        "remainingBalance": "Remaining Balance:"
+      },
+      "warning": "Payment summary not available. Please ensure the event price has been set.",
+      "form": {
+        "paymentType": "Payment Type",
+        "paymentTypePlaceholder": "Select payment type",
+        "amount": "Amount ($)",
+        "notes": "Notes (optional)",
+        "notesPlaceholder": "Add any notes about this payment..."
+      },
+      "paymentTypes": {
+        "ADVANCE": "Advance Payment",
+        "REMAINING": "Remaining Balance",
+        "TOTAL": "Full Payment"
+      },
+      "descriptions": {
+        "TOTAL": "Pays the entire remaining balance",
+        "REMAINING": "Pays the full remaining balance",
+        "ADVANCE": "A partial payment towards the total"
+      },
+      "validation": {
+        "invalidAmount": "Please enter a valid amount greater than 0",
+        "exceedsBalance": "Amount cannot exceed the remaining balance of ${{balance}}"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "submitPayment": "Submit Payment"
+      },
+      "failedToCreate": "Failed to create payment"
+    },
+    "dialog": {
+      "view": {
+        "title": "Event Details",
+        "description": "View event information",
+        "loading": "Loading event...",
+        "error": "Error",
+        "description": "Description",
+        "date": "Date",
+        "time": "Time",
+        "allDay": "All day event",
+        "location": "Location",
+        "price": "Price",
+        "enterPrice": "Enter price",
+        "setPrice": "Set Price",
+        "noPrice": "No price set",
+        "createdBy": "Created by",
+        "editEvent": "Edit Event",
+        "paymentDetails": "Payment Details",
+        "makePayment": "Make Payment",
+        "validation": {
+          "invalidAmount": "Please enter a valid number",
+          "priceNegative": "Price cannot be negative"
+        },
+        "failedToUpdate": "Failed to update price"
+      }
+    },
+    "list": {
+      "title": "All Events",
+      "totalEvents": "Total: {{total}} event(s) - Page {{current}} of {{totalPages}}",
+      "createEvent": "Create Event",
+      "noEvents": "No events found",
+      "noEventsMessage": "Create your first event to get started",
+      "table": {
+        "name": "Name",
+        "place": "Place",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "price": "Price",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "actions": {
+        "view": "View Details",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "loading": "Loading events...",
+      "error": "Error loading events",
+      "tryAgain": "Try Again",
+      "pagination": {
+        "showing": "Showing {{from}} to {{to}} of {{total}} events",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "failedToLoad": "Failed to load events"
+    },
+    "calendar": {
+      "loading": "Loading calendar...",
+      "error": "Error loading events",
+      "tryAgain": "Try Again",
+      "today": "Today",
+      "dayNames": {
+        "sunday": "Sun",
+        "monday": "Mon",
+        "tuesday": "Tue",
+        "wednesday": "Wed",
+        "thursday": "Thu",
+        "friday": "Fri",
+        "saturday": "Sat"
+      },
+      "moreEvents": "+{{count}} more",
+      "failedToLoad": "Failed to load events"
+    },
+    "create": {
+      "title": "Create New Event",
+      "description": "Add a new event to your schedule.",
+      "failedToCreate": "Failed to create event",
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "e.g., Cumpleaños de Maria",
+        "place": "Place",
+        "placePlaceholder": "e.g., Calle Calama y San Martin, Cochabamba",
+        "description": "Description",
+        "descriptionPlaceholder": "Event description...",
+        "allDay": "All Day",
+        "allDayLabel": "This is an all-day event",
+        "startDate": "Start Date",
+        "startTime": "Start Time",
+        "endDate": "End Date",
+        "endTime": "End Time"
+      },
+      "validation": {
+        "nameRequired": "Name is required",
+        "placeRequired": "Place is required",
+        "startDateRequired": "Start date is required",
+        "startTimeRequired": "Start time is required",
+        "endDateRequired": "End date is required",
+        "endTimeRequired": "End time is required"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "createEvent": "Create Event"
+      }
+    },
+    "delete": {
+      "title": "Delete Event",
+      "description": "Are you sure you want to delete this event? This action cannot be undone.",
+      "failedToDelete": "Failed to delete event",
+      "eventLabel": "Event: {{eventName}}",
+      "warning": "This will permanently delete the event and all its information.",
+      "buttons": {
+        "cancel": "Cancel",
+        "deleteEvent": "Delete Event"
+      }
+    },
+    "edit": {
+      "title": "Edit Event",
+      "description": "Update event information.",
+      "loading": "Loading event...",
+      "failedToLoad": "Failed to load event",
+      "failedToUpdate": "Failed to update event",
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "e.g., Cumpleaños de Maria",
+        "place": "Place",
+        "placePlaceholder": "e.g., Calle Calama y San Martin, Cochabamba",
+        "description": "Description",
+        "descriptionPlaceholder": "Event description...",
+        "allDay": "All Day",
+        "allDayLabel": "This is an all-day event",
+        "startDate": "Start Date",
+        "startTime": "Start Time",
+        "endDate": "End Date",
+        "endTime": "End Time"
+      },
+      "validation": {
+        "nameRequired": "Name is required",
+        "placeRequired": "Place is required",
+        "startDateRequired": "Start date is required",
+        "startTimeRequired": "Start time is required",
+        "endDateRequired": "End date is required",
+        "endTimeRequired": "End time is required"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "saveChanges": "Save Changes"
+      }
+    },
+    "page": {
+      "title": "Events",
+      "loggedInAs": "Logged in as: {{name}}",
+      "description": "Manage your band events and schedule",
+      "views": {
+        "list": "List View",
+        "calendar": "Calendar View"
+      }
     }
   },
   "profile": {

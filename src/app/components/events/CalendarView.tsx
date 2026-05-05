@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
@@ -15,6 +16,7 @@ interface CalendarViewProps {
 }
 
 export function CalendarView({ onEventUpdated }: CalendarViewProps) {
+  const { t, i18n } = useTranslation();
   const { user, hasPermission, hasRole } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,7 +53,7 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
       const response = await eventsApi.listForCalendar(year, month);
       setEvents(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load events');
+      setError(err instanceof Error ? err.message : t('events.calendar.failedToLoad'));
     } finally {
       setIsLoading(false);
     }
@@ -156,7 +158,7 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
 
   // Format month and year
   const formatMonthYear = (date: Date) => {
-    return date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+    return date.toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' });
   };
 
   // Handle event click
@@ -180,14 +182,22 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
     }
   };
 
-  // Day names
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  // Day names - translated
+  const dayNames = [
+    t('events.calendar.dayNames.sunday'),
+    t('events.calendar.dayNames.monday'),
+    t('events.calendar.dayNames.tuesday'),
+    t('events.calendar.dayNames.wednesday'),
+    t('events.calendar.dayNames.thursday'),
+    t('events.calendar.dayNames.friday'),
+    t('events.calendar.dayNames.saturday')
+  ];
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-gray-600">Loading calendar...</span>
+        <span className="ml-2 text-gray-600">{t('events.calendar.loading')}</span>
       </div>
     );
   }
@@ -197,10 +207,10 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
       <Card className="border-red-200">
         <CardContent className="pt-6">
           <div className="text-red-600 text-center">
-            <p className="font-medium">Error loading events</p>
+            <p className="font-medium">{t('events.calendar.error')}</p>
             <p className="text-sm">{error}</p>
             <Button onClick={loadEvents} variant="outline" className="mt-4">
-              Try Again
+              {t('events.calendar.tryAgain')}
             </Button>
           </div>
         </CardContent>
@@ -221,7 +231,7 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
               <ChevronRight className="h-4 w-4" />
             </Button>
             <Button variant="outline" size="sm" onClick={goToToday} className="hidden sm:flex">
-              Today
+              {t('events.calendar.today')}
             </Button>
           </div>
         </div>
@@ -290,7 +300,7 @@ export function CalendarView({ onEventUpdated }: CalendarViewProps) {
                         ))}
                         {dayEvents.length > 3 && (
                           <div className="text-xs text-gray-500 pl-1">
-                            +{dayEvents.length - 3} more
+                            {t('events.calendar.moreEvents', { count: dayEvents.length - 3 })}
                           </div>
                         )}
                       </div>

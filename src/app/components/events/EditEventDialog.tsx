@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { eventsApi } from '../../lib/api';
 import type { Event, EventFormData } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
@@ -26,6 +27,7 @@ interface EditEventDialogProps {
 }
 
 export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: EditEventDialogProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +70,7 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
 
       setIsAllDay(event.is_all_day);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load event');
+      setError(err instanceof Error ? err.message : t('events.edit.failedToLoad'));
     } finally {
       setIsLoadingData(false);
     }
@@ -97,27 +99,27 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
     e.preventDefault();
 
     if (!name.trim()) {
-      setError('Name is required');
+      setError(t('events.edit.validation.nameRequired'));
       return;
     }
     if (!place.trim()) {
-      setError('Place is required');
+      setError(t('events.edit.validation.placeRequired'));
       return;
     }
     if (!startDate) {
-      setError('Start date is required');
+      setError(t('events.edit.validation.startDateRequired'));
       return;
     }
     if (!isAllDay && !startTime) {
-      setError('Start time is required');
+      setError(t('events.edit.validation.startTimeRequired'));
       return;
     }
     if (!endDate) {
-      setError('End date is required');
+      setError(t('events.edit.validation.endDateRequired'));
       return;
     }
     if (!isAllDay && !endTime) {
-      setError('End time is required');
+      setError(t('events.edit.validation.endTimeRequired'));
       return;
     }
 
@@ -151,7 +153,7 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
       }
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to update event');
+      setError(error.detail || error.message || t('events.edit.failedToUpdate'));
     } finally {
       setIsLoading(false);
     }
@@ -161,16 +163,16 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Edit Event</DialogTitle>
+          <DialogTitle>{t('events.edit.title')}</DialogTitle>
           <DialogDescription>
-            Update event information.
+            {t('events.edit.description')}
           </DialogDescription>
         </DialogHeader>
 
         {isLoadingData ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading event...</span>
+            <span className="ml-2 text-gray-600">{t('events.edit.loading')}</span>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -184,13 +186,13 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
               {/* Name */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-name" className="text-right">
-                  Name *
+                  {t('events.edit.form.name')} *
                 </Label>
                 <Input
                   id="edit-name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g., Cumpleaños de Maria"
+                  placeholder={t('events.edit.form.namePlaceholder')}
                   className="col-span-3"
                   disabled={isLoading}
                 />
@@ -199,13 +201,13 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
               {/* Place */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-place" className="text-right">
-                  Place *
+                  {t('events.edit.form.place')} *
                 </Label>
                 <Input
                   id="edit-place"
                   value={place}
                   onChange={(e) => setPlace(e.target.value)}
-                  placeholder="e.g., Calle Calama y San Martin, Cochabamba"
+                  placeholder={t('events.edit.form.placePlaceholder')}
                   className="col-span-3"
                   disabled={isLoading}
                 />
@@ -214,13 +216,13 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
               {/* Description */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-description" className="text-right">
-                  Description
+                  {t('events.edit.form.description')}
                 </Label>
                 <Textarea
                   id="edit-description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Event description..."
+                  placeholder={t('events.edit.form.descriptionPlaceholder')}
                   className="col-span-3"
                   disabled={isLoading}
                   rows={3}
@@ -230,7 +232,7 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
               {/* All Day */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-allday" className="text-right">
-                  All Day
+                  {t('events.edit.form.allDay')}
                 </Label>
                 <div className="col-span-3 flex items-center space-x-2">
                   <Checkbox
@@ -240,7 +242,7 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
                     disabled={isLoading}
                   />
                   <Label htmlFor="edit-allday" className="text-sm font-normal">
-                    This is an all-day event
+                    {t('events.edit.form.allDayLabel')}
                   </Label>
                 </div>
               </div>
@@ -248,7 +250,7 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
               {/* Start Date */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-start-date" className="text-right">
-                  Start Date *
+                  {t('events.edit.form.startDate')} *
                 </Label>
                 <Input
                   id="edit-start-date"
@@ -264,7 +266,7 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
               {!isAllDay && (
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="edit-start-time" className="text-right">
-                    Start Time *
+                    {t('events.edit.form.startTime')} *
                   </Label>
                   <Input
                     id="edit-start-time"
@@ -280,7 +282,7 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
               {/* End Date */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-end-date" className="text-right">
-                  End Date *
+                  {t('events.edit.form.endDate')} *
                 </Label>
                 <Input
                   id="edit-end-date"
@@ -296,7 +298,7 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
               {!isAllDay && (
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="edit-end-time" className="text-right">
-                    End Time *
+                    {t('events.edit.form.endTime')} *
                   </Label>
                   <Input
                     id="edit-end-time"
@@ -311,11 +313,11 @@ export function EditEventDialog({ eventId, open, onOpenChange, onSuccess }: Edit
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isLoading}>
-                Cancel
+                {t('events.edit.buttons.cancel')}
               </Button>
               <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Save Changes
+                {t('events.edit.buttons.saveChanges')}
               </Button>
             </DialogFooter>
           </form>

@@ -20,6 +20,56 @@ vi.mock('@/app/lib/timezone', () => ({
   formatTime: vi.fn((date) => `formatted-time-${date}`),
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.dialog.view.title': 'Event Details',
+        'events.dialog.view.description': 'View event information',
+        'events.dialog.view.loading': 'Loading event...',
+        'events.dialog.view.error': 'Error',
+        'events.dialog.view.date': 'Date',
+        'events.dialog.view.time': 'Time',
+        'events.dialog.view.allDay': 'All day event',
+        'events.dialog.view.location': 'Location',
+        'events.dialog.view.price': 'Price',
+        'events.dialog.view.enterPrice': 'Enter price',
+        'events.dialog.view.setPrice': 'Set Price',
+        'events.dialog.view.noPrice': 'No price set',
+        'events.dialog.view.createdBy': 'Created by',
+        'events.dialog.view.editEvent': 'Edit Event',
+        'events.dialog.view.paymentDetails': 'Payment Details',
+        'events.dialog.view.makePayment': 'Make Payment',
+        'events.dialog.view.validation.invalidAmount': 'Please enter a valid number',
+        'events.dialog.view.validation.priceNegative': 'Price cannot be negative',
+        'events.dialog.view.failedToUpdate': 'Failed to update price',
+        'events.payment.title': 'Payment Details',
+        'events.payment.description': '{{eventName}} - Payment history and summary',
+        'events.payment.loading': 'Loading payment details...',
+        'events.payment.error': 'Error',
+        'events.payment.summary.title': 'Payment Summary',
+        'events.payment.summary.finalPrice': 'Final Price',
+        'events.payment.summary.totalPaid': 'Total Paid',
+        'events.payment.summary.remaining': 'Remaining',
+        'events.payment.history.title': 'Payment History',
+        'events.payment.history.noPayments': 'No payments have been made yet.',
+        'events.payment.ADVANCE': 'Advance Payment',
+        'events.payment.REMAINING': 'Remaining Balance',
+        'events.payment.TOTAL': 'Full Payment',
+        'events.payment.buttons.close': 'Close',
+        'common.cancel': 'Cancel',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string' && translation.includes('{{')) {
+        return translation.replace('{{eventName}}', options.eventName || '');
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Mock useUser hook
 const mockUser = {
   id: 1,

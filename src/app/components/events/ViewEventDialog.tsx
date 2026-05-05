@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
@@ -29,6 +30,7 @@ interface ViewEventDialogProps {
 }
 
 export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEvent, onPriceUpdate, showEditButton = true }: ViewEventDialogProps) {
+  const { t } = useTranslation();
   const { hasRole, user } = useUser();
   const isAdmin = hasRole('admin');
   
@@ -94,12 +96,12 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
     const priceValue = priceInput.trim() === '' ? null : parseFloat(priceInput);
     
     if (priceValue !== null && isNaN(priceValue)) {
-      setPriceError('Please enter a valid number');
+      setPriceError(t('events.dialog.view.validation.invalidAmount'));
       return;
     }
     
     if (priceValue !== null && priceValue < 0) {
-      setPriceError('Price cannot be negative');
+      setPriceError(t('events.dialog.view.validation.priceNegative'));
       return;
     }
 
@@ -115,7 +117,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
       }
     } catch (err) {
       const apiError = err as ApiError;
-      setPriceError(apiError.detail || apiError.message || 'Failed to update price');
+      setPriceError(apiError.detail || apiError.message || t('events.dialog.view.failedToUpdate'));
     } finally {
       setIsUpdatingPrice(false);
     }
@@ -125,20 +127,20 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Event Details</DialogTitle>
+          <DialogTitle>{t('events.dialog.view.title')}</DialogTitle>
           <DialogDescription>
-            View event information
+            {t('events.dialog.view.description')}
           </DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading event...</span>
+            <span className="ml-2 text-gray-600">{t('events.dialog.view.loading')}</span>
           </div>
         ) : error ? (
           <div className="text-red-600 text-center py-4">
-            <p className="font-medium">Error</p>
+            <p className="font-medium">{t('events.dialog.view.error')}</p>
             <p className="text-sm">{error}</p>
           </div>
         ) : event ? (
@@ -159,7 +161,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
             {/* Description */}
             {event.description && (
               <div className="space-y-1">
-                <p className="text-sm text-gray-500">Description</p>
+                <p className="text-sm text-gray-500">{t('events.dialog.view.description')}</p>
                 <p className="text-sm">{event.description}</p>
               </div>
             )}
@@ -168,7 +170,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
             <div className="flex items-start space-x-2">
               <Calendar className="h-4 w-4 mt-1 text-gray-500" />
               <div>
-                <p className="text-sm text-gray-500">Date</p>
+                <p className="text-sm text-gray-500">{t('events.dialog.view.date')}</p>
                 <p className="text-sm">
                   {formatDate(event.start_datetime)}
                   {event.start_datetime !== event.end_datetime && (
@@ -183,7 +185,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
               <div className="flex items-start space-x-2">
                 <Clock className="h-4 w-4 mt-1 text-gray-500" />
                 <div>
-                  <p className="text-sm text-gray-500">Time</p>
+                  <p className="text-sm text-gray-500">{t('events.dialog.view.time')}</p>
                   <p className="text-sm">
                     {formatTimeOnly(event.start_datetime)} - {formatTimeOnly(event.end_datetime)}
                   </p>
@@ -195,7 +197,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
             {event.is_all_day && (
               <div className="flex items-start space-x-2">
                 <Clock className="h-4 w-4 mt-1 text-gray-500" />
-                <p className="text-sm">All day event</p>
+                <p className="text-sm">{t('events.dialog.view.allDay')}</p>
               </div>
             )}
 
@@ -203,7 +205,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
             <div className="flex items-start space-x-2">
               <MapPin className="h-4 w-4 mt-1 text-gray-500" />
               <div>
-                <p className="text-sm text-gray-500">Location</p>
+                <p className="text-sm text-gray-500">{t('events.dialog.view.location')}</p>
                 <p className="text-sm">{event.place}</p>
               </div>
             </div>
@@ -212,7 +214,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
             <div className="flex items-start space-x-2">
               <DollarSign className="h-4 w-4 mt-1 text-gray-500" />
               <div className="flex-1">
-                <p className="text-sm text-gray-500">Price</p>
+                <p className="text-sm text-gray-500">{t('events.dialog.view.price')}</p>
                 {isAdmin ? (
                   priceInput !== '' || event.price !== undefined ? (
                     <div className="flex items-center gap-2 mt-1">
@@ -222,7 +224,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                         min="0"
                         value={priceInput}
                         onChange={(e) => setPriceInput(e.target.value)}
-                        placeholder="Enter price"
+                        placeholder={t('events.dialog.view.enterPrice')}
                         className="h-8 w-32"
                         disabled={isUpdatingPrice}
                       />
@@ -243,7 +245,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                             disabled={isUpdatingPrice}
                             className="h-8"
                           >
-                            Cancel
+                            {t('common.cancel')}
                           </Button>
                         </>
                       ) : (
@@ -258,20 +260,20 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                       )}
                     </div>
                   ) : (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={handleStartEditPrice}
-                      className="h-8 mt-1"
-                    >
-                      Set Price
-                    </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={handleStartEditPrice}
+                          className="h-8 mt-1"
+                        >
+                          {t('events.dialog.view.setPrice')}
+                        </Button>
                   )
                 ) : (
                   <p className="text-sm">
-                    {event.price !== undefined && event.price !== null 
-                      ? `${event.price.toFixed(2)}` 
-                      : 'No price set'}
+                    {event.price !== undefined && event.price !== null
+                      ? `${event.price.toFixed(2)}`
+                      : t('events.dialog.view.noPrice')}
                   </p>
                 )}
                 {priceError && (
@@ -285,7 +287,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
               <div className="flex items-start space-x-2">
                 <User className="h-4 w-4 mt-1 text-gray-500" />
                 <div>
-                  <p className="text-sm text-gray-500">Created by</p>
+                  <p className="text-sm text-gray-500">{t('events.dialog.view.createdBy')}</p>
                   <p className="text-sm">
                     {event.created_by.name} {event.created_by.lastname}
                   </p>
@@ -300,7 +302,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
           {showEditButton && onEdit && canEditEvent && (
             <Button type="button" onClick={handleEdit}>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit Event
+              {t('events.dialog.view.editEvent')}
             </Button>
           )}
           {/* Payment buttons - for event creator (non-admin) or admin */}
@@ -312,7 +314,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                 onClick={() => setShowPaymentDetails(true)}
               >
                 <CreditCard className="h-4 w-4 mr-2" />
-                Payment Details
+                {t('events.dialog.view.paymentDetails')}
               </Button>
             </>
           )}
@@ -324,7 +326,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                 onClick={() => setShowMakePayment(true)}
               >
                 <Wallet className="h-4 w-4 mr-2" />
-                Make Payment
+                {t('events.dialog.view.makePayment')}
               </Button>
             </>
           )}

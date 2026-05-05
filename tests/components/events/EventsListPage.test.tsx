@@ -24,6 +24,44 @@ vi.mock('@/app/lib/timezone', () => ({
   formatDateTime: vi.fn((date) => `datetime-${date}`),
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.list.title': 'All Events',
+        'events.list.totalEvents': 'Total: {{total}} event(s) - Page {{current}} of {{totalPages}}',
+        'events.list.createEvent': 'Create Event',
+        'events.list.noEvents': 'No events found',
+        'events.list.noEventsMessage': 'Create your first event to get started',
+        'events.list.table.name': 'Name',
+        'events.list.table.place': 'Place',
+        'events.list.table.startDate': 'Start Date',
+        'events.list.table.endDate': 'End Date',
+        'events.list.table.price': 'Price',
+        'events.list.table.status': 'Status',
+        'events.list.table.actions': 'Actions',
+        'events.list.actions.view': 'View Details',
+        'events.list.actions.edit': 'Edit',
+        'events.list.actions.delete': 'Delete',
+        'events.list.loading': 'Loading events...',
+        'events.list.error': 'Error loading events',
+        'events.list.tryAgain': 'Try Again',
+        'events.list.pagination.showing': 'Showing {{from}} to {{to}} of {{total}} events',
+        'events.list.pagination.previous': 'Previous',
+        'events.list.pagination.next': 'Next',
+        'events.list.failedToLoad': 'Failed to load events',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string') {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, key) => options[key] || match);
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Mock useUser hook
 const mockUser = {
   id: 1,

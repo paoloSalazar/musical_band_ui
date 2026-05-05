@@ -19,6 +19,36 @@ vi.mock('@/app/lib/timezone', () => ({
   formatTime: vi.fn((dateString) => `formatted-time-${dateString}`),
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.payment.title': 'Payment Details',
+        'events.payment.description': '{{eventName}} - Payment history and summary',
+        'events.payment.loading': 'Loading payment details...',
+        'events.payment.error': 'Error',
+        'events.payment.summary.title': 'Payment Summary',
+        'events.payment.summary.finalPrice': 'Final Price',
+        'events.payment.summary.totalPaid': 'Total Paid',
+        'events.payment.summary.remaining': 'Remaining',
+        'events.payment.history.title': 'Payment History',
+        'events.payment.history.noPayments': 'No payments have been made yet.',
+        'events.payment.ADVANCE': 'Advance Payment',
+        'events.payment.REMAINING': 'Remaining Balance',
+        'events.payment.TOTAL': 'Full Payment',
+        'events.payment.buttons.close': 'Close',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string' && translation.includes('{{')) {
+        return translation.replace('{{eventName}}', options.eventName || '');
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Mock UI components
 vi.mock('@/app/components/ui/button', () => ({
   Button: ({ children, onClick, ...props }) => (
@@ -185,7 +215,7 @@ describe('ViewPaymentDetailsDialog', () => {
     expect(screen.getByText('Final Price')).toBeTruthy();
     expect(screen.getAllByText('$125.00')).toHaveLength(2); // Final price and total paid
     expect(screen.getByText('Total Paid')).toBeTruthy();
-    expect(screen.getAllByText('Remaining')).toHaveLength(2); // Label and payment type
+    expect(screen.getByText('Remaining')).toBeTruthy(); // Label only
     expect(screen.getAllByText('$0.00')).toHaveLength(1); // Only remaining balance
   });
 
@@ -206,8 +236,8 @@ describe('ViewPaymentDetailsDialog', () => {
     expect(screen.getByText('$50.00')).toBeTruthy();
     expect(screen.getByText('$75.00')).toBeTruthy();
     expect(screen.getByText('$100.00')).toBeTruthy();
-    expect(screen.getAllByText('Advance')).toHaveLength(1);
-    expect(screen.getAllByText('Remaining')).toHaveLength(2); // Label and payment type
+    expect(screen.getAllByText('Advance Payment')).toHaveLength(1);
+    expect(screen.getAllByText('Remaining Balance')).toHaveLength(1); // Payment type only
     expect(screen.getAllByText('Full Payment')).toHaveLength(1);
   });
 
@@ -381,8 +411,8 @@ describe('ViewPaymentDetailsDialog', () => {
       expect(screen.getByText('Payment History')).toBeTruthy();
     });
 
-    expect(screen.getAllByText('Advance')).toHaveLength(1);
-    expect(screen.getAllByText('Remaining')).toHaveLength(2); // Label and payment type
+    expect(screen.getAllByText('Advance Payment')).toHaveLength(1);
+    expect(screen.getAllByText('Remaining Balance')).toHaveLength(1); // Payment type only
     expect(screen.getAllByText('Full Payment')).toHaveLength(1);
   });
 
@@ -401,8 +431,8 @@ describe('ViewPaymentDetailsDialog', () => {
     });
 
     // The styling is applied via CSS classes, but we can verify the text is displayed
-    expect(screen.getAllByText('Advance')).toHaveLength(1);
-    expect(screen.getAllByText('Remaining')).toHaveLength(2); // Label and payment type
+    expect(screen.getAllByText('Advance Payment')).toHaveLength(1);
+    expect(screen.getAllByText('Remaining Balance')).toHaveLength(1); // Payment type only
     expect(screen.getAllByText('Full Payment')).toHaveLength(1);
   });
 

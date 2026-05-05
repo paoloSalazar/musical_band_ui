@@ -50,6 +50,29 @@ vi.mock('lucide-react', () => ({
   AlertTriangle: () => <div data-testid="alert-triangle-icon" />,
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.delete.title': 'Delete Event',
+        'events.delete.description': 'Are you sure you want to delete this event? This action cannot be undone.',
+        'events.delete.failedToDelete': 'Failed to delete event',
+        'events.delete.eventLabel': 'Event: {{eventName}}',
+        'events.delete.warning': 'This will permanently delete the event and all its information.',
+        'events.delete.buttons.cancel': 'Cancel',
+        'events.delete.buttons.deleteEvent': 'Delete Event',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string') {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, key) => options[key] || match);
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Import after mocking to get the mocked version
 import { eventsApi } from '@/app/lib/api';
 
