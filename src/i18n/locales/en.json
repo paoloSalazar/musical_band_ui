@@ -231,7 +231,9 @@
         "startDateRequired": "Start date is required",
         "startTimeRequired": "Start time is required",
         "endDateRequired": "End date is required",
-        "endTimeRequired": "End time is required"
+        "endTimeRequired": "End time is required",
+        "cannotCreateInPast": "Cannot create events in the past",
+        "eventConflict": "Event conflicts with existing event '{{eventName}}' on {{date}}"
       },
       "buttons": {
         "cancel": "Cancel",

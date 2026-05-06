@@ -6,6 +6,9 @@ import {
   formatDate,
   formatTime,
   formatDateTimeHumanReadable,
+  formatDateHumanReadable,
+  formatDateTimeHumanReadableLocalized,
+  formatTimeHumanReadable,
   convertToUTC,
   getCurrentLocalDateTime,
   getCurrentLocalDate,
@@ -120,6 +123,47 @@ describe('timezone.ts', () => {
 
     it('should return empty string for empty input', () => {
       const result = formatDateTimeHumanReadable('');
+      expect(result).toBe('');
+    });
+  });
+
+  describe('formatDateHumanReadable', () => {
+    it('should format date in Spanish when locale is es', () => {
+      const result = formatDateHumanReadable('2026-03-23T13:00:00Z', 'es');
+      expect(result.toLowerCase()).toContain('marzo');
+      expect(result).toContain('2026');
+    });
+
+    it('should return empty string for empty input', () => {
+      const result = formatDateHumanReadable('');
+      expect(result).toBe('');
+    });
+  });
+
+  describe('formatDateTimeHumanReadableLocalized', () => {
+    it('should format date and time in Spanish when locale is es', () => {
+      const result = formatDateTimeHumanReadableLocalized('2026-03-23T13:00:00Z', 'es');
+      expect(result.toLowerCase()).toContain('marzo');
+      expect(result).toContain('2026');
+      expect(result).toMatch(/\d{1,2}:\d{2}/);
+    });
+
+    it('should return empty string for empty input', () => {
+      const result = formatDateTimeHumanReadableLocalized('');
+      expect(result).toBe('');
+    });
+  });
+
+  describe('formatTimeHumanReadable', () => {
+    it('should format time in Spanish 24-hour style when locale is es', () => {
+      const result = formatTimeHumanReadable('2026-03-23T13:00:00Z', 'es');
+      expect(result).toMatch(/\d{1,2}:\d{2}/);
+      expect(result).not.toContain('AM');
+      expect(result).not.toContain('PM');
+    });
+
+    it('should return empty string for empty input', () => {
+      const result = formatTimeHumanReadable('');
       expect(result).toBe('');
     });
   });

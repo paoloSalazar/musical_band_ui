@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
-import { formatDate as formatDateUtil, formatTime } from '../../lib/timezone';
+import { formatDateHumanReadable, formatTimeHumanReadable } from '../../lib/timezone';
 import { useUser } from '../../contexts/UserContext';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -30,7 +30,7 @@ interface ViewEventDialogProps {
 }
 
 export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEvent, onPriceUpdate, showEditButton = true }: ViewEventDialogProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { hasRole, user } = useUser();
   const isAdmin = hasRole('admin');
   
@@ -69,7 +69,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   };
 
   const formatTimeOnly = (dateString: string) => {
-    return formatTime(dateString);
+    return formatTimeHumanReadable(dateString, i18n.language);
   };
 
   const handleEdit = () => {
@@ -172,9 +172,9 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
               <div>
                 <p className="text-sm text-gray-500">{t('events.dialog.view.date')}</p>
                 <p className="text-sm">
-                  {formatDate(event.start_datetime)}
+                  {formatDateHumanReadable(event.start_datetime, i18n.language)}
                   {event.start_datetime !== event.end_datetime && (
-                    <> - {formatDate(event.end_datetime)}</>
+                    <> - {formatDateHumanReadable(event.end_datetime, i18n.language)}</>
                   )}
                 </p>
               </div>
@@ -187,7 +187,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                 <div>
                   <p className="text-sm text-gray-500">{t('events.dialog.view.time')}</p>
                   <p className="text-sm">
-                    {formatTimeOnly(event.start_datetime)} - {formatTimeOnly(event.end_datetime)}
+                    {formatTimeHumanReadable(event.start_datetime, i18n.language)} - {formatTimeHumanReadable(event.end_datetime, i18n.language)}
                   </p>
                 </div>
               </div>

@@ -123,6 +123,8 @@ vi.mock('react-i18next', () => ({
         'events.create.validation.startTimeRequired': 'Start time is required',
         'events.create.validation.endDateRequired': 'End date is required',
         'events.create.validation.endTimeRequired': 'End time is required',
+        'events.create.validation.cannotCreateInPast': 'Cannot create events in the past',
+        'events.create.validation.eventConflict': 'Event conflicts with existing event \'{{eventName}}\' on {{date}}',
         'events.create.buttons.cancel': 'Cancel',
         'events.create.buttons.createEvent': 'Create Event',
       };
@@ -407,6 +409,44 @@ describe('CreateEventDialog', () => {
 
     expect(eventsApi.create).toHaveBeenCalled();
   });
+
+  it('should translate "Cannot create events in the past" API error', async () => {
+    eventsApi.create.mockRejectedValue({
+      detail: 'Cannot create events in the past',
+    });
+
+    render(
+      <UserProvider>
+        <CreateEventDialog open={true} onOpenChange={() => {}} />
+      </UserProvider>
+    );
+
+    // Fill in minimal required fields with a past date
+    const nameInput = screen.getByPlaceholderText('e.g., Cumpleaños de Maria');
+    const placeInput = screen.getByPlaceholderText('e.g., Calle Calama y San Martin, Cochabamba');
+    const startDateInput = document.getElementById('create-start-date') as HTMLInputElement;
+    const endDateInput = document.getElementById('create-end-date') as HTMLInputElement;
+    const startTimeInput = document.getElementById('create-start-time') as HTMLInputElement;
+    const endTimeInput = document.getElementById('create-end-time') as HTMLInputElement;
+
+    fireEvent.change(nameInput, { target: { value: 'Past Event' } });
+    fireEvent.change(placeInput, { target: { value: 'Test Venue' } });
+    fireEvent.change(startDateInput, { target: { value: '2020-01-15' } }); // Past date
+    fireEvent.change(endDateInput, { target: { value: '2020-01-15' } });
+    fireEvent.change(startTimeInput, { target: { value: '10:00' } });
+    fireEvent.change(endTimeInput, { target: { value: '12:00' } });
+
+    const submitButton = screen.getByText('Create Event');
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('Cannot create events in the past')).toBeTruthy();
+    });
+
+    expect(eventsApi.create).toHaveBeenCalled();
+  });
+
+
 
   it('should reset form when dialog closes', () => {
     render(

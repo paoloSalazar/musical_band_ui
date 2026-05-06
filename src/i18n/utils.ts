@@ -159,6 +159,32 @@ export function translateApiError(errorMessage: string, context?: string): strin
   // Common API error patterns with regex to extract dynamic values
   const errorPatterns = [
     {
+      regex: /^Cannot create events in the past$/i,
+      key: 'events.create.validation.cannotCreateInPast',
+      extractor: () => ({})
+    },
+    {
+      regex: /^Event conflicts with existing event '(.+)' on (\d{4}-\d{2}-\d{2})$/i,
+      key: 'events.create.validation.eventConflict',
+      extractor: (match: RegExpMatchArray) => {
+        const eventName = match[1];
+        const dateString = match[2];
+        // Format date to human readable format
+        try {
+          const date = new Date(dateString + 'T00:00:00');
+          const formattedDate = date.toLocaleDateString(i18n.language || 'en', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+          return { eventName, date: formattedDate };
+        } catch (error) {
+          // Fallback to original date string if formatting fails
+          return { eventName, date: dateString };
+        }
+      }
+    },
+    {
       regex: /^User (.+@.+\..+) already exists$/i,
       key: 'users.errors.userAlreadyExists',
       extractor: (match: RegExpMatchArray) => ({ email: match[1] })

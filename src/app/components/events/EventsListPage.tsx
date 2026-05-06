@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
-import { formatDateTimeHumanReadable, formatDate, formatDateTime } from '../../lib/timezone';
+import { formatDateTimeHumanReadable, formatDateHumanReadable, formatDateTimeHumanReadableLocalized } from '../../lib/timezone';
 import {
   Table,
   TableBody,
@@ -39,7 +39,7 @@ interface EventsListPageProps {
 }
 
 export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPageProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, hasPermission, hasRole } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
   const [total, setTotal] = useState(0);
@@ -103,7 +103,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
   };
 
   const formatDateTime = (dateString: string) => {
-    return formatDateTimeHumanReadable(dateString);
+    return formatDateTimeHumanReadable(dateString, i18n.language);
   };
 
   const handleView = (event: Event) => {
@@ -204,10 +204,10 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                           {event.place}
                         </TableCell>
                         <TableCell className="text-gray-600">
-                          {event.is_all_day ? formatDate(event.start_datetime) : formatDateTime(event.start_datetime)}
+                          {event.is_all_day ? formatDateHumanReadable(event.start_datetime, i18n.language) : formatDateTimeHumanReadableLocalized(event.start_datetime, i18n.language)}
                         </TableCell>
                         <TableCell className="text-gray-600">
-                          {event.is_all_day ? formatDate(event.end_datetime) : formatDateTime(event.end_datetime)}
+                          {event.is_all_day ? formatDateHumanReadable(event.end_datetime, i18n.language) : formatDateTimeHumanReadableLocalized(event.end_datetime, i18n.language)}
                         </TableCell>
                         <TableCell className="text-gray-600">
                           {event.price !== undefined && event.price !== null ? `${event.price.toFixed(2)}` : '-'}

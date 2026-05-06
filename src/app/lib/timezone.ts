@@ -108,8 +108,36 @@ export function formatTime(utcDateString: string): string {
  * @param utcDateString - ISO 8601 UTC datetime string
  * @returns Formatted datetime string (e.g., "Mar 23, 2026 at 9:00 AM")
  */
-export function formatDateTimeHumanReadable(utcDateString: string): string {
-  return formatDateTime(utcDateString, "MMM d, yyyy 'at' h:mm a");
+function getLocale(locale?: string): string {
+  if (locale) {
+    return locale;
+  }
+
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    return navigator.language;
+  }
+
+  return 'en';
+}
+
+export function formatDateTimeHumanReadable(utcDateString: string, locale?: string): string {
+  if (!utcDateString) {
+    return '';
+  }
+
+  try {
+    const zonedDate = convertToUserTimeZone(utcDateString);
+    return zonedDate.toLocaleString(getLocale(locale), {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  } catch (error) {
+    console.warn('[timezone] Error formatting human readable datetime:', error);
+    return utcDateString;
+  }
 }
 
 /**
@@ -155,4 +183,77 @@ export function getCurrentLocalTime(): string {
   const now = new Date();
   const zonedDate = toZonedTime(now, getUserTimeZone());
   return formatTz(zonedDate, 'HH:mm', { timeZone: getUserTimeZone() });
+}
+
+/**
+ * Format a UTC datetime string to display date in human-readable format
+ * @param utcDateString - ISO 8601 UTC datetime string
+ * @param locale - Locale for formatting (defaults to current i18n language)
+ * @returns Formatted date string (e.g., "March 23, 2026" or "23 de marzo de 2026")
+ */
+export function formatDateHumanReadable(utcDateString: string, locale?: string): string {
+  if (!utcDateString) {
+    return '';
+  }
+
+  try {
+    const zonedDate = convertToUserTimeZone(utcDateString);
+    return zonedDate.toLocaleDateString(getLocale(locale), {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    console.warn('[timezone] Error formatting human readable date:', error);
+    return utcDateString;
+  }
+}
+
+/**
+ * Format a UTC datetime string to display date and time in human-readable format
+ * @param utcDateString - ISO 8601 UTC datetime string
+ * @param locale - Locale for formatting (defaults to current i18n language)
+ * @returns Formatted datetime string (e.g., "March 23, 2026, 2:30 PM")
+ */
+export function formatDateTimeHumanReadableLocalized(utcDateString: string, locale?: string): string {
+  if (!utcDateString) {
+    return '';
+  }
+
+  try {
+    const zonedDate = convertToUserTimeZone(utcDateString);
+    return zonedDate.toLocaleString(getLocale(locale), {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  } catch (error) {
+    console.warn('[timezone] Error formatting human readable datetime:', error);
+    return utcDateString;
+  }
+}
+
+/**
+ * Format a UTC datetime string to display time only in human-readable format
+ * @param utcDateString - ISO 8601 UTC datetime string
+ * @param locale - Locale for formatting (defaults to current i18n language)
+ * @returns Formatted time string (e.g., "2:30 PM")
+ */
+export function formatTimeHumanReadable(utcDateString: string, locale?: string): string {
+  if (!utcDateString) {
+    return '';
+  }
+
+  try {
+    const zonedDate = convertToUserTimeZone(utcDateString);
+    return zonedDate.toLocaleTimeString(getLocale(locale), {
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  } catch (error) {
+    console.warn('[timezone] Error formatting human readable time:', error);
+    return utcDateString;
+  }
 }

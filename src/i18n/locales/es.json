@@ -231,7 +231,9 @@
         "startDateRequired": "La fecha de inicio es obligatoria",
         "startTimeRequired": "La hora de inicio es obligatoria",
         "endDateRequired": "La fecha de fin es obligatoria",
-        "endTimeRequired": "La hora de fin es obligatoria"
+        "endTimeRequired": "La hora de fin es obligatoria",
+        "cannotCreateInPast": "No se pueden crear eventos en el pasado",
+        "eventConflict": "El evento entra en conflicto con el evento existente '{{eventName}}' el {{date}}"
       },
       "buttons": {
         "cancel": "Cancelar",

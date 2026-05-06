@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { translateApiError } from '../../../i18n/utils';
 import { eventsApi } from '../../lib/api';
 import type { Event, EventFormData } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
@@ -126,7 +127,23 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
       }
     } catch (err) {
       const apiError = err as ApiError;
-      setError(apiError.detail || apiError.message || t('events.create.failedToCreate'));
+      const rawErrorMessage = apiError.detail || apiError.message || '';
+
+      // Handle specific API error messages
+      let errorMessage = t('events.create.failedToCreate');
+      if (rawErrorMessage === 'Cannot create events in the past') {
+        errorMessage = t('events.create.validation.cannotCreateInPast');
+      } else if (rawErrorMessage) {
+        // Try to translate other API errors
+        const translated = translateApiError(rawErrorMessage, 'event creation');
+        if (translated !== rawErrorMessage) {
+          errorMessage = translated;
+        } else {
+          errorMessage = rawErrorMessage;
+        }
+      }
+
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
