@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { profileApi, type UserDetailCreateData } from '../../lib/api/profile';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -22,20 +23,8 @@ interface AddAdditionalInfoDialogProps {
 }
 
 // Common detail types for the dropdown
-const DETAIL_TYPES = [
-  { value: 'address', label: 'Address' },
-  { value: 'address1', label: 'Address Line 1' },
-  { value: 'address2', label: 'Address Line 2' },
-  { value: 'city', label: 'City' },
-  { value: 'state', label: 'State/Province' },
-  { value: 'country', label: 'Country' },
-  { value: 'postal_code', label: 'Postal Code' },
-  { value: 'phone', label: 'Phone' },
-  { value: 'bio', label: 'Biography' },
-  { value: 'website', label: 'Website' },
-  { value: 'linkedin', label: 'LinkedIn' },
-  { value: 'twitter', label: 'Twitter' },
-  { value: 'instagram', label: 'Instagram' },
+const DETAIL_TYPE_VALUES = [
+  'address', 'address1', 'address2', 'city', 'state', 'country', 'postal_code', 'phone', 'bio', 'website', 'linkedin', 'twitter', 'instagram'
 ];
 
 export function AddAdditionalInfoDialog({
@@ -44,6 +33,13 @@ export function AddAdditionalInfoDialog({
   onOpenChange,
   onSuccess,
 }: AddAdditionalInfoDialogProps) {
+  const { t } = useTranslation();
+
+  const DETAIL_TYPES = DETAIL_TYPE_VALUES.map(value => ({
+    value,
+    label: t(`profile.addAdditionalInfo.detailTypes.${value}`),
+  }));
+
   const [formData, setFormData] = useState<UserDetailCreateData>({
     user_id: userId,
     detail_type: '',
@@ -53,8 +49,8 @@ export function AddAdditionalInfoDialog({
   const [error, setError] = useState<string | null>(null);
 
   // Reset form when dialog opens
-  const handleOpenChange = (isOpen: boolean) => {
-    if (isOpen) {
+  useEffect(() => {
+    if (open) {
       setFormData({
         user_id: userId,
         detail_type: '',
@@ -62,6 +58,9 @@ export function AddAdditionalInfoDialog({
       });
       setError(null);
     }
+  }, [open, userId]);
+
+  const handleOpenChange = (isOpen: boolean) => {
     onOpenChange(isOpen);
   };
 
@@ -73,7 +72,7 @@ export function AddAdditionalInfoDialog({
     e.preventDefault();
 
     if (!formData.detail_type || !formData.detail_value) {
-      setError('Please fill in all required fields');
+      setError(t('profile.addAdditionalInfo.error.fillFields'));
       return;
     }
 
@@ -94,7 +93,7 @@ export function AddAdditionalInfoDialog({
       onSuccess();
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to add additional info');
+      setError(error.detail || error.message || t('profile.addAdditionalInfo.error.failed'));
     } finally {
       setIsLoading(false);
     }
@@ -106,10 +105,10 @@ export function AddAdditionalInfoDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Plus className="mr-2 h-5 w-5" />
-            Add Additional Information
+            {t('profile.addAdditionalInfo.title')}
           </DialogTitle>
           <DialogDescription>
-            Add new additional information to your profile.
+            {t('profile.addAdditionalInfo.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -124,13 +123,13 @@ export function AddAdditionalInfoDialog({
             {/* Detail Type */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="detail_type" className="text-right">
-                Type
+                {t('profile.addAdditionalInfo.fields.type')}
               </Label>
               <Input
                 id="detail_type"
                 value={formData.detail_type}
                 onChange={(e) => handleChange('detail_type', e.target.value)}
-                placeholder="e.g., address, city, phone"
+                placeholder={t('profile.addAdditionalInfo.fields.typePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
                 required
@@ -148,13 +147,13 @@ export function AddAdditionalInfoDialog({
             {/* Detail Value */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="detail_value" className="text-right">
-                Value
+                {t('profile.addAdditionalInfo.fields.value')}
               </Label>
               <Input
                 id="detail_value"
                 value={formData.detail_value}
                 onChange={(e) => handleChange('detail_value', e.target.value)}
-                placeholder="Enter the value"
+                placeholder={t('profile.addAdditionalInfo.fields.valuePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
                 required
@@ -169,11 +168,11 @@ export function AddAdditionalInfoDialog({
               onClick={() => handleOpenChange(false)}
               disabled={isLoading}
             >
-              Cancel
+              {t('profile.addAdditionalInfo.buttons.cancel')}
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="button" onClick={handleSubmit} disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Add Info
+              {t('profile.addAdditionalInfo.buttons.addInfo')}
             </Button>
           </DialogFooter>
         </form>

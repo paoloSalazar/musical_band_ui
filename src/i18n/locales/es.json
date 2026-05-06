@@ -292,13 +292,141 @@
       }
     }
   },
-  "profile": {
+   "profile": {
     "title": "Perfil",
     "name": "Nombre",
     "phone": "Teléfono",
     "bio": "Biografía",
     "updateProfile": "Actualizar Perfil",
-    "changePassword": "Cambiar Contraseña"
+    "changePassword": "Cambiar Contraseña",
+    "addAdditionalInfo": {
+      "title": "Agregar Información Adicional",
+      "description": "Agregue nueva información adicional a su perfil.",
+      "error": {
+        "fillFields": "Por favor complete todos los campos requeridos",
+        "failed": "Error al agregar información adicional"
+      },
+      "fields": {
+        "type": "Tipo",
+        "typePlaceholder": "ej. dirección, ciudad, teléfono",
+        "value": "Valor",
+        "valuePlaceholder": "Ingrese el valor"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "addInfo": "Agregar Info"
+      },
+      "detailTypes": {
+        "address": "Dirección",
+        "address1": "Línea de Dirección 1",
+        "address2": "Línea de Dirección 2",
+        "city": "Ciudad",
+        "state": "Estado/Provincia",
+        "country": "País",
+        "postal_code": "Código Postal",
+        "phone": "Teléfono",
+        "bio": "Biografía",
+        "website": "Sitio Web",
+        "linkedin": "LinkedIn",
+        "twitter": "Twitter",
+        "instagram": "Instagram"
+      }
+    },
+    "changePassword": {
+      "title": "Cambiar Contraseña",
+      "description": "Ingrese su contraseña actual y elija una nueva contraseña.",
+      "error": {
+        "passwordsNotMatch": "Las nuevas contraseñas no coinciden",
+        "passwordTooShort": "La nueva contraseña debe tener al menos 6 caracteres",
+        "failed": "Error al cambiar la contraseña"
+      },
+      "success": "¡Contraseña cambiada exitosamente!",
+      "fields": {
+        "current": "Actual",
+        "currentPlaceholder": "Ingrese la contraseña actual",
+        "new": "Nueva",
+        "newPlaceholder": "Ingrese la nueva contraseña",
+        "confirm": "Confirmar",
+        "confirmPlaceholder": "Confirme la nueva contraseña"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "changePassword": "Cambiar Contraseña",
+        "changed": "¡Cambiada!"
+      }
+    },
+    "deleteAdditionalInfo": {
+      "title": "Eliminar Información Adicional",
+      "description": "¿Está seguro de que desea eliminar la información \"{{detailType}}\"? Esta acción no se puede deshacer.",
+      "error": {
+        "failed": "Error al eliminar información adicional"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
+    },
+    "editAdditionalInfo": {
+      "title": "Editar Información Adicional",
+      "description": "Actualice la información adicional de su perfil.",
+      "error": {
+        "fillFields": "Por favor ingrese un valor",
+        "failed": "Error al actualizar información adicional"
+      },
+      "fields": {
+        "type": "Tipo",
+        "value": "Valor",
+        "valuePlaceholder": "Ingrese el valor"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveChanges": "Guardar Cambios"
+      }
+    },
+    "editProfile": {
+      "title": "Editar Perfil",
+      "description": "Actualice su información básica de perfil a continuación.",
+      "error": {
+        "failed": "Error al actualizar el perfil"
+      },
+      "fields": {
+        "name": "Nombre",
+        "namePlaceholder": "Ingrese su nombre",
+        "lastname": "Apellido",
+        "lastnamePlaceholder": "Ingrese su apellido",
+        "secondLastname": "Segundo Apellido",
+        "secondLastnamePlaceholder": "Ingrese su segundo apellido (opcional)",
+        "phoneNumber": "Número de Teléfono",
+        "phoneNumberPlaceholder": "+1234567890"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveChanges": "Guardar Cambios"
+      }
+    },
+    "page": {
+      "loading": "Cargando perfil...",
+      "error": "Error",
+      "failedToLoad": "Error al cargar el perfil",
+      "retry": "Reintentar",
+      "noData": "No hay datos de perfil disponibles",
+      "backToHome": "Volver al Inicio",
+      "title": "Mi Perfil",
+      "changePassword": "Cambiar Contraseña",
+      "editProfile": "Editar Perfil",
+      "userId": "ID: {{id}}",
+      "sections": {
+        "contactInfo": "Información de Contacto",
+        "email": "Correo Electrónico",
+        "phoneNumber": "Número de Teléfono",
+        "role": "Rol",
+        "memberSince": "Miembro Desde",
+        "additionalInfo": "Información Adicional",
+        "addInfo": "Agregar Info",
+        "noAdditionalInfo": "No se ha agregado información adicional aún. Haga clic en \"Agregar Info\" para agregar detalles como dirección, ciudad u otra información.",
+        "myPermissions": "Mis Permisos"
+      }
+    }
   },
   "admin": {
     "title": "Panel de Administrador",

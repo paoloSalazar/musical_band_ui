@@ -290,15 +290,143 @@
         "list": "List View",
         "calendar": "Calendar View"
       }
+    },
+    "deleteAdditionalInfo": {
+      "title": "Delete Additional Information",
+      "description": "Are you sure you want to delete the \"{{detailType}}\" information? This action cannot be undone.",
+      "error": {
+        "failed": "Failed to delete additional info"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "delete": "Delete"
+      }
     }
   },
-  "profile": {
+   "profile": {
     "title": "Profile",
     "name": "Name",
     "phone": "Phone",
     "bio": "Bio",
     "updateProfile": "Update Profile",
-    "changePassword": "Change Password"
+    "changePassword": "Change Password",
+    "addAdditionalInfo": {
+      "title": "Add Additional Information",
+      "description": "Add new additional information to your profile.",
+      "error": {
+        "fillFields": "Please fill in all required fields",
+        "failed": "Failed to add additional info"
+      },
+      "fields": {
+        "type": "Type",
+        "typePlaceholder": "e.g., address, city, phone",
+        "value": "Value",
+        "valuePlaceholder": "Enter the value"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "addInfo": "Add Info"
+      },
+      "detailTypes": {
+        "address": "Address",
+        "address1": "Address Line 1",
+        "address2": "Address Line 2",
+        "city": "City",
+        "state": "State/Province",
+        "country": "Country",
+        "postal_code": "Postal Code",
+        "phone": "Phone",
+        "bio": "Biography",
+        "website": "Website",
+        "linkedin": "LinkedIn",
+        "twitter": "Twitter",
+        "instagram": "Instagram"
+      }
+    },
+    "changePassword": {
+      "title": "Change Password",
+      "description": "Enter your current password and choose a new password.",
+      "error": {
+        "passwordsNotMatch": "New passwords do not match",
+        "passwordTooShort": "New password must be at least 6 characters",
+        "failed": "Failed to change password"
+      },
+      "success": "Password changed successfully!",
+      "fields": {
+        "current": "Current",
+        "currentPlaceholder": "Enter current password",
+        "new": "New",
+        "newPlaceholder": "Enter new password",
+        "confirm": "Confirm",
+        "confirmPlaceholder": "Confirm new password"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "changePassword": "Change Password",
+        "changed": "Changed!"
+      }
+    },
+    "editAdditionalInfo": {
+      "title": "Edit Additional Information",
+      "description": "Update the additional information for your profile.",
+      "error": {
+        "fillFields": "Please enter a value",
+        "failed": "Failed to update additional info"
+      },
+      "fields": {
+        "type": "Type",
+        "value": "Value",
+        "valuePlaceholder": "Enter the value"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "saveChanges": "Save Changes"
+      }
+    },
+    "editProfile": {
+      "title": "Edit Profile",
+      "description": "Update your basic profile information below.",
+      "error": {
+        "failed": "Failed to update profile"
+      },
+      "fields": {
+        "name": "Name",
+        "namePlaceholder": "Enter your name",
+        "lastname": "Last Name",
+        "lastnamePlaceholder": "Enter your last name",
+        "secondLastname": "Second Last Name",
+        "secondLastnamePlaceholder": "Enter your second last name (optional)",
+        "phoneNumber": "Phone Number",
+        "phoneNumberPlaceholder": "+1234567890"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "saveChanges": "Save Changes"
+      }
+    },
+    "page": {
+      "loading": "Loading profile...",
+      "error": "Error",
+      "failedToLoad": "Failed to load profile",
+      "retry": "Retry",
+      "noData": "No profile data available",
+      "backToHome": "Back to Home",
+      "title": "My Profile",
+      "changePassword": "Change Password",
+      "editProfile": "Edit Profile",
+      "userId": "ID: {{id}}",
+      "sections": {
+        "contactInfo": "Contact Information",
+        "email": "Email",
+        "phoneNumber": "Phone Number",
+        "role": "Role",
+        "memberSince": "Member Since",
+        "additionalInfo": "Additional Information",
+        "addInfo": "Add Info",
+        "noAdditionalInfo": "No additional information added yet. Click \"Add Info\" to add details like address, city, or other information.",
+        "myPermissions": "My Permissions"
+      }
+    }
   },
   "admin": {
     "title": "Admin Panel",
