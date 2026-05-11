@@ -51,7 +51,7 @@ describe('PermissionsListPage Component', () => {
 
     render(<PermissionsListPage />);
 
-    expect(screen.getByText('Loading permissions...')).toBeInTheDocument();
+    expect(screen.getByText('permissions.loading')).toBeInTheDocument();
     expect(document.querySelector('.animate-spin')).toBeInTheDocument();
   });
 
@@ -72,7 +72,7 @@ describe('PermissionsListPage Component', () => {
       expect(screen.getByText('write')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Showing 2 of 2 permission(s)')).toBeInTheDocument();
+    expect(screen.getByText('permissions.totalPermissions')).toBeInTheDocument();
   });
 
   it('should show empty state when no permissions', async () => {
@@ -83,7 +83,7 @@ describe('PermissionsListPage Component', () => {
     render(<PermissionsListPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('No permissions found')).toBeInTheDocument();
+      expect(screen.getByText('permissions.noPermissions')).toBeInTheDocument();
     });
   });
 
@@ -95,11 +95,11 @@ describe('PermissionsListPage Component', () => {
     render(<PermissionsListPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Error loading permissions')).toBeInTheDocument();
+      expect(screen.getByText('permissions.error')).toBeInTheDocument();
       expect(screen.getByText('Network error')).toBeInTheDocument();
     });
 
-    const tryAgainButton = screen.getByRole('button', { name: /try again/i });
+    const tryAgainButton = screen.getByRole('button', { name: /permissions\.tryAgain/i });
     expect(tryAgainButton).toBeInTheDocument();
   });
 
@@ -114,7 +114,7 @@ describe('PermissionsListPage Component', () => {
 
     await waitFor(() => screen.getByText('read'));
 
-    const viewButton = screen.getAllByTitle('View')[0];
+    const viewButton = screen.getAllByTitle('permissions.actions.view')[0];
     fireEvent.click(viewButton);
 
     expect(screen.getByTestId('view-permission-dialog')).toBeInTheDocument();
@@ -131,7 +131,7 @@ describe('PermissionsListPage Component', () => {
 
     await waitFor(() => screen.getByText('read'));
 
-    const editButton = screen.getAllByTitle('Edit')[0];
+    const editButton = screen.getAllByTitle('permissions.actions.edit')[0];
     fireEvent.click(editButton);
 
     expect(screen.getByTestId('edit-permission-dialog')).toBeInTheDocument();
@@ -148,7 +148,7 @@ describe('PermissionsListPage Component', () => {
 
     await waitFor(() => screen.getByText('read'));
 
-    const deleteButton = screen.getAllByTitle('Delete')[0];
+    const deleteButton = screen.getAllByTitle('permissions.actions.delete')[0];
     fireEvent.click(deleteButton);
 
     expect(screen.getByTestId('delete-permission-dialog')).toBeInTheDocument();
@@ -182,7 +182,7 @@ describe('PermissionsListPage Component', () => {
 
     render(<PermissionsListPage />);
 
-    await waitFor(() => screen.getByText('No permissions found'));
+    await waitFor(() => screen.getByText('permissions.noPermissions'));
 
     const createButton = screen.getByTestId('permission-form-dialog');
     fireEvent.click(createButton);
@@ -201,7 +201,7 @@ describe('PermissionsListPage Component', () => {
 
     await waitFor(() => screen.getByText('read'));
 
-    const editButton = screen.getAllByTitle('Edit')[0];
+    const editButton = screen.getAllByTitle('permissions.actions.edit')[0];
     fireEvent.click(editButton);
 
     const editDialog = screen.getByTestId('edit-permission-dialog');
@@ -225,14 +225,14 @@ describe('PermissionsListPage Component', () => {
 
     await waitFor(() => screen.getByText('read'));
 
-    const deleteButton = screen.getAllByTitle('Delete')[0];
+    const deleteButton = screen.getAllByTitle('permissions.actions.delete')[0];
     fireEvent.click(deleteButton);
 
     const deleteDialog = screen.getByTestId('delete-permission-dialog');
     fireEvent.click(deleteDialog);
 
     await waitFor(() => {
-      expect(screen.getByText('No permissions found')).toBeInTheDocument();
+      expect(screen.getByText('permissions.noPermissions')).toBeInTheDocument();
     });
   });
 });

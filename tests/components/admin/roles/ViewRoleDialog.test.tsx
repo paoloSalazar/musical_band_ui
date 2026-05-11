@@ -50,7 +50,7 @@ describe('ViewRoleDialog Component', () => {
 
     render(<ViewRoleDialog roleName="admin" open={true} onOpenChange={() => {}} />);
 
-    expect(screen.getByText('Loading role...')).toBeInTheDocument();
+    expect(screen.getByText('roles.form.loadingRole')).toBeInTheDocument();
   });
 
   it('should show error state', async () => {
@@ -64,7 +64,7 @@ describe('ViewRoleDialog Component', () => {
       expect(screen.getByText('Role not found')).toBeInTheDocument();
     });
 
-    const tryAgainButton = screen.getByRole('button', { name: /try again/i });
+    const tryAgainButton = screen.getByRole('button', { name: /common\.tryAgain/i });
     expect(tryAgainButton).toBeInTheDocument();
   });
 
@@ -94,7 +94,7 @@ describe('ViewRoleDialog Component', () => {
     render(<ViewRoleDialog roleName="user" open={true} onOpenChange={() => {}} />);
 
     await waitFor(() => {
-      expect(screen.getByText('No description')).toBeInTheDocument();
+      expect(screen.getByText('roles.dialog.view.noDescription')).toBeInTheDocument();
     });
   });
 

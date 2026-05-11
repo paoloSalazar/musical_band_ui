@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { profileApi } from '../../lib/api/profile';
 import { Button } from '../ui/button';
 import { PasswordInput } from '../ui/password-input';
@@ -27,6 +28,7 @@ export function ChangePasswordDialog({
   onOpenChange,
   onSuccess,
 }: ChangePasswordDialogProps) {
+  const { t } = useTranslation();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -50,13 +52,13 @@ export function ChangePasswordDialog({
 
     // Validate passwords match
     if (newPassword !== confirmPassword) {
-      setError('New passwords do not match');
+      setError(t('profile.changePassword.error.passwordsNotMatch'));
       return;
     }
 
     // Validate password length
     if (newPassword.length < 6) {
-      setError('New password must be at least 6 characters');
+      setError(t('profile.changePassword.error.passwordTooShort'));
       return;
     }
 
@@ -75,7 +77,7 @@ export function ChangePasswordDialog({
       }, 1500);
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to change password');
+      setError(error.detail || error.message || t('profile.changePassword.error.failed'));
     } finally {
       setIsLoading(false);
     }
@@ -95,10 +97,10 @@ export function ChangePasswordDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <KeyRound className="mr-2 h-5 w-5" />
-            Change Password
+            {t('profile.changePassword.title')}
           </DialogTitle>
           <DialogDescription>
-            Enter your current password and choose a new password.
+            {t('profile.changePassword.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -112,20 +114,20 @@ export function ChangePasswordDialog({
 
             {success && (
               <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
-                Password changed successfully!
+                {t('profile.changePassword.success')}
               </div>
             )}
 
             {/* Current Password */}
             <div className="grid grid-cols-3 items-center gap-3">
               <Label htmlFor="current_password" className="text-right">
-                Current
+                {t('profile.changePassword.fields.current')}
               </Label>
               <PasswordInput
                 id="current_password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="Enter current password"
+                placeholder={t('profile.changePassword.fields.currentPlaceholder')}
                 className="col-span-3"
                 disabled={isLoading || success}
                 required
@@ -135,13 +137,13 @@ export function ChangePasswordDialog({
             {/* New Password */}
             <div className="grid grid-cols-3 items-center gap-3">
               <Label htmlFor="new_password" className="text-right">
-                New
+                {t('profile.changePassword.fields.new')}
               </Label>
               <PasswordInput
                 id="new_password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Enter new password"
+                placeholder={t('profile.changePassword.fields.newPlaceholder')}
                 className="col-span-3"
                 disabled={isLoading || success}
                 required
@@ -152,13 +154,13 @@ export function ChangePasswordDialog({
             {/* Confirm New Password */}
             <div className="grid grid-cols-3 items-center gap-3">
               <Label htmlFor="confirm_password" className="text-right">
-                Confirm
+                {t('profile.changePassword.fields.confirm')}
               </Label>
               <PasswordInput
                 id="confirm_password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm new password"
+                placeholder={t('profile.changePassword.fields.confirmPlaceholder')}
                 className="col-span-3"
                 disabled={isLoading || success}
                 required
@@ -174,15 +176,15 @@ export function ChangePasswordDialog({
               onClick={() => handleOpenChange(false)}
               disabled={isLoading || success}
             >
-              Cancel
+              {t('profile.changePassword.buttons.cancel')}
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={isLoading || success}
               className="bg-blue-600 hover:bg-blue-700"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {success ? 'Changed!' : 'Change Password'}
+              {success ? t('profile.changePassword.buttons.changed') : t('profile.changePassword.buttons.changePassword')}
             </Button>
           </DialogFooter>
         </form>

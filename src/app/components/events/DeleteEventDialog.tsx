@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { eventsApi } from '../../lib/api';
 import type { ApiError } from '../../lib/api/client';
 import { Button } from '../ui/button';
@@ -21,6 +22,7 @@ interface DeleteEventDialogProps {
 }
 
 export function DeleteEventDialog({ eventId, eventName, open, onOpenChange, onSuccess }: DeleteEventDialogProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,7 +42,7 @@ export function DeleteEventDialog({ eventId, eventName, open, onOpenChange, onSu
       }
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to delete event');
+      setError(error.detail || error.message || t('events.delete.failedToDelete'));
     } finally {
       setIsLoading(false);
     }
@@ -52,10 +54,10 @@ export function DeleteEventDialog({ eventId, eventName, open, onOpenChange, onSu
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-red-500" />
-            Delete Event
+            {t('events.delete.title')}
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this event? This action cannot be undone.
+            {t('events.delete.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -66,9 +68,9 @@ export function DeleteEventDialog({ eventId, eventName, open, onOpenChange, onSu
         )}
 
         <div className="py-3">
-          <p className="font-medium">Event: {eventName}</p>
+          <p className="font-medium">{t('events.delete.eventLabel', { eventName })}</p>
           <p className="text-sm text-gray-500 mt-1">
-            This will permanently delete the event and all its information.
+            {t('events.delete.warning')}
           </p>
         </div>
 
@@ -79,7 +81,7 @@ export function DeleteEventDialog({ eventId, eventName, open, onOpenChange, onSu
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
-            Cancel
+            {t('events.delete.buttons.cancel')}
           </Button>
           <Button
             type="submit"
@@ -89,7 +91,7 @@ export function DeleteEventDialog({ eventId, eventName, open, onOpenChange, onSu
             className="bg-red-600 hover:bg-red-700"
           >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Delete Event
+            {t('events.delete.buttons.deleteEvent')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -72,7 +72,7 @@ describe('EditUserDialog Component', () => {
       />
     );
 
-    expect(screen.getByText('Loading user...')).toBeInTheDocument();
+    expect(screen.getByText('users.form.loadingUser')).toBeInTheDocument();
   });
 
   it('should show loading while fetching roles', async () => {
@@ -89,9 +89,9 @@ describe('EditUserDialog Component', () => {
       />
     );
 
-    await waitFor(() => screen.getByRole('button', { name: /save changes/i }));
+    await waitFor(() => screen.getByRole('button', { name: /users\.form\.buttons\.saveChanges/i }));
 
-    expect(screen.getByRole('button', { name: /save changes/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /users\.form\.buttons\.saveChanges/i })).toBeDisabled();
   });
 
   it('should allow editing fields', async () => {
@@ -146,7 +146,7 @@ describe('EditUserDialog Component', () => {
     await waitFor(() => screen.getByDisplayValue('John'));
 
     const nameInput = screen.getByDisplayValue('John');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveChanges/i });
 
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
     fireEvent.click(submitButton);
@@ -184,7 +184,7 @@ describe('EditUserDialog Component', () => {
 
     await waitFor(() => screen.getByDisplayValue('John'));
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveChanges/i });
     fireEvent.click(submitButton);
 
     expect(submitButton).toBeDisabled();
@@ -212,7 +212,7 @@ describe('EditUserDialog Component', () => {
 
     await waitFor(() => screen.getByDisplayValue('John'));
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveChanges/i });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
@@ -241,10 +241,10 @@ describe('EditUserDialog Component', () => {
     const nameInput = screen.getByDisplayValue('John');
     fireEvent.change(nameInput, { target: { value: '' } });
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /users\.form\.buttons\.saveChanges/i });
     fireEvent.click(submitButton);
 
-    expect(screen.getByText('Name is required')).toBeInTheDocument();
+    expect(screen.getByText('users.form.validation.nameRequired')).toBeInTheDocument();
   });
 
   it('should reset state when dialog closes', async () => {

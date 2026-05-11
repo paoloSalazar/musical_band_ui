@@ -15,6 +15,27 @@ vi.mock('@/app/contexts/UserContext', () => ({
   }),
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.page.title': 'Events',
+        'events.page.loggedInAs': 'Logged in as: {{name}}',
+        'events.page.description': 'Manage your band events and schedule',
+        'events.page.views.list': 'List View',
+        'events.page.views.calendar': 'Calendar View',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string') {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, key) => options[key] || match);
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Mock UI components
 vi.mock('@/app/components/ui/tabs', () => ({
   Tabs: ({ children, value, onValueChange }) => (
@@ -71,8 +92,7 @@ describe('EventsPage', () => {
 
     // Check header elements
     expect(screen.getByText('Events')).toBeTruthy();
-    expect(screen.getByText(/Logged in as:/)).toBeTruthy();
-    expect(screen.getByText('Test User')).toBeTruthy();
+    expect(screen.getByText('Logged in as: Test User')).toBeTruthy();
     expect(screen.getByText('Manage your band events and schedule')).toBeTruthy();
 
     // Check tabs are rendered

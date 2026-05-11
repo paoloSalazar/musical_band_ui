@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { profileApi } from '../../lib/api';
 import type { UserProfileWithDetails, UserDetail } from '../../lib/types';
 import { Button } from '../ui/button';
@@ -11,6 +12,7 @@ import { DeleteAdditionalInfoDialog } from './DeleteAdditionalInfoDialog';
 import { ChangePasswordDialog } from './ChangePasswordDialog';
 
 export function ProfilePage() {
+  const { t } = useTranslation();
   const [profile, setProfile] = useState<UserProfileWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,10 +35,10 @@ export function ProfilePage() {
       if (response.success) {
         setProfile(response.data);
       } else {
-        setError(response.message || 'Failed to load profile');
+        setError(response.message || t('profile.page.failedToLoad'));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load profile');
+      setError(err instanceof Error ? err.message : t('profile.page.failedToLoad'));
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +55,7 @@ export function ProfilePage() {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-3 text-gray-600">Loading profile...</span>
+        <span className="ml-3 text-gray-600">{t('profile.page.loading')}</span>
       </div>
     );
   }
@@ -62,10 +64,10 @@ export function ProfilePage() {
     return (
       <div className="max-w-4xl mx-auto py-8">
         <div className="text-red-600 text-center py-8">
-          <p className="font-medium text-lg">Error</p>
+          <p className="font-medium text-lg">{t('profile.page.error')}</p>
           <p className="text-sm">{error}</p>
           <Button onClick={loadProfile} className="mt-4">
-            Retry
+            {t('profile.page.retry')}
           </Button>
         </div>
       </div>
@@ -76,7 +78,7 @@ export function ProfilePage() {
     return (
       <div className="max-w-4xl mx-auto py-8">
         <div className="text-gray-500 text-center py-8">
-          No profile data available
+          {t('profile.page.noData')}
         </div>
       </div>
     );
@@ -87,12 +89,12 @@ export function ProfilePage() {
       {/* Back to Home */}
       <Link to="/" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6">
         <ArrowLeft className="h-4 w-4 mr-2" />
-        Back to Home
+        {t('profile.page.backToHome')}
       </Link>
 
       <div className="bg-white rounded-lg shadow-sm border p-6">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">My Profile</h1>
+          <h1 className="text-2xl font-bold">{t('profile.page.title')}</h1>
           {user && (
             <div className="flex gap-2">
               <Button
@@ -101,7 +103,7 @@ export function ProfilePage() {
                 onClick={() => setIsChangePasswordDialogOpen(true)}
               >
                 <KeyRound className="h-4 w-4 mr-2" />
-                Change Password
+                {t('profile.page.changePassword')}
               </Button>
               <Button
                 variant="outline"
@@ -109,7 +111,7 @@ export function ProfilePage() {
                 onClick={() => setIsEditDialogOpen(true)}
               >
                 <Pencil className="h-4 w-4 mr-2" />
-                Edit Profile
+                {t('profile.page.editProfile')}
               </Button>
             </div>
           )}
@@ -126,18 +128,18 @@ export function ProfilePage() {
                 {user.name} {user.lastname}
                 {user.second_lastname && ` ${user.second_lastname}`}
               </h2>
-              <p className="text-gray-500">ID: {user.id}</p>
+              <p className="text-gray-500">{t('profile.page.userId', { id: user.id })}</p>
             </div>
           </div>
 
           {/* Contact Information */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('profile.page.sections.contactInfo')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex items-start gap-3">
                 <Mail className="h-5 w-5 text-gray-400 mt-0.5" />
                 <div>
-                  <p className="text-sm text-gray-500">Email</p>
+                  <p className="text-sm text-gray-500">{t('profile.page.sections.email')}</p>
                   <p className="font-medium">{user.email}</p>
                 </div>
               </div>
@@ -146,7 +148,7 @@ export function ProfilePage() {
                 <div className="flex items-start gap-3">
                   <Phone className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div>
-                    <p className="text-sm text-gray-500">Phone Number</p>
+                    <p className="text-sm text-gray-500">{t('profile.page.sections.phoneNumber')}</p>
                     <p className="font-medium">{user.phone_number}</p>
                   </div>
                 </div>
@@ -155,14 +157,14 @@ export function ProfilePage() {
               <div className="flex items-start gap-3">
                 <Shield className="h-5 w-5 text-gray-400 mt-0.5" />
                 <div>
-                  <p className="text-sm text-gray-500">Role</p>
+                  <p className="text-sm text-gray-500">{t('profile.page.sections.role')}</p>
                   <p className="font-medium capitalize">{user.role}</p>
                 </div>
               </div>
 
               {user.created_at && (
                 <div>
-                  <p className="text-sm text-gray-500">Member Since</p>
+                  <p className="text-sm text-gray-500">{t('profile.page.sections.memberSince')}</p>
                   <p className="font-medium">{new Date(user.created_at).toLocaleDateString()}</p>
                 </div>
               )}
@@ -172,14 +174,14 @@ export function ProfilePage() {
           {/* Additional Details */}
           <div className="pt-6 border-t">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Additional Information</h3>
+              <h3 className="text-lg font-semibold">{t('profile.page.sections.additionalInfo')}</h3>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setIsAddInfoDialogOpen(true)}
               >
                 <Plus className="h-4 w-4 mr-2" />
-                Add Info
+                {t('profile.page.sections.addInfo')}
               </Button>
             </div>
             {details && details.length > 0 ? (
@@ -193,7 +195,7 @@ export function ProfilePage() {
                         <div className="h-5 w-5 rounded-full bg-gray-200 mt-0.5" />
                       )}
                       <div>
-                        <p className="text-sm text-gray-500 capitalize">{detail.detail_type.replace(/_/g, ' ')}</p>
+                        <p className="text-sm text-gray-500">{t(`profile.addAdditionalInfo.detailTypes.${detail.detail_type}`)}</p>
                         <p className="font-medium">{detail.detail_value}</p>
                       </div>
                     </div>
@@ -223,14 +225,14 @@ export function ProfilePage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-sm">No additional information added yet. Click "Add Info" to add details like address, city, or other information.</p>
+              <p className="text-gray-500 text-sm">{t('profile.page.sections.noAdditionalInfo')}</p>
             )}
           </div>
 
           {/* Permissions */}
           {user.permissions && user.permissions.length > 0 && (
             <div className="pt-6 border-t">
-              <h3 className="text-lg font-semibold mb-4">My Permissions</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('profile.page.sections.myPermissions')}</h3>
               <div className="flex flex-wrap gap-2">
                 {user.permissions.map((permission) => (
                   <span

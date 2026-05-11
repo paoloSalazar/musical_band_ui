@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { translateApiError, translateUserRole, capitalizeFirstLetter } from '../../../../i18n/utils';
 import { usersApi } from '../../../lib/api';
 import type { User } from '../../../lib/types';
 import { 
@@ -17,13 +19,12 @@ import {
   CardHeader, 
   CardTitle 
 } from '../../ui/card';
-import { 
-  Pencil, 
-  Trash2, 
+import {
+  Pencil,
+  Trash2,
   Eye,
   Loader2,
-  User as UserIcon,
-  UserPlus
+  User as UserIcon
 } from 'lucide-react';
 import { UserFormDialog } from './UserFormDialog';
 import { ViewUserDialog } from './ViewUserDialog';
@@ -35,6 +36,7 @@ import { DeleteUserDialog } from './DeleteUserDialog';
  * Displays all users in a table
  */
 export function UsersListPage() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +64,8 @@ export function UsersListPage() {
       setUsers(response.data.data);
       setTotal(response.data.total);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load users');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load users';
+      setError(translateApiError(errorMessage, 'user listing'));
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +92,7 @@ export function UsersListPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-gray-600">Loading users...</span>
+        <span className="ml-2 text-gray-600">{t('users.loading')}</span>
       </div>
     );
   }
@@ -99,10 +102,10 @@ export function UsersListPage() {
       <Card className="border-red-200">
         <CardContent className="pt-6">
           <div className="text-red-600 text-center">
-            <p className="font-medium">Error loading users</p>
+            <p className="font-medium">{t('users.error')}</p>
             <p className="text-sm">{error}</p>
             <Button onClick={loadUsers} variant="outline" className="mt-4">
-              Try Again
+              {t('users.tryAgain')}
             </Button>
           </div>
         </CardContent>
@@ -115,9 +118,9 @@ export function UsersListPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Users</h2>
+          <h2 className="text-2xl font-bold">{t('users.title')}</h2>
           <p className="text-gray-600 mt-1">
-            Manage system users and their roles
+            {t('users.subtitle')}
           </p>
         </div>
         <UserFormDialog
@@ -132,18 +135,18 @@ export function UsersListPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <UserIcon className="mr-2 h-5 w-5" />
-            All Users
+            {t('users.allUsers')}
           </CardTitle>
           <CardDescription>
-            Total: {total} user(s)
+            {t('users.totalUsers', { count: total })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {users.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <UserIcon className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-              <p>No users found</p>
-              <p className="text-sm">Create your first user to get started</p>
+              <p>{t('users.noUsers')}</p>
+              <p className="text-sm">{t('users.noUsersMessage')}</p>
             </div>
           ) : (
             <>
@@ -151,13 +154,13 @@ export function UsersListPage() {
                 <Table className="min-w-full">
                   <TableHeader>
                     <TableRow>
-                      <TableHead>ID</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Last Name</TableHead>
-                      <TableHead>Phone Number</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>{t('users.table.id')}</TableHead>
+                      <TableHead>{t('users.table.name')}</TableHead>
+                      <TableHead>{t('users.table.lastName')}</TableHead>
+                      <TableHead>{t('users.table.phoneNumber')}</TableHead>
+                      <TableHead>{t('users.table.email')}</TableHead>
+                      <TableHead>{t('users.table.role')}</TableHead>
+                      <TableHead className="text-right">{t('users.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -165,13 +168,13 @@ export function UsersListPage() {
                       <TableRow key={user.id}>
                         <TableCell className="font-medium">{user.id}</TableCell>
                         <TableCell>
-                          <span className="font-medium">{user.name}</span>
+                          <span className="font-medium">{capitalizeFirstLetter(user.name)}</span>
                           {user.second_lastname && (
-                            <span className="text-gray-500"> {user.second_lastname}</span>
+                            <span className="text-gray-500"> {capitalizeFirstLetter(user.second_lastname)}</span>
                           )}
                         </TableCell>
                         <TableCell className="text-gray-600">
-                          {user.lastname}
+                          {capitalizeFirstLetter(user.lastname)}
                         </TableCell>
                         <TableCell className="text-gray-600">
                           {user.phone_number || '-'}
@@ -181,31 +184,31 @@ export function UsersListPage() {
                         </TableCell>
                         <TableCell>
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {user.role}
+                            {translateUserRole(user.role)}
                           </span>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              title="View"
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              title={t('users.actions.view')}
                               onClick={() => handleView(user.id)}
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              title="Edit"
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              title={t('users.actions.edit')}
                               onClick={() => handleEdit(user.id)}
                             >
                               <Pencil className="h-4 w-4" />
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              title="Delete"
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              title={t('users.actions.delete')}
                               onClick={() => handleDelete(user.id)}
                               className="text-red-600 hover:text-red-700 hover:bg-red-50"
                             >
@@ -223,7 +226,11 @@ export function UsersListPage() {
               {totalPages > 1 && (
                 <div className="flex items-center justify-between mt-4">
                   <div className="text-sm text-gray-600">
-                    Showing {currentPage * pageSize + 1} to {Math.min((currentPage + 1) * pageSize, total)} of {total} users
+                    {t('users.pagination.showing', {
+                      from: currentPage * pageSize + 1,
+                      to: Math.min((currentPage + 1) * pageSize, total),
+                      total: total
+                    })}
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -232,7 +239,7 @@ export function UsersListPage() {
                       onClick={() => setCurrentPage(prev => Math.max(0, prev - 1))}
                       disabled={currentPage === 0}
                     >
-                      Previous
+                      {t('users.pagination.previous')}
                     </Button>
                     <Button
                       variant="outline"
@@ -240,7 +247,7 @@ export function UsersListPage() {
                       onClick={() => setCurrentPage(prev => Math.min(totalPages - 1, prev + 1))}
                       disabled={currentPage >= totalPages - 1}
                     >
-                      Next
+                      {t('users.pagination.next')}
                     </Button>
                   </div>
                 </div>

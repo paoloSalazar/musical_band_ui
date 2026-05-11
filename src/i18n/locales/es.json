@@ -1,0 +1,814 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "yes": "Sí",
+    "no": "No",
+    "ok": "OK",
+    "tryAgain": "Intentar de Nuevo",
+    "this": "este",
+    "these": "estos",
+    "user": "usuario",
+    "users": "usuarios",
+    "verbs": {
+      "is": "está",
+      "are": "están"
+    }
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "email": "Correo electrónico",
+    "rememberMe": "Recordarme",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "loginError": "Nombre de usuario o contraseña inválidos",
+    "loginSuccess": "Inicio de sesión exitoso"
+  },
+  "login": {
+    "title": "The Electric Dreams",
+    "subtitle": "Portal de Administrador",
+    "welcomeBack": "Bienvenido de Vuelta",
+    "description": "Inicia sesión para administrar tu sitio web de banda",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "admin@electricdreams.com",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "signIn": "Iniciar Sesión",
+    "signingIn": "Iniciando sesión...",
+    "validation": {
+      "required": "Por favor ingresa tanto el correo electrónico como la contraseña"
+    },
+    "footer": "© 2026 The Electric Dreams. Todos los derechos reservados."
+  },
+  "navigation": {
+    "home": "Inicio",
+    "profile": "Perfil",
+    "events": "Eventos",
+    "admin": "Administrador",
+    "dashboard": "Panel de Control"
+  },
+  "events": {
+    "title": "Eventos",
+    "create": "Crear Evento",
+    "edit": "Editar Evento",
+    "delete": "Eliminar Evento",
+    "view": "Ver Evento",
+    "setprice": "Establecer Precio",
+    "status": {
+      "PENDING": "PENDIENTE",
+      "CONFIRMED": "CONFIRMADO",
+      "CANCELLED": "CANCELADO"
+    },
+    "payment": {
+      "ADVANCE": "Pago Anticipado",
+      "REMAINING": "Saldo Restante",
+      "TOTAL": "Pago Total",
+      "title": "Detalles de Pago",
+      "description": "{{eventName}} - Historial de pagos y resumen",
+      "loading": "Cargando detalles de pago...",
+      "error": "Error",
+      "failedToLoad": "Error al cargar detalles de pago",
+      "summary": {
+        "title": "Resumen de Pago",
+        "finalPrice": "Precio Final",
+        "totalPaid": "Total Pagado",
+        "remaining": "Restante"
+      },
+      "history": {
+        "title": "Historial de Pagos",
+        "noPayments": "Aún no se han realizado pagos."
+      },
+      "buttons": {
+        "close": "Cerrar"
+      }
+    },
+    "makePayment": {
+      "title": "Realizar Pago",
+      "description": "{{eventName}} - Registrar un pago para este evento",
+      "loadingSummary": "Cargando resumen...",
+      "summary": {
+        "finalPrice": "Precio Final:",
+        "totalPaid": "Total Pagado:",
+        "remainingBalance": "Saldo Restante:"
+      },
+      "warning": "Resumen de pago no disponible. Asegúrese de que el precio del evento haya sido establecido.",
+      "form": {
+        "paymentType": "Tipo de Pago",
+        "paymentTypePlaceholder": "Seleccionar tipo de pago",
+        "amount": "Monto ($)",
+        "notes": "Notas (opcional)",
+        "notesPlaceholder": "Agregar notas sobre este pago..."
+      },
+      "paymentTypes": {
+        "ADVANCE": "Pago Anticipado",
+        "REMAINING": "Saldo Restante",
+        "TOTAL": "Pago Completo"
+      },
+      "descriptions": {
+        "TOTAL": "Paga todo el saldo restante",
+        "REMAINING": "Paga todo el saldo restante",
+        "ADVANCE": "Un pago parcial hacia el total"
+      },
+      "validation": {
+        "invalidAmount": "Por favor ingrese un monto válido mayor a 0",
+        "exceedsBalance": "El monto no puede exceder el saldo restante de ${{balance}}",
+        "advanceMinimum": "El pago anticipado debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
+        "remainingMinimum": "El pago restante debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
+        "remainingExact": "El pago restante debe ser exactamente igual al saldo restante (${{expectedAmount}}), pero se recibió ${{actualAmount}}"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "submitPayment": "Enviar Pago"
+      },
+      "failedToCreate": "Error al crear pago"
+    },
+    "dialog": {
+      "view": {
+        "title": "Detalles del Evento",
+        "description": "Ver información del evento",
+        "loading": "Cargando evento...",
+        "error": "Error",
+        "description": "Descripción",
+        "date": "Fecha",
+        "time": "Hora",
+        "allDay": "Evento de todo el día",
+        "location": "Ubicación",
+        "price": "Precio",
+        "enterPrice": "Ingresar precio",
+        "setPrice": "Establecer Precio",
+        "noPrice": "Sin precio establecido",
+        "createdBy": "Creado por",
+        "editEvent": "Editar Evento",
+        "paymentDetails": "Detalles de Pago",
+        "makePayment": "Realizar Pago",
+        "validation": {
+          "invalidAmount": "Por favor ingresa un número válido",
+          "priceNegative": "El precio no puede ser negativo"
+        },
+        "failedToUpdate": "Error al actualizar el precio"
+      }
+    },
+    "list": {
+      "title": "Todos los Eventos",
+      "totalEvents": "Total: {{total}} evento(s) - Página {{current}} de {{totalPages}}",
+      "createEvent": "Crear Evento",
+      "noEvents": "No se encontraron eventos",
+      "noEventsMessage": "Crea tu primer evento para comenzar",
+      "table": {
+        "name": "Nombre",
+        "place": "Lugar",
+        "startDate": "Fecha de Inicio",
+        "endDate": "Fecha de Fin",
+        "price": "Precio",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "actions": {
+        "view": "Ver Detalles",
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "loading": "Cargando eventos...",
+      "error": "Error al cargar eventos",
+      "tryAgain": "Intentar de Nuevo",
+      "pagination": {
+        "showing": "Mostrando {{from}} a {{to}} de {{total}} eventos",
+        "previous": "Anterior",
+        "next": "Siguiente"
+      },
+      "failedToLoad": "Error al cargar eventos"
+    },
+    "calendar": {
+      "loading": "Cargando calendario...",
+      "error": "Error al cargar eventos",
+      "tryAgain": "Intentar de Nuevo",
+      "today": "Hoy",
+      "dayNames": {
+        "sunday": "Dom",
+        "monday": "Lun",
+        "tuesday": "Mar",
+        "wednesday": "Mié",
+        "thursday": "Jue",
+        "friday": "Vie",
+        "saturday": "Sáb"
+      },
+      "moreEvents": "+{{count}} más",
+      "failedToLoad": "Error al cargar eventos"
+    },
+    "create": {
+      "title": "Crear Evento Nuevo",
+      "description": "Agrega un nuevo evento a tu horario.",
+      "failedToCreate": "Error al crear evento",
+      "form": {
+        "name": "Nombre",
+        "namePlaceholder": "ej. Cumpleaños de Maria",
+        "place": "Lugar",
+        "placePlaceholder": "ej. Calle Calama y San Martin, Cochabamba",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Descripción del evento...",
+        "allDay": "Todo el Día",
+        "allDayLabel": "Este es un evento de todo el día",
+        "startDate": "Fecha de Inicio",
+        "startTime": "Hora de Inicio",
+        "endDate": "Fecha de Fin",
+        "endTime": "Hora de Fin"
+      },
+      "validation": {
+        "nameRequired": "El nombre es obligatorio",
+        "placeRequired": "El lugar es obligatorio",
+        "startDateRequired": "La fecha de inicio es obligatoria",
+        "startTimeRequired": "La hora de inicio es obligatoria",
+        "endDateRequired": "La fecha de fin es obligatoria",
+        "endTimeRequired": "La hora de fin es obligatoria",
+        "cannotCreateInPast": "No se pueden crear eventos en el pasado",
+        "eventConflict": "El evento entra en conflicto con el evento existente '{{eventName}}' el {{date}}"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "createEvent": "Crear Evento"
+      }
+    },
+    "delete": {
+      "title": "Eliminar Evento",
+      "description": "¿Estás seguro de que quieres eliminar este evento? Esta acción no se puede deshacer.",
+      "failedToDelete": "Error al eliminar evento",
+      "eventLabel": "Evento: {{eventName}}",
+      "warning": "Esto eliminará permanentemente el evento y toda su información.",
+      "buttons": {
+        "cancel": "Cancelar",
+        "deleteEvent": "Eliminar Evento"
+      }
+    },
+    "edit": {
+      "title": "Editar Evento",
+      "description": "Actualizar información del evento.",
+      "loading": "Cargando evento...",
+      "failedToLoad": "Error al cargar evento",
+      "failedToUpdate": "Error al actualizar evento",
+      "form": {
+        "name": "Nombre",
+        "namePlaceholder": "ej. Cumpleaños de Maria",
+        "place": "Lugar",
+        "placePlaceholder": "ej. Calle Calama y San Martin, Cochabamba",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Descripción del evento...",
+        "allDay": "Todo el Día",
+        "allDayLabel": "Este es un evento de todo el día",
+        "startDate": "Fecha de Inicio",
+        "startTime": "Hora de Inicio",
+        "endDate": "Fecha de Fin",
+        "endTime": "Hora de Fin"
+      },
+      "validation": {
+        "nameRequired": "El nombre es obligatorio",
+        "placeRequired": "El lugar es obligatorio",
+        "startDateRequired": "La fecha de inicio es obligatoria",
+        "startTimeRequired": "La hora de inicio es obligatoria",
+        "endDateRequired": "La fecha de fin es obligatoria",
+        "endTimeRequired": "La hora de fin es obligatoria"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveChanges": "Guardar Cambios"
+      }
+    },
+    "page": {
+      "title": "Eventos",
+      "loggedInAs": "Conectado como: {{name}}",
+      "description": "Gestiona los eventos y horarios de tu banda",
+      "views": {
+        "list": "Vista de Lista",
+        "calendar": "Vista de Calendario"
+      }
+    }
+  },
+   "profile": {
+    "title": "Perfil",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "bio": "Biografía",
+    "updateProfile": "Actualizar Perfil",
+    "changePassword": "Cambiar Contraseña",
+    "addAdditionalInfo": {
+      "title": "Agregar Información Adicional",
+      "description": "Agregue nueva información adicional a su perfil.",
+      "error": {
+        "fillFields": "Por favor complete todos los campos requeridos",
+        "failed": "Error al agregar información adicional"
+      },
+      "fields": {
+        "type": "Tipo",
+        "typePlaceholder": "ej. dirección, ciudad, teléfono",
+        "value": "Valor",
+        "valuePlaceholder": "Ingrese el valor"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "addInfo": "Agregar Info"
+      },
+      "detailTypes": {
+        "address": "Dirección",
+        "address1": "Línea de Dirección 1",
+        "address2": "Línea de Dirección 2",
+        "city": "Ciudad",
+        "state": "Estado/Provincia",
+        "country": "País",
+        "postal_code": "Código Postal",
+        "phone": "Teléfono",
+        "bio": "Biografía",
+        "website": "Sitio Web",
+        "linkedin": "LinkedIn",
+        "twitter": "Twitter",
+        "instagram": "Instagram"
+      }
+    },
+    "changePassword": {
+      "title": "Cambiar Contraseña",
+      "description": "Ingrese su contraseña actual y elija una nueva contraseña.",
+      "error": {
+        "passwordsNotMatch": "Las nuevas contraseñas no coinciden",
+        "passwordTooShort": "La nueva contraseña debe tener al menos 6 caracteres",
+        "failed": "Error al cambiar la contraseña"
+      },
+      "success": "¡Contraseña cambiada exitosamente!",
+      "fields": {
+        "current": "Actual",
+        "currentPlaceholder": "Ingrese la contraseña actual",
+        "new": "Nueva",
+        "newPlaceholder": "Ingrese la nueva contraseña",
+        "confirm": "Confirmar",
+        "confirmPlaceholder": "Confirme la nueva contraseña"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "changePassword": "Cambiar Contraseña",
+        "changed": "¡Cambiada!"
+      }
+    },
+    "deleteAdditionalInfo": {
+      "title": "Eliminar Información Adicional",
+      "description": "¿Está seguro de que desea eliminar la información \"{{detailType}}\"? Esta acción no se puede deshacer.",
+      "error": {
+        "failed": "Error al eliminar información adicional"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
+    },
+    "editAdditionalInfo": {
+      "title": "Editar Información Adicional",
+      "description": "Actualice la información adicional de su perfil.",
+      "error": {
+        "fillFields": "Por favor ingrese un valor",
+        "failed": "Error al actualizar información adicional"
+      },
+      "fields": {
+        "type": "Tipo",
+        "value": "Valor",
+        "valuePlaceholder": "Ingrese el valor"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveChanges": "Guardar Cambios"
+      }
+    },
+    "editProfile": {
+      "title": "Editar Perfil",
+      "description": "Actualice su información básica de perfil a continuación.",
+      "error": {
+        "failed": "Error al actualizar el perfil"
+      },
+      "fields": {
+        "name": "Nombre",
+        "namePlaceholder": "Ingrese su nombre",
+        "lastname": "Apellido",
+        "lastnamePlaceholder": "Ingrese su apellido",
+        "secondLastname": "Segundo Apellido",
+        "secondLastnamePlaceholder": "Ingrese su segundo apellido (opcional)",
+        "phoneNumber": "Número de Teléfono",
+        "phoneNumberPlaceholder": "+1234567890"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveChanges": "Guardar Cambios"
+      }
+    },
+    "page": {
+      "loading": "Cargando perfil...",
+      "error": "Error",
+      "failedToLoad": "Error al cargar el perfil",
+      "retry": "Reintentar",
+      "noData": "No hay datos de perfil disponibles",
+      "backToHome": "Volver al Inicio",
+      "title": "Mi Perfil",
+      "changePassword": "Cambiar Contraseña",
+      "editProfile": "Editar Perfil",
+      "userId": "ID: {{id}}",
+      "sections": {
+        "contactInfo": "Información de Contacto",
+        "email": "Correo Electrónico",
+        "phoneNumber": "Número de Teléfono",
+        "role": "Rol",
+        "memberSince": "Miembro Desde",
+        "additionalInfo": "Información Adicional",
+        "addInfo": "Agregar Info",
+        "noAdditionalInfo": "No se ha agregado información adicional aún. Haga clic en \"Agregar Info\" para agregar detalles como dirección, ciudad u otra información.",
+        "myPermissions": "Mis Permisos"
+      }
+    }
+  },
+  "admin": {
+    "title": "Panel de Administrador",
+    "users": "Usuarios",
+    "roles": "Roles",
+    "permissions": "Permisos",
+    "rolePermissions": "Permisos de Roles",
+    "dashboard": "Panel de Control",
+    "home": "Inicio",
+    "logged_in_as": "Conectado como {{name}}"
+  },
+  "home": {
+    "title": "The Electric Dreams",
+    "subtitle": "Banda de rock creando experiencias musicales inolvidables desde 2015",
+    "profile": "Mi Perfil",
+    "logout": "Cerrar Sesión",
+    "welcome": "Bienvenido al Panel de Administrador",
+    "description": "Administra tu sitio web de banda desde aquí",
+    "cards": {
+      "members": {
+        "title": "Miembros de la Banda",
+        "description": "Administra perfiles y biografías de miembros de la banda",
+        "button": "Administrar Miembros"
+      },
+      "events": {
+        "title": "Eventos",
+        "description": "Programa y administra próximos shows",
+        "button": "Administrar Eventos"
+      },
+      "admin": {
+        "title": "Panel de Administrador",
+        "description": "Gestión de usuarios y permisos",
+        "button": "Administrar Admin"
+      }
+    },
+    "stats": {
+      "members": {
+        "title": "Total de Miembros de la Banda",
+        "description": "Miembros activos"
+      },
+      "events": {
+        "title": "Próximos Eventos",
+        "description": "Shows programados"
+      },
+      "admins": {
+        "title": "Usuarios Administradores",
+        "description": "Administradores activos"
+      }
+    },
+    "debug": {
+      "title": "Depuración: Tus Permisos",
+      "role": "Rol:"
+    }
+  },
+  "language": {
+    "current": "Idioma",
+    "select": "Seleccionar Idioma",
+    "english": "Inglés",
+    "spanish": "Español"
+  },
+  "permissions": {
+    "read:events": "Ver Eventos",
+    "create:events": "Crear Eventos",
+    "update:events": "Editar Eventos",
+    "delete:events": "Eliminar Eventos",
+    "read:user_roles": "Ver Roles de Usuario",
+    "create:user_roles": "Crear Roles de Usuario",
+    "update:user_roles": "Editar Roles de Usuario",
+    "delete:user_roles": "Eliminar Roles de Usuario",
+    "read:permissions": "Ver Permisos",
+    "create:permissions": "Crear Permisos",
+    "update:permissions": "Editar Permisos",
+    "delete:permissions": "Eliminar Permisos",
+    "read:users": "Ver Usuarios",
+    "create:users": "Crear Usuarios",
+    "update:users": "Editar Usuarios",
+    "delete:users": "Eliminar Usuarios",
+    "title": "Permisos",
+    "subtitle": "Administrar permisos del sistema",
+    "createPermission": "Crear Permiso",
+    "allPermissions": "Todos los Permisos",
+    "totalPermissions": "Mostrando {{from}} a {{to}} de {{total}} permiso(s)",
+    "noPermissions": "No se encontraron permisos",
+    "noPermissionsMessage": "Crea tu primer permiso para comenzar",
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "description": "Descripción",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "loading": "Cargando permisos...",
+    "error": "Error al cargar permisos",
+    "tryAgain": "Intentar de Nuevo",
+    "form": {
+      "create": {
+        "title": "Crear Nuevo Permiso",
+        "description": "Agregue un nuevo permiso al sistema. Haga clic en guardar cuando haya terminado."
+      },
+      "edit": {
+        "title": "Editar Permiso",
+        "description": "Actualizar los detalles del permiso a continuación."
+      },
+      "fields": {
+        "name": "Nombre",
+        "description": "Descripción",
+        "namePlaceholder": "ej. read:events",
+        "descriptionPlaceholder": "Descripción opcional"
+      },
+      "validation": {
+        "nameRequired": "El nombre del permiso es obligatorio"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "savePermission": "Guardar Permiso",
+        "saveChanges": "Guardar Cambios"
+      },
+      "loadingPermission": "Cargando permiso...",
+      "failedToCreate": "Error al crear permiso",
+      "failedToUpdate": "Error al actualizar permiso"
+    },
+    "dialog": {
+      "view": {
+        "title": "Detalles del Permiso",
+        "description": "Ver información del permiso",
+        "id": "ID",
+        "name": "Nombre",
+        "description": "Descripción",
+        "noDescription": "Sin descripción",
+        "close": "Cerrar"
+      },
+      "delete": {
+        "title": "Eliminar Permiso",
+        "description": "¿Está seguro de que desea eliminar este permiso? Esta acción no se puede deshacer.",
+        "confirmationText": "Está a punto de eliminar el permiso:",
+        "deletePermission": "Eliminar Permiso",
+        "failedToDelete": "Error al eliminar permiso"
+      }
+    },
+    "errors": {
+      "permissionAlreadyExists": "El permiso {{name}} ya existe",
+      "permissionNotFound": "Permiso {{name}} no encontrado",
+      "permissionInUse": "El permiso {{name}} está actualmente en uso y no puede ser eliminado",
+      "cannotDeletePermissionWithRoles": "Este permiso no puede ser eliminado porque está asignado a {{count}} rol ('{{roles}}'). Por favor, elimine este permiso del rol primero.",
+      "permissionDenied": "No tienes permiso para realizar esta acción",
+      "validationError": "Error de validación",
+      "networkError": "Ocurrió un error de red",
+      "serverError": "Ocurrió un error del servidor"
+    }
+  },
+  "rolePermissions": {
+    "title": "Permisos de Roles",
+    "subtitle": "Asignar y administrar permisos para cada rol",
+    "rolesAndPermissions": "Roles y Permisos",
+    "totalRoles": "Total: {{count}} rol(es)",
+    "noRoles": "No se encontraron roles",
+    "loading": "Cargando...",
+    "errorLoading": "Error al cargar datos",
+    "tryAgain": "Intentar de Nuevo",
+    "table": {
+      "role": "Rol",
+      "permissions": "Permisos",
+      "actions": "Acciones",
+      "noPermissions": "Sin permisos",
+      "morePermissions": "+{{count}} más"
+    },
+    "actions": {
+      "manage": "Administrar"
+    },
+    "dialog": {
+      "managePermissions": "Administrar Permisos para {{roleName}}",
+      "selectPermissions": "Selecciona los permisos para asignar a este rol",
+      "noPermissionsAvailable": "No hay permisos disponibles",
+      "cancel": "Cancelar",
+      "saveChanges": "Guardar Cambios",
+      "saving": "Guardando..."
+    },
+    "errors": {
+      "failedToSave": "Error al guardar permisos",
+      "failedToLoad": "Error al cargar datos"
+    }
+  },
+  "types": {
+    "musician_payment_records": "registros de pago de músico",
+    "musician_assignment_to_an_event": "asignación de músico a un evento"
+  },
+  "users": {
+    "title": "Usuarios",
+    "subtitle": "Administrar usuarios del sistema y sus roles",
+    "createUser": "Crear Usuario",
+    "allUsers": "Todos los Usuarios",
+    "totalUsers": "Total: {{count}} usuario(s)",
+    "noUsers": "No se encontraron usuarios",
+    "noUsersMessage": "Crea tu primer usuario para comenzar",
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "lastName": "Apellido",
+      "phoneNumber": "Número de Teléfono",
+      "email": "Correo Electrónico",
+      "role": "Rol",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "loading": "Cargando usuarios...",
+    "error": "Error al cargar usuarios",
+    "tryAgain": "Intentar de Nuevo",
+    "pagination": {
+      "showing": "Mostrando {{from}} a {{to}} de {{total}} usuarios",
+      "previous": "Anterior",
+      "next": "Siguiente"
+    },
+    "form": {
+      "create": {
+        "title": "Crear Nuevo Usuario",
+        "description": "Agregue un nuevo usuario al sistema. Haga clic en guardar cuando haya terminado."
+      },
+      "edit": {
+        "title": "Editar Usuario",
+        "description": "Actualizar nombre, apellido y rol del usuario."
+      },
+      "fields": {
+        "name": "Nombre",
+        "lastName": "Apellido",
+        "secondLastName": "Segundo Apellido",
+        "email": "Correo Electrónico",
+        "phoneNumber": "Número de Teléfono",
+        "password": "Contraseña",
+        "role": "Rol",
+        "selectRole": "Seleccionar un rol"
+      },
+      "validation": {
+        "nameRequired": "El nombre es obligatorio",
+        "lastNameRequired": "El apellido es obligatorio",
+        "emailRequired": "El correo electrónico es obligatorio",
+        "passwordRequired": "La contraseña es obligatoria",
+        "roleRequired": "El rol es obligatorio"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveUser": "Guardar Usuario",
+        "saveChanges": "Guardar Cambios"
+      },
+      "loadingUser": "Cargando usuario...",
+      "failedToCreate": "Error al crear usuario",
+      "failedToUpdate": "Error al actualizar usuario"
+    },
+    "dialog": {
+      "view": {
+        "title": "Detalles del Usuario",
+        "description": "Ver información del usuario",
+        "email": "Correo Electrónico",
+        "phoneNumber": "Número de Teléfono",
+        "role": "Rol",
+        "createdAt": "Creado En",
+        "updatedAt": "Actualizado En",
+        "permissions": "Permisos",
+        "close": "Cerrar",
+        "noData": "No hay datos de usuario disponibles"
+      },
+      "delete": {
+        "title": "Eliminar Usuario",
+        "description": "¿Está seguro de que desea eliminar este usuario? Esta acción no se puede deshacer.",
+        "loadingUser": "Cargando usuario...",
+        "deleteUser": "Eliminar Usuario",
+        "failedToDelete": "Error al eliminar usuario"
+      }
+    },
+    "errors": {
+      "userAlreadyExists": "El usuario {{email}} ya existe",
+      "emailAlreadyInUse": "El correo electrónico {{email}} ya está en uso",
+      "invalidEmail": "Dirección de correo electrónico inválida: {{email}}",
+      "permissionDenied": "No tienes permiso para realizar esta acción",
+      "userNotFound": "Usuario con ID {{id}} no encontrado",
+      "roleNotFound": "Rol {{role}} no encontrado",
+      "cannotDeleteOwnAccount": "No puedes eliminar tu propia cuenta",
+      "cannotDeleteUserWithAssociations": "Este usuario no puede ser eliminado porque ha creado {{count}} eventos. Por favor, reasigne o elimine estos eventos primero.",
+      "cannotDeleteUserWithPaymentRecords": "Este usuario no puede ser eliminado porque tiene {{count}} {{type}}. Por favor, elimine {{determiner}} {{type}} primero.",
+      "validationError": "Error de validación",
+      "networkError": "Ocurrió un error de red",
+      "serverError": "Ocurrió un error del servidor"
+    }
+  },
+  "roles": {
+    "admin": "Administrador",
+    "member": "Miembro",
+    "moderator": "Moderador",
+    "user": "Usuario",
+    "musician": "Músico",
+    "client": "Cliente",
+    "manager": "Gerente",
+    "staff": "Personal",
+    "auxiliar_musician": "Músico Auxiliar",
+    "title": "Roles de Usuario",
+    "subtitle": "Administrar roles de usuario y sus permisos",
+    "createRole": "Crear Rol",
+    "allRoles": "Todos los Roles",
+    "totalRoles": "Total: {{count}} rol(es)",
+    "noRoles": "No se encontraron roles",
+    "noRolesMessage": "Crea tu primer rol para comenzar",
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "description": "Descripción",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "loading": "Cargando roles...",
+    "error": "Error al cargar roles",
+    "tryAgain": "Intentar de Nuevo",
+    "form": {
+      "create": {
+        "title": "Crear Nuevo Rol",
+        "description": "Agregue un nuevo rol de usuario al sistema. Haga clic en guardar cuando haya terminado."
+      },
+      "edit": {
+        "title": "Editar Rol",
+        "description": "Actualizar los detalles del rol a continuación."
+      },
+      "fields": {
+        "name": "Nombre",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Descripción opcional",
+        "namePlaceholder": "ej. moderador"
+      },
+      "validation": {
+        "nameRequired": "El nombre del rol es obligatorio"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "saveRole": "Guardar Rol",
+        "saveChanges": "Guardar Cambios"
+      },
+      "loadingRole": "Cargando rol...",
+      "failedToCreate": "Error al crear rol",
+      "failedToUpdate": "Error al actualizar rol"
+    },
+    "dialog": {
+      "view": {
+        "title": "Detalles del Rol",
+        "description": "Ver información del rol",
+        "id": "ID",
+        "name": "Nombre",
+        "description": "Descripción",
+        "noDescription": "Sin descripción",
+        "close": "Cerrar"
+      },
+      "delete": {
+        "title": "Eliminar Rol",
+        "description": "¿Está seguro de que desea eliminar este rol? Esta acción no se puede deshacer.",
+        "confirmationText": "Está a punto de eliminar el rol:",
+        "delete": "Eliminar",
+        "failedToDelete": "Error al eliminar rol"
+      }
+    },
+    "errors": {
+      "roleAlreadyExists": "El rol {{name}} ya existe",
+      "roleNotFound": "Rol {{name}} no encontrado",
+      "roleInUse": "El rol {{name}} está actualmente en uso y no puede ser eliminado",
+      "cannotDeleteRoleWithUsers": "Este rol no puede ser eliminado porque {{count}} {{noun}} {{verb}} asignado{{plural}} a él. Por favor, reasigne {{determiner}} {{noun}} a otro rol primero.",
+      "permissionDenied": "No tienes permiso para realizar esta acción",
+      "validationError": "Error de validación",
+      "networkError": "Ocurrió un error de red",
+      "serverError": "Ocurrió un error del servidor"
+    }
+  }
+}

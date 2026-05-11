@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { translateApiError } from '../../../i18n/utils';
 import { eventsApi } from '../../lib/api';
 import type { Event, EventFormData } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
@@ -26,6 +28,7 @@ interface CreateEventDialogProps {
 }
 
 export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }: CreateEventDialogProps) {
+  const { t } = useTranslation();
   // Pre-fill dates when initialDate is provided
   useEffect(() => {
     if (open && initialDate) {
@@ -70,27 +73,27 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
     e.preventDefault();
 
     if (!name.trim()) {
-      setError('Name is required');
+      setError(t('events.create.validation.nameRequired'));
       return;
     }
     if (!place.trim()) {
-      setError('Place is required');
+      setError(t('events.create.validation.placeRequired'));
       return;
     }
     if (!startDate) {
-      setError('Start date is required');
+      setError(t('events.create.validation.startDateRequired'));
       return;
     }
     if (!isAllDay && !startTime) {
-      setError('Start time is required');
+      setError(t('events.create.validation.startTimeRequired'));
       return;
     }
     if (!endDate) {
-      setError('End date is required');
+      setError(t('events.create.validation.endDateRequired'));
       return;
     }
     if (!isAllDay && !endTime) {
-      setError('End time is required');
+      setError(t('events.create.validation.endTimeRequired'));
       return;
     }
 
@@ -124,7 +127,23 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
       }
     } catch (err) {
       const apiError = err as ApiError;
-      setError(apiError.detail || apiError.message || 'Failed to create event');
+      const rawErrorMessage = apiError.detail || apiError.message || '';
+
+      // Handle specific API error messages
+      let errorMessage = t('events.create.failedToCreate');
+      if (rawErrorMessage === 'Cannot create events in the past') {
+        errorMessage = t('events.create.validation.cannotCreateInPast');
+      } else if (rawErrorMessage) {
+        // Try to translate other API errors
+        const translated = translateApiError(rawErrorMessage, 'event creation');
+        if (translated !== rawErrorMessage) {
+          errorMessage = translated;
+        } else {
+          errorMessage = rawErrorMessage;
+        }
+      }
+
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -134,9 +153,9 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Create New Event</DialogTitle>
+          <DialogTitle>{t('events.create.title')}</DialogTitle>
           <DialogDescription>
-            Add a new event to your schedule.
+            {t('events.create.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -151,13 +170,13 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
             {/* Name */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="create-name" className="text-right">
-                Name *
+                {t('events.create.form.name')} *
               </Label>
               <Input
                 id="create-name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., Cumpleaños de Maria"
+                placeholder={t('events.create.form.namePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
               />
@@ -166,13 +185,13 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
             {/* Place */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="create-place" className="text-right">
-                Place *
+                {t('events.create.form.place')} *
               </Label>
               <Input
                 id="create-place"
                 value={place}
                 onChange={(e) => setPlace(e.target.value)}
-                placeholder="e.g., Calle Calama y San Martin, Cochabamba"
+                placeholder={t('events.create.form.placePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
               />
@@ -181,13 +200,13 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
             {/* Description */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="create-description" className="text-right">
-                Description
+                {t('events.create.form.description')}
               </Label>
               <Textarea
                 id="create-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Event description..."
+                placeholder={t('events.create.form.descriptionPlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
                 rows={3}
@@ -197,7 +216,7 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
             {/* All Day */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="create-allday" className="text-right">
-                All Day
+                {t('events.create.form.allDay')}
               </Label>
               <div className="col-span-3 flex items-center space-x-2">
                 <Checkbox
@@ -207,7 +226,7 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
                   disabled={isLoading}
                 />
                 <Label htmlFor="create-allday" className="text-sm font-normal">
-                  This is an all-day event
+                  {t('events.create.form.allDayLabel')}
                 </Label>
               </div>
             </div>
@@ -215,7 +234,7 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
             {/* Start Date */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="create-start-date" className="text-right">
-                Start Date *
+                {t('events.create.form.startDate')} *
               </Label>
               <Input
                 id="create-start-date"
@@ -231,7 +250,7 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
             {!isAllDay && (
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="create-start-time" className="text-right">
-                  Start Time *
+                  {t('events.create.form.startTime')} *
                 </Label>
                 <Input
                   id="create-start-time"
@@ -247,7 +266,7 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
             {/* End Date */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="create-end-date" className="text-right">
-                End Date *
+                {t('events.create.form.endDate')} *
               </Label>
               <Input
                 id="create-end-date"
@@ -263,7 +282,7 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
             {!isAllDay && (
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="create-end-time" className="text-right">
-                  End Time *
+                  {t('events.create.form.endTime')} *
                 </Label>
                 <Input
                   id="create-end-time"
@@ -278,11 +297,11 @@ export function CreateEventDialog({ open, onOpenChange, onSuccess, initialDate }
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={isLoading}>
-              Cancel
+              {t('events.create.buttons.cancel')}
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create Event
+              {t('events.create.buttons.createEvent')}
             </Button>
           </DialogFooter>
         </form>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { eventsApi } from '../../lib/api';
+import { useTranslation } from 'react-i18next';
+import { eventsApi, translatePaymentError } from '../../lib/api';
 import type { PaymentType, PaymentSummary } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
 import { Button } from '../ui/button';
@@ -40,6 +41,7 @@ export function MakePaymentDialog({
   onOpenChange,
   onPaymentSuccess,
 }: MakePaymentDialogProps) {
+  const { t } = useTranslation();
   const [amount, setAmount] = useState('');
   const [paymentType, setPaymentType] = useState<PaymentType>('ADVANCE');
   const [notes, setNotes] = useState('');
@@ -98,14 +100,14 @@ export function MakePaymentDialog({
     const amountValue = parseFloat(amount);
 
     if (isNaN(amountValue) || amountValue <= 0) {
-      return 'Please enter a valid amount greater than 0';
+      return t('events.makePayment.validation.invalidAmount');
     }
 
     const remaining = getRemainingBalance();
 
     // ADVANCE and REMAINING can't exceed remaining balance
     if ((paymentType === 'ADVANCE' || paymentType === 'REMAINING') && amountValue > remaining) {
-      return `Amount cannot exceed the remaining balance of $${remaining.toFixed(2)}`;
+      return t('events.makePayment.validation.exceedsBalance', { balance: remaining.toFixed(2) });
     }
 
     return null;
@@ -138,7 +140,8 @@ export function MakePaymentDialog({
       onOpenChange(false);
     } catch (err) {
       const apiError = err as ApiError;
-      setError(apiError.detail || apiError.message || 'Failed to create payment');
+      const rawErrorMessage = apiError.detail || apiError.message || t('events.makePayment.failedToCreate');
+      setError(translatePaymentError(rawErrorMessage, t));
     } finally {
       setIsLoading(false);
     }
@@ -150,9 +153,9 @@ export function MakePaymentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Make Payment</DialogTitle>
+          <DialogTitle>{t('events.makePayment.title')}</DialogTitle>
           <DialogDescription>
-            {eventName} - Record a payment for this event
+            {t('events.makePayment.description', { eventName })}
           </DialogDescription>
         </DialogHeader>
 
@@ -161,22 +164,22 @@ export function MakePaymentDialog({
           {isLoadingSummary ? (
             <div className="flex items-center justify-center py-2">
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              <span className="text-sm text-gray-500">Loading summary...</span>
+              <span className="text-sm text-gray-500">{t('events.makePayment.loadingSummary')}</span>
             </div>
           ) : summary ? (
             <div className="bg-gray-50 rounded-lg p-3 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500">Final Price:</span>
+                <span className="text-gray-500">{t('events.makePayment.summary.finalPrice')}</span>
                 <span className="font-medium">${parseFloat(summary.final_price).toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Total Paid:</span>
+                <span className="text-gray-500">{t('events.makePayment.summary.totalPaid')}</span>
                 <span className="font-medium text-green-600">
                   ${parseFloat(summary.total_paid).toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between border-t pt-2">
-                <span className="text-gray-500">Remaining Balance:</span>
+                <span className="text-gray-500">{t('events.makePayment.summary.remainingBalance')}</span>
                 <span className={`font-medium ${
                   remainingBalance > 0 ? 'text-red-600' : 'text-green-600'
                 }`}>
@@ -187,36 +190,31 @@ export function MakePaymentDialog({
           ) : (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800 flex items-center">
               <AlertCircle className="h-4 w-4 mr-2 flex-shrink-0" />
-              Payment summary not available. Please ensure the event price has been set.
+              {t('events.makePayment.warning')}
             </div>
           )}
 
           {/* Payment Type */}
           <div className="space-y-2">
-            <Label htmlFor="payment-type">Payment Type</Label>
+            <Label htmlFor="payment-type">{t('events.makePayment.form.paymentType')}</Label>
             <Select value={paymentType} onValueChange={handlePaymentTypeChange}>
               <SelectTrigger id="payment-type">
-                <SelectValue placeholder="Select payment type" />
+                <SelectValue placeholder={t('events.makePayment.form.paymentTypePlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ADVANCE">Advance Payment</SelectItem>
-                <SelectItem value="REMAINING">Remaining Balance</SelectItem>
-                <SelectItem value="TOTAL">Full Payment</SelectItem>
+                <SelectItem value="ADVANCE">{t('events.makePayment.paymentTypes.ADVANCE')}</SelectItem>
+                <SelectItem value="REMAINING">{t('events.makePayment.paymentTypes.REMAINING')}</SelectItem>
+                <SelectItem value="TOTAL">{t('events.makePayment.paymentTypes.TOTAL')}</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-xs text-gray-500">
-              {paymentType === 'TOTAL' 
-                ? 'Pays the entire remaining balance'
-                : paymentType === 'REMAINING'
-                ? 'Pays the full remaining balance'
-                : 'A partial payment towards the total'
-              }
+              {t(`events.makePayment.descriptions.${paymentType}`)}
             </p>
           </div>
 
           {/* Amount */}
           <div className="space-y-2">
-            <Label htmlFor="amount">Amount ($)</Label>
+            <Label htmlFor="amount">{t('events.makePayment.form.amount')}</Label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
@@ -235,12 +233,12 @@ export function MakePaymentDialog({
 
           {/* Notes */}
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes (optional)</Label>
+            <Label htmlFor="notes">{t('events.makePayment.form.notes')}</Label>
             <Textarea
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Add any notes about this payment..."
+              placeholder={t('events.makePayment.form.notesPlaceholder')}
               rows={3}
             />
           </div>
@@ -260,7 +258,7 @@ export function MakePaymentDialog({
             onClick={() => onOpenChange(false)}
             disabled={isLoading}
           >
-            Cancel
+            {t('events.makePayment.buttons.cancel')}
           </Button>
           <Button
             type="button"
@@ -268,7 +266,7 @@ export function MakePaymentDialog({
             disabled={isLoading || isLoadingSummary || !amount}
           >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Submit Payment
+            {t('events.makePayment.buttons.submitPayment')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -96,6 +96,47 @@ vi.mock('lucide-react', () => ({
   Loader2: () => <div data-testid="loader-icon" />,
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.create.title': 'Create New Event',
+        'events.create.description': 'Add a new event to your schedule.',
+        'events.create.failedToCreate': 'Failed to create event',
+        'events.create.form.name': 'Name',
+        'events.create.form.namePlaceholder': 'e.g., Cumpleaños de Maria',
+        'events.create.form.place': 'Place',
+        'events.create.form.placePlaceholder': 'e.g., Calle Calama y San Martin, Cochabamba',
+        'events.create.form.description': 'Description',
+        'events.create.form.descriptionPlaceholder': 'Event description...',
+        'events.create.form.allDay': 'All Day',
+        'events.create.form.allDayLabel': 'This is an all-day event',
+        'events.create.form.startDate': 'Start Date',
+        'events.create.form.startTime': 'Start Time',
+        'events.create.form.endDate': 'End Date',
+        'events.create.form.endTime': 'End Time',
+        'events.create.validation.nameRequired': 'Name is required',
+        'events.create.validation.placeRequired': 'Place is required',
+        'events.create.validation.startDateRequired': 'Start date is required',
+        'events.create.validation.startTimeRequired': 'Start time is required',
+        'events.create.validation.endDateRequired': 'End date is required',
+        'events.create.validation.endTimeRequired': 'End time is required',
+        'events.create.validation.cannotCreateInPast': 'Cannot create events in the past',
+        'events.create.validation.eventConflict': 'Event conflicts with existing event \'{{eventName}}\' on {{date}}',
+        'events.create.buttons.cancel': 'Cancel',
+        'events.create.buttons.createEvent': 'Create Event',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string') {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, key) => options[key] || match);
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Import after mocking to get the mocked version
 import { eventsApi } from '@/app/lib/api';
 import { convertToUTC } from '@/app/lib/timezone';
@@ -368,6 +409,44 @@ describe('CreateEventDialog', () => {
 
     expect(eventsApi.create).toHaveBeenCalled();
   });
+
+  it('should translate "Cannot create events in the past" API error', async () => {
+    eventsApi.create.mockRejectedValue({
+      detail: 'Cannot create events in the past',
+    });
+
+    render(
+      <UserProvider>
+        <CreateEventDialog open={true} onOpenChange={() => {}} />
+      </UserProvider>
+    );
+
+    // Fill in minimal required fields with a past date
+    const nameInput = screen.getByPlaceholderText('e.g., Cumpleaños de Maria');
+    const placeInput = screen.getByPlaceholderText('e.g., Calle Calama y San Martin, Cochabamba');
+    const startDateInput = document.getElementById('create-start-date') as HTMLInputElement;
+    const endDateInput = document.getElementById('create-end-date') as HTMLInputElement;
+    const startTimeInput = document.getElementById('create-start-time') as HTMLInputElement;
+    const endTimeInput = document.getElementById('create-end-time') as HTMLInputElement;
+
+    fireEvent.change(nameInput, { target: { value: 'Past Event' } });
+    fireEvent.change(placeInput, { target: { value: 'Test Venue' } });
+    fireEvent.change(startDateInput, { target: { value: '2020-01-15' } }); // Past date
+    fireEvent.change(endDateInput, { target: { value: '2020-01-15' } });
+    fireEvent.change(startTimeInput, { target: { value: '10:00' } });
+    fireEvent.change(endTimeInput, { target: { value: '12:00' } });
+
+    const submitButton = screen.getByText('Create Event');
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('Cannot create events in the past')).toBeTruthy();
+    });
+
+    expect(eventsApi.create).toHaveBeenCalled();
+  });
+
+
 
   it('should reset form when dialog closes', () => {
     render(

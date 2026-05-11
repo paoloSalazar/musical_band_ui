@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { profileApi, type ProfileUpdateData } from '../../lib/api/profile';
 import type { User } from '../../lib/types';
 import { Button } from '../ui/button';
@@ -28,6 +29,7 @@ export function EditProfileDialog({
   onOpenChange,
   onSuccess,
 }: EditProfileDialogProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<ProfileUpdateData>({
     name: '',
     lastname: '',
@@ -70,7 +72,7 @@ export function EditProfileDialog({
       onSuccess();
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to update profile');
+      setError(error.detail || error.message || t('profile.editProfile.error.failed'));
     } finally {
       setIsLoading(false);
     }
@@ -89,10 +91,10 @@ export function EditProfileDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Pencil className="mr-2 h-5 w-5" />
-            Edit Profile
+            {t('profile.editProfile.title')}
           </DialogTitle>
           <DialogDescription>
-            Update your basic profile information below.
+            {t('profile.editProfile.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -107,13 +109,13 @@ export function EditProfileDialog({
             {/* Name */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
-                Name
+                {t('profile.editProfile.fields.name')}
               </Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
-                placeholder="Enter your name"
+                placeholder={t('profile.editProfile.fields.namePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
                 required
@@ -123,13 +125,13 @@ export function EditProfileDialog({
             {/* Lastname */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="lastname" className="text-right">
-                Last Name
+                {t('profile.editProfile.fields.lastname')}
               </Label>
               <Input
                 id="lastname"
                 value={formData.lastname}
                 onChange={(e) => handleChange('lastname', e.target.value)}
-                placeholder="Enter your last name"
+                placeholder={t('profile.editProfile.fields.lastnamePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
                 required
@@ -139,13 +141,13 @@ export function EditProfileDialog({
             {/* Second Lastname */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="second_lastname" className="text-right">
-                Second Last Name
+                {t('profile.editProfile.fields.secondLastname')}
               </Label>
               <Input
                 id="second_lastname"
                 value={formData.second_lastname}
                 onChange={(e) => handleChange('second_lastname', e.target.value)}
-                placeholder="Enter your second last name (optional)"
+                placeholder={t('profile.editProfile.fields.secondLastnamePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
               />
@@ -154,14 +156,14 @@ export function EditProfileDialog({
             {/* Phone Number */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="phone_number" className="text-right">
-                Phone Number
+                {t('profile.editProfile.fields.phoneNumber')}
               </Label>
               <Input
                 id="phone_number"
                 type="tel"
                 value={formData.phone_number}
                 onChange={(e) => handleChange('phone_number', e.target.value)}
-                placeholder="+1234567890"
+                placeholder={t('profile.editProfile.fields.phoneNumberPlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
               />
@@ -175,11 +177,11 @@ export function EditProfileDialog({
               onClick={() => handleOpenChange(false)}
               disabled={isLoading}
             >
-              Cancel
+              {t('profile.editProfile.buttons.cancel')}
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Changes
+              {t('profile.editProfile.buttons.saveChanges')}
             </Button>
           </DialogFooter>
         </form>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { profileApi } from '../../lib/api/profile';
 import type { UserDetail } from '../../lib/types';
 import { Button } from '../ui/button';
@@ -25,19 +26,19 @@ interface EditAdditionalInfoDialogProps {
 
 // Common detail types for the dropdown
 const DETAIL_TYPES = [
-  { value: 'address', label: 'Address' },
-  { value: 'address1', label: 'Address Line 1' },
-  { value: 'address2', label: 'Address Line 2' },
-  { value: 'city', label: 'City' },
-  { value: 'state', label: 'State/Province' },
-  { value: 'country', label: 'Country' },
-  { value: 'postal_code', label: 'Postal Code' },
-  { value: 'phone', label: 'Phone' },
-  { value: 'bio', label: 'Biography' },
-  { value: 'website', label: 'Website' },
-  { value: 'linkedin', label: 'LinkedIn' },
-  { value: 'twitter', label: 'Twitter' },
-  { value: 'instagram', label: 'Instagram' },
+  { value: 'address', key: 'profile.addAdditionalInfo.detailTypes.address' },
+  { value: 'address1', key: 'profile.addAdditionalInfo.detailTypes.address1' },
+  { value: 'address2', key: 'profile.addAdditionalInfo.detailTypes.address2' },
+  { value: 'city', key: 'profile.addAdditionalInfo.detailTypes.city' },
+  { value: 'state', key: 'profile.addAdditionalInfo.detailTypes.state' },
+  { value: 'country', key: 'profile.addAdditionalInfo.detailTypes.country' },
+  { value: 'postal_code', key: 'profile.addAdditionalInfo.detailTypes.postal_code' },
+  { value: 'phone', key: 'profile.addAdditionalInfo.detailTypes.phone' },
+  { value: 'bio', key: 'profile.addAdditionalInfo.detailTypes.bio' },
+  { value: 'website', key: 'profile.addAdditionalInfo.detailTypes.website' },
+  { value: 'linkedin', key: 'profile.addAdditionalInfo.detailTypes.linkedin' },
+  { value: 'twitter', key: 'profile.addAdditionalInfo.detailTypes.twitter' },
+  { value: 'instagram', key: 'profile.addAdditionalInfo.detailTypes.instagram' },
 ];
 
 export function EditAdditionalInfoDialog({
@@ -47,6 +48,7 @@ export function EditAdditionalInfoDialog({
   onOpenChange,
   onSuccess,
 }: EditAdditionalInfoDialogProps) {
+  const { t } = useTranslation();
   const [detailValue, setDetailValue] = useState(detail.detail_value);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +65,7 @@ export function EditAdditionalInfoDialog({
     e.preventDefault();
 
     if (!detailValue.trim()) {
-      setError('Please enter a value');
+      setError(t('profile.editAdditionalInfo.error.fillFields'));
       return;
     }
 
@@ -80,7 +82,7 @@ export function EditAdditionalInfoDialog({
       onSuccess();
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || 'Failed to update additional info');
+      setError(error.detail || error.message || t('profile.editAdditionalInfo.error.failed'));
     } finally {
       setIsLoading(false);
     }
@@ -99,10 +101,10 @@ export function EditAdditionalInfoDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Pencil className="mr-2 h-5 w-5" />
-            Edit Additional Information
+            {t('profile.editAdditionalInfo.title')}
           </DialogTitle>
           <DialogDescription>
-            Update the additional information for your profile.
+            {t('profile.editAdditionalInfo.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -117,7 +119,7 @@ export function EditAdditionalInfoDialog({
             {/* Detail Type (read-only) */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="detail_type" className="text-right">
-                Type
+                {t('profile.editAdditionalInfo.fields.type')}
               </Label>
               <Input
                 id="detail_type"
@@ -129,7 +131,7 @@ export function EditAdditionalInfoDialog({
               <datalist id="detail-types-edit">
                 {DETAIL_TYPES.map((type) => (
                   <option key={type.value} value={type.value}>
-                    {type.label}
+                    {t(type.key)}
                   </option>
                 ))}
               </datalist>
@@ -138,13 +140,13 @@ export function EditAdditionalInfoDialog({
             {/* Detail Value (editable) */}
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="detail_value" className="text-right">
-                Value
+                {t('profile.editAdditionalInfo.fields.value')}
               </Label>
               <Input
                 id="detail_value"
                 value={detailValue}
                 onChange={(e) => setDetailValue(e.target.value)}
-                placeholder="Enter the value"
+                placeholder={t('profile.editAdditionalInfo.fields.valuePlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
                 required
@@ -159,11 +161,11 @@ export function EditAdditionalInfoDialog({
               onClick={() => handleOpenChange(false)}
               disabled={isLoading}
             >
-              Cancel
+              {t('profile.editAdditionalInfo.buttons.cancel')}
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Changes
+              {t('profile.editAdditionalInfo.buttons.saveChanges')}
             </Button>
           </DialogFooter>
         </form>

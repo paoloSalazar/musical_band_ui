@@ -16,6 +16,14 @@ import { profileApi } from '@/app/lib/api/profile';
 
 const mockProfileApi = profileApi as any;
 
+// Mock react-i18next
+const mockT = vi.fn((key: string) => key);
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: mockT,
+  }),
+}));
+
 // Mock alert
 const mockAlert = vi.fn();
 global.alert = mockAlert;
@@ -38,6 +46,8 @@ describe('DeleteAdditionalInfoDialog Component', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset the t function mock
+    mockT.mockImplementation((key: string) => key);
   });
 
   afterEach(() => {
@@ -45,22 +55,49 @@ describe('DeleteAdditionalInfoDialog Component', () => {
   });
 
   it('should render alert dialog with confirmation message when open', () => {
+    // Set up mock translations
+    mockT.mockImplementation((key: string, options?: any) => {
+      const translations = {
+        'profile.deleteAdditionalInfo.title': 'Delete Additional Information',
+        'profile.deleteAdditionalInfo.description': 'Are you sure you want to delete the "{{detailType}}" information? This action cannot be undone.',
+        'profile.deleteAdditionalInfo.buttons.cancel': 'Cancel',
+        'profile.deleteAdditionalInfo.buttons.delete': 'Delete',
+      };
+      if (key === 'profile.deleteAdditionalInfo.description') {
+        return 'Are you sure you want to delete the "address" information? This action cannot be undone.';
+      }
+      return translations[key] || key;
+    });
+
     render(<DeleteAdditionalInfoDialog {...mockProps} />);
 
     expect(screen.getByText('Delete Additional Information')).toBeInTheDocument();
-    expect(screen.getByText(/Are you sure you want to delete the "address" information\?/)).toBeInTheDocument();
-    expect(screen.getByText(/This action cannot be undone/)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /delete/i })).toBeInTheDocument();
+    expect(screen.getByText('Are you sure you want to delete the "address" information? This action cannot be undone.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
   });
 
   it('should not render when closed', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.deleteAdditionalInfo.title': 'Delete Additional Information',
+      };
+      return translations[key] || key;
+    });
+
     render(<DeleteAdditionalInfoDialog {...mockProps} open={false} />);
 
     expect(screen.queryByText('Delete Additional Information')).not.toBeInTheDocument();
   });
 
   it('should delete successfully', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.deleteAdditionalInfo.buttons.delete': 'Delete',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.deleteUserDetail.mockResolvedValueOnce({
       success: true,
       data: undefined,
@@ -68,7 +105,7 @@ describe('DeleteAdditionalInfoDialog Component', () => {
 
     render(<DeleteAdditionalInfoDialog {...mockProps} />);
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
@@ -80,17 +117,49 @@ describe('DeleteAdditionalInfoDialog Component', () => {
   });
 
   it('should handle API error', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.deleteAdditionalInfo.buttons.delete': 'Delete',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.deleteUserDetail.mockRejectedValueOnce({
       detail: 'Detail not found',
     });
 
     render(<DeleteAdditionalInfoDialog {...mockProps} />);
 
-    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
       expect(mockAlert).toHaveBeenCalledWith('Detail not found');
+    });
+
+    expect(mockProps.onSuccess).not.toHaveBeenCalled();
+  });
+
+  it('should handle API error with fallback message', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.deleteAdditionalInfo.buttons.delete': 'Delete',
+        'profile.deleteAdditionalInfo.error.failed': 'Failed to delete additional info',
+      };
+      return translations[key] || key;
+    });
+
+    // Mock an error without detail or message properties
+    const errorWithoutMessage = {};
+    mockProfileApi.deleteUserDetail.mockRejectedValueOnce(errorWithoutMessage);
+
+    render(<DeleteAdditionalInfoDialog {...mockProps} />);
+
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      expect(mockAlert).toHaveBeenCalledWith('Failed to delete additional info');
     });
 
     expect(mockProps.onSuccess).not.toHaveBeenCalled();

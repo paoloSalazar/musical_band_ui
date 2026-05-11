@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
-import { formatDateTimeHumanReadable, formatDate, formatDateTime } from '../../lib/timezone';
+import { formatDateTimeHumanReadable, formatDateHumanReadable, formatDateTimeHumanReadableLocalized } from '../../lib/timezone';
 import {
   Table,
   TableBody,
@@ -38,6 +39,7 @@ interface EventsListPageProps {
 }
 
 export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPageProps) {
+  const { t, i18n } = useTranslation();
   const { user, hasPermission, hasRole } = useUser();
   const [events, setEvents] = useState<Event[]>([]);
   const [total, setTotal] = useState(0);
@@ -80,7 +82,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
       setTotal(response.data.total);
       setTotalPages(response.data.total_pages);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load events');
+      setError(err instanceof Error ? err.message : t('events.list.failedToLoad'));
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +103,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
   };
 
   const formatDateTime = (dateString: string) => {
-    return formatDateTimeHumanReadable(dateString);
+    return formatDateTimeHumanReadable(dateString, i18n.language);
   };
 
   const handleView = (event: Event) => {
@@ -128,7 +130,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-gray-600">Loading events...</span>
+        <span className="ml-2 text-gray-600">{t('events.list.loading')}</span>
       </div>
     );
   }
@@ -138,10 +140,10 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
       <Card className="border-red-200">
         <CardContent className="pt-6">
           <div className="text-red-600 text-center">
-            <p className="font-medium">Error loading events</p>
+            <p className="font-medium">{t('events.list.error')}</p>
             <p className="text-sm">{error}</p>
             <Button onClick={loadEvents} variant="outline" className="mt-4">
-              Try Again
+              {t('events.list.tryAgain')}
             </Button>
           </div>
         </CardContent>
@@ -158,16 +160,16 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
             <div>
               <CardTitle className="flex items-center">
                 <Calendar className="mr-2 h-5 w-5" />
-                All Events
+                {t('events.list.title')}
               </CardTitle>
               <CardDescription>
-                Total: {total} event(s) - Page {currentPage} of {totalPages}
+                {t('events.list.totalEvents', { total, current: currentPage, totalPages })}
               </CardDescription>
             </div>
             {canCreateEvent && (
               <Button onClick={() => setCreateDialogOpen(true)} className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
-                Create Event
+                {t('events.list.createEvent')}
               </Button>
             )}
           </div>
@@ -176,8 +178,8 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
           {sortedEvents.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <Calendar className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-              <p>No events found</p>
-              <p className="text-sm">Create your first event to get started</p>
+              <p>{t('events.list.noEvents')}</p>
+              <p className="text-sm">{t('events.list.noEventsMessage')}</p>
             </div>
           ) : (
             <>
@@ -185,13 +187,13 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                 <Table className="min-w-full">
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Place</TableHead>
-                      <TableHead>Start Date</TableHead>
-                      <TableHead>End Date</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>{t('events.list.table.name')}</TableHead>
+                      <TableHead>{t('events.list.table.place')}</TableHead>
+                      <TableHead>{t('events.list.table.startDate')}</TableHead>
+                      <TableHead>{t('events.list.table.endDate')}</TableHead>
+                      <TableHead>{t('events.list.table.price')}</TableHead>
+                      <TableHead>{t('events.list.table.status')}</TableHead>
+                      <TableHead className="text-right">{t('events.list.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -202,10 +204,10 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                           {event.place}
                         </TableCell>
                         <TableCell className="text-gray-600">
-                          {event.is_all_day ? formatDate(event.start_datetime) : formatDateTime(event.start_datetime)}
+                          {event.is_all_day ? formatDateHumanReadable(event.start_datetime, i18n.language) : formatDateTimeHumanReadableLocalized(event.start_datetime, i18n.language)}
                         </TableCell>
                         <TableCell className="text-gray-600">
-                          {event.is_all_day ? formatDate(event.end_datetime) : formatDateTime(event.end_datetime)}
+                          {event.is_all_day ? formatDateHumanReadable(event.end_datetime, i18n.language) : formatDateTimeHumanReadableLocalized(event.end_datetime, i18n.language)}
                         </TableCell>
                         <TableCell className="text-gray-600">
                           {event.price !== undefined && event.price !== null ? `${event.price.toFixed(2)}` : '-'}
@@ -217,24 +219,24 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                             event.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
                             'bg-gray-100 text-gray-800'
                           }`}>
-                            {event.status}
+                             {t(`events.status.${event.status}`)}
                           </span>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              title="View Details"
-                              onClick={() => handleView(event)}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
+                             <Button
+                               variant="ghost"
+                               size="sm"
+                               title={t('events.list.actions.view')}
+                               onClick={() => handleView(event)}
+                             >
+                               <Eye className="h-4 w-4" />
+                             </Button>
                             {canEditEventAction && canEditEvent(event) && (
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                title="Edit"
+                                title={t('events.list.actions.edit')}
                                 onClick={() => handleEdit(event.id)}
                               >
                                 <Pencil className="h-4 w-4" />
@@ -244,7 +246,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                title="Delete"
+                                title={t('events.list.actions.delete')}
                                 onClick={() => handleDelete(event)}
                                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
                               >
@@ -263,7 +265,11 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
               {totalPages > 1 && (
                 <div className="flex items-center justify-between mt-4">
                   <div className="text-sm text-gray-600">
-                    Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, total)} of {total} events
+                    {t('events.list.pagination.showing', {
+                      from: ((currentPage - 1) * pageSize) + 1,
+                      to: Math.min(currentPage * pageSize, total),
+                      total
+                    })}
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -272,7 +278,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                       onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                       disabled={currentPage === 1}
                     >
-                      Previous
+                      {t('events.list.pagination.previous')}
                     </Button>
                     <Button
                       variant="outline"
@@ -280,7 +286,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                       onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                       disabled={currentPage >= totalPages}
                     >
-                      Next
+                      {t('events.list.pagination.next')}
                     </Button>
                   </div>
                 </div>

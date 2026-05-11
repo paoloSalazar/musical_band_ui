@@ -33,7 +33,7 @@ describe('DeletePermissionDialog Component', () => {
     );
 
     expect(screen.getByText('read:events')).toBeInTheDocument();
-    expect(screen.getByText('Delete Permission')).toBeInTheDocument();
+    expect(screen.getByText('permissions.dialog.delete.title')).toBeInTheDocument();
   });
 
   it('should submit delete successfully', async () => {

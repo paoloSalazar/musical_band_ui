@@ -60,7 +60,7 @@ describe('EditPermissionDialog Component', () => {
       />
     );
 
-    expect(screen.getByText('Loading permission...')).toBeInTheDocument();
+    expect(screen.getByText('permissions.form.loadingPermission')).toBeInTheDocument();
   });
 
   it('should display name as read-only', async () => {
@@ -139,7 +139,7 @@ describe('EditPermissionDialog Component', () => {
     await waitFor(() => screen.getByDisplayValue('Can read data'));
 
     const descriptionInput = screen.getByDisplayValue('Can read data');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /permissions\.form\.buttons\.saveChanges/i });
 
     fireEvent.change(descriptionInput, { target: { value: 'Updated desc' } });
     fireEvent.click(submitButton);
@@ -174,7 +174,7 @@ describe('EditPermissionDialog Component', () => {
 
     await waitFor(() => screen.getByDisplayValue('Can read data'));
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /permissions\.form\.buttons\.saveChanges/i });
     fireEvent.click(submitButton);
 
     expect(submitButton).toBeDisabled();
@@ -203,7 +203,7 @@ describe('EditPermissionDialog Component', () => {
 
     await waitFor(() => screen.getByDisplayValue('Can read data'));
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /permissions\.form\.buttons\.saveChanges/i });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
@@ -279,7 +279,7 @@ describe('EditPermissionDialog Component', () => {
 
     await waitFor(() => screen.getByDisplayValue('read'));
 
-    const descriptionInput = screen.getByPlaceholderText('Enter description');
+    const descriptionInput = screen.getByPlaceholderText('permissions.form.fields.descriptionPlaceholder');
     expect(descriptionInput).toHaveValue('');
   });
 });

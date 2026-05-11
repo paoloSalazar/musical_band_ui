@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { translateApiError, translateUserRole, capitalizeFirstLetter } from '../../../../i18n/utils';
 import { usersApi } from '../../../lib/api';
 import type { User } from '../../../lib/types';
 import { Button } from '../../ui/button';
@@ -18,6 +20,7 @@ interface ViewUserDialogProps {
 }
 
 export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogProps) {
+  const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +38,8 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
       const response = await usersApi.getById(userId);
       setUser(response.data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load user');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load user';
+      setError(translateApiError(errorMessage, 'user view'));
     } finally {
       setIsLoading(false);
     }
@@ -45,16 +49,16 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>User Details</DialogTitle>
+          <DialogTitle>{t('users.dialog.view.title')}</DialogTitle>
           <DialogDescription>
-            View user information
+            {t('users.dialog.view.description')}
           </DialogDescription>
         </DialogHeader>
         
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
-            <span className="ml-2 text-gray-600">Loading user...</span>
+            <span className="ml-2 text-gray-600">{t('users.form.loadingUser')}</span>
           </div>
         ) : error ? (
           <div className="text-red-600 text-center py-4">
@@ -70,8 +74,8 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
               </div>
               <div>
                 <h3 className="text-lg font-semibold">
-                  {user.name} {user.lastname}
-                  {user.second_lastname && ` ${user.second_lastname}`}
+                  {capitalizeFirstLetter(user.name)} {capitalizeFirstLetter(user.lastname)}
+                  {user.second_lastname && ` ${capitalizeFirstLetter(user.second_lastname)}`}
                 </h3>
                 <p className="text-gray-500">ID: {user.id}</p>
               </div>
@@ -82,7 +86,7 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-gray-400" />
                 <div>
-                  <p className="text-sm text-gray-500">Email</p>
+                  <p className="text-sm text-gray-500">{t('users.dialog.view.email')}</p>
                   <p className="font-medium">{user.email}</p>
                 </div>
               </div>
@@ -91,7 +95,7 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
                 <div className="flex items-center gap-3">
                   <Phone className="h-4 w-4 text-gray-400" />
                   <div>
-                    <p className="text-sm text-gray-500">Phone Number</p>
+                    <p className="text-sm text-gray-500">{t('users.dialog.view.phoneNumber')}</p>
                     <p className="font-medium">{user.phone_number}</p>
                   </div>
                 </div>
@@ -100,21 +104,21 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
               <div className="flex items-center gap-3">
                 <Shield className="h-4 w-4 text-gray-400" />
                 <div>
-                  <p className="text-sm text-gray-500">Role</p>
-                  <p className="font-medium">{user.role}</p>
+                  <p className="text-sm text-gray-500">{t('users.dialog.view.role')}</p>
+                  <p className="font-medium">{translateUserRole(user.role)}</p>
                 </div>
               </div>
 
               {user.created_at && (
                 <div>
-                  <p className="text-sm text-gray-500">Created At</p>
+                  <p className="text-sm text-gray-500">{t('users.dialog.view.createdAt')}</p>
                   <p className="font-medium">{new Date(user.created_at).toLocaleString()}</p>
                 </div>
               )}
 
               {user.updated_at && (
                 <div>
-                  <p className="text-sm text-gray-500">Updated At</p>
+                  <p className="text-sm text-gray-500">{t('users.dialog.view.updatedAt')}</p>
                   <p className="font-medium">{new Date(user.updated_at).toLocaleString()}</p>
                 </div>
               )}
@@ -123,7 +127,7 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
             {/* Permissions */}
             {user.permissions && user.permissions.length > 0 && (
               <div className="pt-4 border-t">
-                <p className="text-sm text-gray-500 mb-2">Permissions</p>
+                <p className="text-sm text-gray-500 mb-2">{t('users.dialog.view.permissions')}</p>
                 <div className="flex flex-wrap gap-2">
                   {user.permissions.map((permission) => (
                     <span
@@ -139,13 +143,13 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
           </div>
         ) : (
           <div className="text-gray-500 text-center py-4">
-            No user data available
+            {t('users.dialog.view.noData')}
           </div>
         )}
-        
+
         <div className="mt-4 flex justify-end">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Close
+            {t('users.dialog.view.close')}
           </Button>
         </div>
       </DialogContent>

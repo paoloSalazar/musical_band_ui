@@ -16,6 +16,14 @@ import { profileApi } from '@/app/lib/api/profile';
 
 const mockProfileApi = profileApi as any;
 
+// Mock react-i18next
+const mockT = vi.fn((key: string) => key);
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: mockT,
+  }),
+}));
+
 describe('EditProfileDialog Component', () => {
   const mockUser = {
     id: 1,
@@ -39,9 +47,26 @@ describe('EditProfileDialog Component', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset the t function mock
+    mockT.mockImplementation((key: string) => key);
   });
 
   it('should render dialog with form when open', async () => {
+    // Set up mock translations
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.title': 'Edit Profile',
+        'profile.editProfile.description': 'Update your basic profile information below.',
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.phoneNumber': 'Phone Number',
+        'profile.editProfile.buttons.cancel': 'Cancel',
+        'profile.editProfile.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditProfileDialog {...mockProps} />);
 
     await waitFor(() => {
@@ -53,17 +78,34 @@ describe('EditProfileDialog Component', () => {
     expect(screen.getByLabelText('Last Name')).toBeInTheDocument();
     expect(screen.getByLabelText('Second Last Name')).toBeInTheDocument();
     expect(screen.getByLabelText('Phone Number')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /save changes/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save Changes' })).toBeInTheDocument();
   });
 
   it('should not render when closed', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.title': 'Edit Profile',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditProfileDialog {...mockProps} open={false} />);
 
     expect(screen.queryByText('Edit Profile')).not.toBeInTheDocument();
   });
 
   it('should initialize form with user data when dialog opens', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.phoneNumber': 'Phone Number',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditProfileDialog {...mockProps} />);
 
     expect(screen.getByLabelText('Name')).toHaveValue('John');
@@ -73,6 +115,16 @@ describe('EditProfileDialog Component', () => {
   });
 
   it('should handle form input changes', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.phoneNumber': 'Phone Number',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditProfileDialog {...mockProps} />);
 
     const nameInput = screen.getByLabelText('Name');
@@ -92,6 +144,15 @@ describe('EditProfileDialog Component', () => {
   });
 
   it('should show validation error when required fields are empty', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditProfileDialog {...mockProps} />);
 
     const nameInput = screen.getByLabelText('Name');
@@ -101,7 +162,7 @@ describe('EditProfileDialog Component', () => {
     fireEvent.change(nameInput, { target: { value: '' } });
     fireEvent.change(lastnameInput, { target: { value: '' } });
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
     fireEvent.click(submitButton);
 
     // HTML5 validation should prevent submission
@@ -109,6 +170,15 @@ describe('EditProfileDialog Component', () => {
   });
 
   it('should submit form successfully', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     const mockUpdatedUser = { ...mockUser, name: 'Jane', lastname: 'Smith' };
     mockProfileApi.updateCurrentUser.mockResolvedValueOnce({
       success: true,
@@ -119,7 +189,7 @@ describe('EditProfileDialog Component', () => {
 
     const nameInput = screen.getByLabelText('Name');
     const lastnameInput = screen.getByLabelText('Last Name');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
     fireEvent.change(lastnameInput, { target: { value: 'Smith' } });
@@ -139,6 +209,16 @@ describe('EditProfileDialog Component', () => {
   });
 
   it('should show loading state during submission', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.buttons.saveChanges': 'Save Changes',
+        'profile.editProfile.buttons.cancel': 'Cancel',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateCurrentUser.mockImplementationOnce(
       () => new Promise(resolve => setTimeout(resolve, 100))
     );
@@ -147,14 +227,14 @@ describe('EditProfileDialog Component', () => {
 
     const nameInput = screen.getByLabelText('Name');
     const lastnameInput = screen.getByLabelText('Last Name');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
     fireEvent.change(lastnameInput, { target: { value: 'Smith' } });
     fireEvent.click(submitButton);
 
     expect(submitButton).toBeDisabled();
-    expect(screen.getByRole('button', { name: /cancel/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
     expect(document.querySelector('.animate-spin')).toBeInTheDocument();
 
     await waitFor(() => {
@@ -187,6 +267,15 @@ describe('EditProfileDialog Component', () => {
   // });
 
   it('should handle API error with message fallback', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateCurrentUser.mockImplementationOnce(() =>
       Promise.reject({ message: 'Server error' })
     );
@@ -195,7 +284,7 @@ describe('EditProfileDialog Component', () => {
 
     const nameInput = screen.getByLabelText('Name');
     const lastnameInput = screen.getByLabelText('Last Name');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
     fireEvent.change(lastnameInput, { target: { value: 'Smith' } });
@@ -207,6 +296,15 @@ describe('EditProfileDialog Component', () => {
   });
 
   it('should handle generic error fallback', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateCurrentUser.mockImplementationOnce(() =>
       Promise.reject(new Error('Network error'))
     );
@@ -215,7 +313,7 @@ describe('EditProfileDialog Component', () => {
 
     const nameInput = screen.getByLabelText('Name');
     const lastnameInput = screen.getByLabelText('Last Name');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
     fireEvent.change(lastnameInput, { target: { value: 'Smith' } });
@@ -227,6 +325,13 @@ describe('EditProfileDialog Component', () => {
   });
 
   it('should re-initialize form when user prop changes', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+      };
+      return translations[key] || key;
+    });
+
     const { rerender } = render(<EditProfileDialog {...mockProps} />);
 
     expect(screen.getByLabelText('Name')).toHaveValue('John');
@@ -238,6 +343,16 @@ describe('EditProfileDialog Component', () => {
   });
 
   it('should clear error when dialog closes', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.buttons.saveChanges': 'Save Changes',
+        'profile.editProfile.buttons.cancel': 'Cancel',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateCurrentUser.mockImplementationOnce(() =>
       Promise.reject({ detail: 'Validation error' })
     );
@@ -246,7 +361,7 @@ describe('EditProfileDialog Component', () => {
 
     const nameInput = screen.getByLabelText('Name');
     const lastnameInput = screen.getByLabelText('Last Name');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
     fireEvent.change(lastnameInput, { target: { value: 'Smith' } });
@@ -257,23 +372,41 @@ describe('EditProfileDialog Component', () => {
     });
 
     // Close dialog by clicking cancel - error should be cleared
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
     fireEvent.click(cancelButton);
 
-    // The handleOpenChange should clear the error when dialog closes
     expect(mockProps.onOpenChange).toHaveBeenCalledWith(false);
+    // Error should be cleared when dialog closes
   });
 
   it('should call onOpenChange when cancel is clicked', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.buttons.cancel': 'Cancel',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditProfileDialog {...mockProps} />);
 
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
     fireEvent.click(cancelButton);
 
     expect(mockProps.onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it('should disable inputs during loading', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.phoneNumber': 'Phone Number',
+        'profile.editProfile.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateCurrentUser.mockImplementationOnce(
       () => new Promise(() => {})
     );
@@ -288,7 +421,7 @@ describe('EditProfileDialog Component', () => {
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
     fireEvent.change(lastnameInput, { target: { value: 'Smith' } });
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
     fireEvent.click(submitButton);
 
     expect(nameInput).toBeDisabled();
@@ -298,6 +431,16 @@ describe('EditProfileDialog Component', () => {
   });
 
   it('should handle user with missing optional fields', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.phoneNumber': 'Phone Number',
+      };
+      return translations[key] || key;
+    });
+
     const userWithoutOptional = {
       ...mockUser,
       second_lastname: undefined,
@@ -313,6 +456,16 @@ describe('EditProfileDialog Component', () => {
   });
 
   it('should handle user with null values', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editProfile.fields.name': 'Name',
+        'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.phoneNumber': 'Phone Number',
+      };
+      return translations[key] || key;
+    });
+
     const userWithNulls = {
       ...mockUser,
       name: null,

@@ -60,7 +60,7 @@ describe('EditRoleDialog Component', () => {
       />
     );
 
-    expect(screen.getByText('Loading role...')).toBeInTheDocument();
+    expect(screen.getByText('roles.form.loadingRole')).toBeInTheDocument();
   });
 
   it('should display name as read-only', async () => {
@@ -139,7 +139,7 @@ describe('EditRoleDialog Component', () => {
     await waitFor(() => screen.getByDisplayValue('Administrator'));
 
     const descriptionInput = screen.getByDisplayValue('Administrator');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /roles\.form\.buttons\.saveChanges/i });
 
     fireEvent.change(descriptionInput, { target: { value: 'Updated desc' } });
     fireEvent.click(submitButton);
@@ -175,7 +175,7 @@ describe('EditRoleDialog Component', () => {
 
     await waitFor(() => screen.getByDisplayValue('Administrator'));
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /roles\.form\.buttons\.saveChanges/i });
     fireEvent.click(submitButton);
 
     expect(submitButton).toBeDisabled();
@@ -204,7 +204,7 @@ describe('EditRoleDialog Component', () => {
 
     await waitFor(() => screen.getByDisplayValue('Administrator'));
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: /roles\.form\.buttons\.saveChanges/i });
     fireEvent.click(submitButton);
 
     await waitFor(() => {
@@ -280,7 +280,7 @@ describe('EditRoleDialog Component', () => {
 
     await waitFor(() => screen.getByDisplayValue('user'));
 
-    const descriptionInput = screen.getByPlaceholderText('Enter description');
+    const descriptionInput = screen.getByPlaceholderText('roles.form.fields.descriptionPlaceholder');
     expect(descriptionInput).toHaveValue('');
   });
 });

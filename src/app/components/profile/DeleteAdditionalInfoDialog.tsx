@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { profileApi } from '../../lib/api/profile';
 import { Button } from '../ui/button';
 import {
@@ -30,6 +31,7 @@ export function DeleteAdditionalInfoDialog({
   onOpenChange,
   onSuccess,
 }: DeleteAdditionalInfoDialogProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleDelete = async () => {
@@ -46,7 +48,7 @@ export function DeleteAdditionalInfoDialog({
     } catch (err) {
       const error = err as ApiError;
       // Show error via alert since this is an alert dialog
-      alert(error.detail || error.message || 'Failed to delete additional info');
+      alert(error.detail || error.message || t('profile.deleteAdditionalInfo.error.failed'));
     } finally {
       setIsLoading(false);
     }
@@ -65,22 +67,23 @@ export function DeleteAdditionalInfoDialog({
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center">
             <Trash2 className="mr-2 h-5 w-5 text-red-500" />
-            Delete Additional Information
+            {t('profile.deleteAdditionalInfo.title')}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete the "{detail.detail_type}" information?
-            This action cannot be undone.
+            {t('profile.deleteAdditionalInfo.description', { detailType: detail.detail_type })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>
+            {t('profile.deleteAdditionalInfo.buttons.cancel')}
+          </AlertDialogCancel>
           <Button
             onClick={handleDelete}
             disabled={isLoading}
             className="bg-red-500 hover:bg-red-600 text-white"
           >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Delete
+            {t('profile.deleteAdditionalInfo.buttons.delete')}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

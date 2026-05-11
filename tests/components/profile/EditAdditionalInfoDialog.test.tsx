@@ -16,6 +16,14 @@ import { profileApi } from '@/app/lib/api/profile';
 
 const mockProfileApi = profileApi as any;
 
+// Mock react-i18next
+const mockT = vi.fn((key: string) => key);
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: mockT,
+  }),
+}));
+
 describe('EditAdditionalInfoDialog Component', () => {
   const mockDetail = {
     id: 1,
@@ -34,26 +42,56 @@ describe('EditAdditionalInfoDialog Component', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset the t function mock
+    mockT.mockImplementation((key: string) => key);
   });
 
   it('should render dialog with form when open', () => {
+    // Set up mock translations
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.title': 'Edit Additional Information',
+        'profile.editAdditionalInfo.description': 'Update the additional information for your profile.',
+        'profile.editAdditionalInfo.fields.type': 'Type',
+        'profile.editAdditionalInfo.fields.value': 'Value',
+        'profile.editAdditionalInfo.buttons.cancel': 'Cancel',
+        'profile.editAdditionalInfo.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     expect(screen.getByText('Edit Additional Information')).toBeInTheDocument();
     expect(screen.getByText('Update the additional information for your profile.')).toBeInTheDocument();
     expect(screen.getByLabelText('Type')).toBeInTheDocument();
     expect(screen.getByLabelText('Value')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /cancel/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /save changes/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save Changes' })).toBeInTheDocument();
   });
 
   it('should not render when closed', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.title': 'Edit Additional Information',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} open={false} />);
 
     expect(screen.queryByText('Edit Additional Information')).not.toBeInTheDocument();
   });
 
   it('should initialize form with detail data when dialog opens', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.type': 'Type',
+        'profile.editAdditionalInfo.fields.value': 'Value',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     expect(screen.getByLabelText('Type')).toHaveValue('address');
@@ -61,6 +99,25 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should show datalist options for detail types', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.addAdditionalInfo.detailTypes.address': 'Address',
+        'profile.addAdditionalInfo.detailTypes.address1': 'Address Line 1',
+        'profile.addAdditionalInfo.detailTypes.address2': 'Address Line 2',
+        'profile.addAdditionalInfo.detailTypes.city': 'City',
+        'profile.addAdditionalInfo.detailTypes.state': 'State/Province',
+        'profile.addAdditionalInfo.detailTypes.country': 'Country',
+        'profile.addAdditionalInfo.detailTypes.postal_code': 'Postal Code',
+        'profile.addAdditionalInfo.detailTypes.phone': 'Phone',
+        'profile.addAdditionalInfo.detailTypes.bio': 'Biography',
+        'profile.addAdditionalInfo.detailTypes.website': 'Website',
+        'profile.addAdditionalInfo.detailTypes.linkedin': 'LinkedIn',
+        'profile.addAdditionalInfo.detailTypes.twitter': 'Twitter',
+        'profile.addAdditionalInfo.detailTypes.instagram': 'Instagram',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     const datalist = document.getElementById('detail-types-edit');
@@ -69,9 +126,17 @@ describe('EditAdditionalInfoDialog Component', () => {
     const options = datalist?.querySelectorAll('option');
     expect(options).toHaveLength(13); // Based on DETAIL_TYPES array
     expect(options?.[0]).toHaveAttribute('value', 'address');
+    expect(options?.[0]).toHaveTextContent('Address');
   });
 
   it('should have read-only detail type field', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.type': 'Type',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     const typeInput = screen.getByLabelText('Type');
@@ -80,6 +145,13 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should handle detail value input changes', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     const valueInput = screen.getByLabelText('Value');
@@ -89,6 +161,14 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should show validation error when value is empty', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+        'profile.editAdditionalInfo.error.fillFields': 'Please enter a value',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     const valueInput = screen.getByLabelText('Value');
@@ -104,12 +184,21 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should show validation error when value is only whitespace', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+        'profile.editAdditionalInfo.error.fillFields': 'Please enter a value',
+        'profile.editAdditionalInfo.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     const valueInput = screen.getByLabelText('Value');
     fireEvent.change(valueInput, { target: { value: '   ' } });
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
     fireEvent.click(submitButton);
 
     expect(screen.getByText('Please enter a value')).toBeInTheDocument();
@@ -117,6 +206,14 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should submit form successfully', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+        'profile.editAdditionalInfo.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     const mockUpdatedDetail = { ...mockDetail, detail_value: '456 Oak Ave' };
     mockProfileApi.updateUserDetail.mockResolvedValueOnce({
       success: true,
@@ -126,7 +223,7 @@ describe('EditAdditionalInfoDialog Component', () => {
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     const valueInput = screen.getByLabelText('Value');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(valueInput, { target: { value: '456 Oak Ave' } });
     fireEvent.click(submitButton);
@@ -140,6 +237,15 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should show loading state during submission', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+        'profile.editAdditionalInfo.buttons.saveChanges': 'Save Changes',
+        'profile.editAdditionalInfo.buttons.cancel': 'Cancel',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateUserDetail.mockImplementationOnce(
       () => new Promise(resolve => setTimeout(resolve, 100))
     );
@@ -147,13 +253,13 @@ describe('EditAdditionalInfoDialog Component', () => {
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     const valueInput = screen.getByLabelText('Value');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(valueInput, { target: { value: '456 Oak Ave' } });
     fireEvent.click(submitButton);
 
     expect(submitButton).toBeDisabled();
-    expect(screen.getByRole('button', { name: /cancel/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Cancel' })).toBeDisabled();
     expect(document.querySelector('.animate-spin')).toBeInTheDocument();
 
     await waitFor(() => {
@@ -162,6 +268,13 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should handle API error', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateUserDetail.mockRejectedValueOnce({
       detail: 'Validation error'
     });
@@ -180,6 +293,14 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should handle API error with message fallback', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+        'profile.editAdditionalInfo.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateUserDetail.mockImplementationOnce(() =>
       Promise.reject({ message: 'Server error' })
     );
@@ -187,7 +308,7 @@ describe('EditAdditionalInfoDialog Component', () => {
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     const valueInput = screen.getByLabelText('Value');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(valueInput, { target: { value: '456 Oak Ave' } });
     fireEvent.click(submitButton);
@@ -198,6 +319,14 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should handle generic error fallback', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+        'profile.editAdditionalInfo.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateUserDetail.mockImplementationOnce(() =>
       Promise.reject(new Error('Network error'))
     );
@@ -205,7 +334,7 @@ describe('EditAdditionalInfoDialog Component', () => {
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     const valueInput = screen.getByLabelText('Value');
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(valueInput, { target: { value: '456 Oak Ave' } });
     fireEvent.click(submitButton);
@@ -216,6 +345,13 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should re-initialize form when detail prop changes', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+      };
+      return translations[key] || key;
+    });
+
     const { rerender } = render(<EditAdditionalInfoDialog {...mockProps} />);
 
     expect(screen.getByLabelText('Value')).toHaveValue('123 Main St');
@@ -227,6 +363,15 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should clear error when dialog closes', async () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+        'profile.editAdditionalInfo.error.fillFields': 'Please enter a value',
+        'profile.editAdditionalInfo.buttons.cancel': 'Cancel',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
     // First submit with error
@@ -241,7 +386,7 @@ describe('EditAdditionalInfoDialog Component', () => {
     });
 
     // Simulate closing dialog
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
     fireEvent.click(cancelButton);
 
     expect(mockProps.onOpenChange).toHaveBeenCalledWith(false);
@@ -249,15 +394,30 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should call onOpenChange when cancel is clicked', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.buttons.cancel': 'Cancel',
+      };
+      return translations[key] || key;
+    });
+
     render(<EditAdditionalInfoDialog {...mockProps} />);
 
-    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    const cancelButton = screen.getByRole('button', { name: 'Cancel' });
     fireEvent.click(cancelButton);
 
     expect(mockProps.onOpenChange).toHaveBeenCalledWith(false);
   });
 
   it('should disable inputs during loading', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+        'profile.editAdditionalInfo.buttons.saveChanges': 'Save Changes',
+      };
+      return translations[key] || key;
+    });
+
     mockProfileApi.updateUserDetail.mockImplementationOnce(
       () => new Promise(() => {})
     );
@@ -268,13 +428,21 @@ describe('EditAdditionalInfoDialog Component', () => {
 
     fireEvent.change(valueInput, { target: { value: '456 Oak Ave' } });
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
+    const submitButton = screen.getByRole('button', { name: 'Save Changes' });
     fireEvent.click(submitButton);
 
     expect(valueInput).toBeDisabled();
   });
 
   it('should handle different detail types', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.type': 'Type',
+        'profile.editAdditionalInfo.fields.value': 'Value',
+      };
+      return translations[key] || key;
+    });
+
     const phoneDetail = { ...mockDetail, detail_type: 'phone', detail_value: '+1234567890' };
 
     render(<EditAdditionalInfoDialog {...mockProps} detail={phoneDetail} />);
@@ -284,6 +452,13 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should handle empty detail value', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+      };
+      return translations[key] || key;
+    });
+
     const emptyDetail = { ...mockDetail, detail_value: '' };
 
     render(<EditAdditionalInfoDialog {...mockProps} detail={emptyDetail} />);
@@ -292,6 +467,13 @@ describe('EditAdditionalInfoDialog Component', () => {
   });
 
   it('should handle special characters in detail value', () => {
+    mockT.mockImplementation((key: string) => {
+      const translations = {
+        'profile.editAdditionalInfo.fields.value': 'Value',
+      };
+      return translations[key] || key;
+    });
+
     const specialDetail = { ...mockDetail, detail_value: 'Special & <characters> "test"' };
 
     render(<EditAdditionalInfoDialog {...mockProps} detail={specialDetail} />);

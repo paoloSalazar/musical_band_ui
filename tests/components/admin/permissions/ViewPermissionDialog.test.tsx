@@ -50,7 +50,7 @@ describe('ViewPermissionDialog Component', () => {
 
     render(<ViewPermissionDialog permissionId={1} open={true} onOpenChange={() => {}} />);
 
-    expect(screen.getByText('Loading permission...')).toBeInTheDocument();
+    expect(screen.getByText('permissions.form.loadingPermission')).toBeInTheDocument();
     expect(document.querySelector('.animate-spin')).toBeInTheDocument();
   });
 
@@ -65,7 +65,7 @@ describe('ViewPermissionDialog Component', () => {
       expect(screen.getByText('Permission not found')).toBeInTheDocument();
     });
 
-    const tryAgainButton = screen.getByRole('button', { name: /try again/i });
+    const tryAgainButton = screen.getByRole('button', { name: /permissions\.tryAgain/i });
     expect(tryAgainButton).toBeInTheDocument();
   });
 
@@ -95,7 +95,7 @@ describe('ViewPermissionDialog Component', () => {
     render(<ViewPermissionDialog permissionId={1} open={true} onOpenChange={() => {}} />);
 
     await waitFor(() => {
-      expect(screen.getByText('No description')).toBeInTheDocument();
+      expect(screen.getByText('permissions.dialog.view.noDescription')).toBeInTheDocument();
     });
   });
 

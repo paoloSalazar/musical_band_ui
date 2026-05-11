@@ -18,6 +18,36 @@ vi.mock('@/app/lib/timezone', () => ({
   convertToUserTimeZone: vi.fn((date) => new Date(date)),
 }));
 
+// Mock react-i18next
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    i18n: { language: 'es' }, // Set to Spanish for calendar tests
+    t: vi.fn((key, options) => {
+      // Return mocked translations for common keys
+      const translations = {
+        'events.calendar.loading': 'Loading calendar...',
+        'events.calendar.error': 'Error loading events',
+        'events.calendar.tryAgain': 'Try Again',
+        'events.calendar.today': 'Today',
+        'events.calendar.dayNames.sunday': 'Sun',
+        'events.calendar.dayNames.monday': 'Mon',
+        'events.calendar.dayNames.tuesday': 'Tue',
+        'events.calendar.dayNames.wednesday': 'Wed',
+        'events.calendar.dayNames.thursday': 'Thu',
+        'events.calendar.dayNames.friday': 'Fri',
+        'events.calendar.dayNames.saturday': 'Sat',
+        'events.calendar.moreEvents': '+{{count}} more',
+        'events.calendar.failedToLoad': 'Failed to load events',
+      };
+      const translation = translations[key] || key;
+      if (options && typeof translation === 'string') {
+        return translation.replace(/\{\{(\w+)\}\}/g, (match, key) => options[key] || match);
+      }
+      return translation;
+    }),
+  }),
+}));
+
 // Mock useUser hook
 const mockUser = {
   id: 1,

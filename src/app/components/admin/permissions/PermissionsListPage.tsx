@@ -1,22 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { permissionsApi } from '../../../lib/api';
 import type { Permission } from '../../../lib/types';
 import type { ApiError } from '../../../lib/api/client';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from '../../ui/table';
 import { Button } from '../../ui/button';
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
 } from '../../ui/card';
 import {
   Pagination,
@@ -25,9 +26,9 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from '../../ui/pagination';
-import { 
-  Pencil, 
-  Trash2, 
+import {
+  Pencil,
+  Trash2,
   Eye,
   Loader2,
   Lock
@@ -42,6 +43,7 @@ import { DeletePermissionDialog } from './DeletePermissionDialog';
  * Displays all permissions in a table
  */
 export function PermissionsListPage() {
+  const { t } = useTranslation();
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -116,7 +118,7 @@ export function PermissionsListPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-        <span className="ml-2 text-gray-600">Loading permissions...</span>
+        <span className="ml-2 text-gray-600">{t('permissions.loading')}</span>
       </div>
     );
   }
@@ -126,10 +128,10 @@ export function PermissionsListPage() {
       <Card className="border-red-200">
         <CardContent className="pt-6">
           <div className="text-red-600 text-center">
-            <p className="font-medium">Error loading permissions</p>
+            <p className="font-medium">{t('permissions.error')}</p>
             <p className="text-sm">{error}</p>
             <Button onClick={loadPermissions} variant="outline" className="mt-4">
-              Try Again
+              {t('permissions.tryAgain')}
             </Button>
           </div>
         </CardContent>
@@ -142,9 +144,9 @@ export function PermissionsListPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Permissions</h2>
+          <h2 className="text-2xl font-bold">{t('permissions.title')}</h2>
           <p className="text-gray-600 mt-1">
-            Manage system permissions
+            {t('permissions.subtitle')}
           </p>
         </div>
         <PermissionFormDialog
@@ -159,28 +161,28 @@ export function PermissionsListPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Lock className="mr-2 h-5 w-5" />
-            All Permissions
+            {t('permissions.allPermissions')}
           </CardTitle>
           <CardDescription>
-            Showing {permissions.length} of {total} permission(s)
+            {t('permissions.totalPermissions', { from: skip + 1, to: Math.min(skip + limit, total), total })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {permissions.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <Lock className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-              <p>No permissions found</p>
-              <p className="text-sm">Create your first permission to get started</p>
+              <p>{t('permissions.noPermissions')}</p>
+              <p className="text-sm">{t('permissions.noPermissionsMessage')}</p>
             </div>
           ) : (
             <div className="overflow-x-auto -mx-4 sm:mx-0">
               <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{t('permissions.table.id')}</TableHead>
+                  <TableHead>{t('permissions.table.name')}</TableHead>
+                  <TableHead>{t('permissions.table.description')}</TableHead>
+                  <TableHead className="text-right">{t('permissions.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -195,26 +197,26 @@ export function PermissionsListPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          title="View"
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          title={t('permissions.actions.view')}
                           onClick={() => handleView(permission.id)}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          title="Edit"
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          title={t('permissions.actions.edit')}
                           onClick={() => handleEdit(permission.id, permission.name)}
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          title="Delete"
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          title={t('permissions.actions.delete')}
                           onClick={() => handleDelete(permission.id, permission.name)}
                           className="text-red-600 hover:text-red-700 hover:bg-red-50"
                         >
@@ -237,18 +239,18 @@ export function PermissionsListPage() {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious 
+                <PaginationPrevious
                   onClick={handlePreviousPage}
                   className={skip === 0 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                 />
               </PaginationItem>
               <PaginationItem>
                 <span className="px-4 text-sm text-gray-600">
-                  Page {Math.floor(skip / limit) + 1}
+                  {t('common.previous')} {Math.floor(skip / limit) + 1} {t('common.next').toLowerCase()}
                 </span>
               </PaginationItem>
               <PaginationItem>
-                <PaginationNext 
+                <PaginationNext
                   onClick={handleNextPage}
                   className={!hasMore ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                 />

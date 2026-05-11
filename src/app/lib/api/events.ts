@@ -7,6 +7,52 @@ import { apiClient, type ApiResponse } from './client';
 import type { Event, EventFormData, Payment, PaymentSummary, PaymentFormData } from '../types';
 
 /**
+ * Translate payment validation error messages from backend
+ * Handles messages like "ADVANCE payment must be at least 30.0% (900.000 of 3000.00)"
+ */
+export const translatePaymentError = (errorMessage: string, t: (key: string, options?: any) => string): string => {
+  // Parse ADVANCE payment validation error
+  const advanceMatch = errorMessage.match(/ADVANCE payment must be at least (\d+(?:\.\d+)?)% \(([\d,]+(?:\.\d+)?) of ([\d,]+(?:\.\d+)?)\)/);
+  if (advanceMatch) {
+    const percentage = parseFloat(advanceMatch[1]);
+    const minAmount = parseFloat(advanceMatch[2].replace(/,/g, ''));
+    const totalAmount = parseFloat(advanceMatch[3].replace(/,/g, ''));
+    return t('events.makePayment.validation.advanceMinimum', {
+      percentage: percentage.toFixed(1),
+      minAmount: minAmount.toFixed(2),
+      totalAmount: totalAmount.toFixed(2)
+    });
+  }
+
+  // Parse REMAINING payment validation error (minimum percentage)
+  const remainingMatch = errorMessage.match(/REMAINING payment must be at least (\d+(?:\.\d+)?)% \(([\d,]+(?:\.\d+)?) of ([\d,]+(?:\.\d+)?)\)/);
+  if (remainingMatch) {
+    const percentage = parseFloat(remainingMatch[1]);
+    const minAmount = parseFloat(remainingMatch[2].replace(/,/g, ''));
+    const totalAmount = parseFloat(remainingMatch[3].replace(/,/g, ''));
+    return t('events.makePayment.validation.remainingMinimum', {
+      percentage: percentage.toFixed(1),
+      minAmount: minAmount.toFixed(2),
+      totalAmount: totalAmount.toFixed(2)
+    });
+  }
+
+  // Parse REMAINING payment validation error (exact amount required)
+  const remainingExactMatch = errorMessage.match(/REMAINING payment must equal exactly the remaining balance \(([\d,]+(?:\.\d+)?)\), but got ([\d,]+(?:\.\d+)?)/);
+  if (remainingExactMatch) {
+    const expectedAmount = parseFloat(remainingExactMatch[1].replace(/,/g, ''));
+    const actualAmount = parseFloat(remainingExactMatch[2].replace(/,/g, ''));
+    return t('events.makePayment.validation.remainingExact', {
+      expectedAmount: expectedAmount.toFixed(2),
+      actualAmount: actualAmount.toFixed(2)
+    });
+  }
+
+  // Return original message if no pattern matches
+  return errorMessage;
+};
+
+/**
  * Paginated events response for table view
  */
 export interface PaginatedEventsResponse {
