@@ -466,6 +466,11 @@
         "title": "Admin Panel",
         "description": "User management and permissions",
         "button": "Manage Admin"
+      },
+      "availability": {
+        "title": "My Availability",
+        "description": "Manage your unavailable dates",
+        "button": "Manage Availability"
       }
     },
     "stats": {
@@ -492,6 +497,42 @@
     "select": "Select Language",
     "english": "English",
     "spanish": "Español"
+  },
+  "musicianAvailability": {
+    "title": "My Availability",
+    "subtitle": "Manage your unavailable dates",
+    "calendar": {
+      "today": "Today",
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "selectDate": "Select date"
+    },
+    "form": {
+      "date": "Date",
+      "reason": "Reason (optional)",
+      "reasonPlaceholder": "e.g., Vacation, Family event, etc.",
+      "addSingle": "Add Unavailable Date",
+      "addBulk": "Add Multiple Dates",
+      "edit": "Edit Availability",
+      "save": "Save Changes",
+      "cancel": "Cancel"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Remove this unavailable date?"
+    },
+    "messages": {
+      "added": "Availability updated successfully",
+      "deleted": "Availability removed successfully",
+      "error": "Failed to update availability",
+      "pastDateError": "Cannot set past dates as unavailable",
+      "duplicateError": "This date is already marked as unavailable"
+    },
+    "empty": {
+      "title": "No unavailable dates",
+      "description": "You haven't set any unavailable dates yet."
+    }
   },
   "permissions": {
     "read:events": "View Events",

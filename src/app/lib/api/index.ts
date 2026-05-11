@@ -8,3 +8,4 @@ export { authService, type LoginRequest, type LoginResponse, type User, type Ref
 export { rolesApi, permissionsApi, usersApi } from './rbac';
 export { profileApi } from './profile';
 export { eventsApi, translatePaymentError } from './events';
+export { musicianAvailabilityApi } from './musicianAvailability';
