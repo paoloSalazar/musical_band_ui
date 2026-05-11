@@ -69,10 +69,11 @@
     "edit": "Edit Event",
     "delete": "Delete Event",
     "view": "View Event",
+    "setprice": "Set Price",
     "status": {
-      "PENDING": "Pending",
-      "CONFIRMED": "Confirmed",
-      "CANCELLED": "Cancelled"
+      "PENDING": "PENDING",
+      "CONFIRMED": "CONFIRMED",
+      "CANCELLED": "CANCELLED"
     },
     "payment": {
       "ADVANCE": "Advance Payment",
@@ -126,7 +127,10 @@
       },
       "validation": {
         "invalidAmount": "Please enter a valid amount greater than 0",
-        "exceedsBalance": "Amount cannot exceed the remaining balance of ${{balance}}"
+        "exceedsBalance": "Amount cannot exceed the remaining balance of ${{balance}}",
+        "advanceMinimum": "Advance payment must be at least {{percentage}}% (${{minAmount}} of ${{totalAmount}})",
+        "remainingMinimum": "Remaining payment must be at least {{percentage}}% (${{minAmount}} of ${{totalAmount}})",
+        "remainingExact": "Remaining payment must equal exactly the remaining balance (${{expectedAmount}}), but got ${{actualAmount}}"
       },
       "buttons": {
         "cancel": "Cancel",

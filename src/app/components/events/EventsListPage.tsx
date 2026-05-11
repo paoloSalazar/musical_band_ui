@@ -219,7 +219,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                             event.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
                             'bg-gray-100 text-gray-800'
                           }`}>
-                            {event.status}
+                             {t(`events.status.${event.status}`)}
                           </span>
                         </TableCell>
                         <TableCell className="text-right">

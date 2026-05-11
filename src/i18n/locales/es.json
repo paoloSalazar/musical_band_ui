@@ -69,10 +69,11 @@
     "edit": "Editar Evento",
     "delete": "Eliminar Evento",
     "view": "Ver Evento",
+    "setprice": "Establecer Precio",
     "status": {
-      "PENDING": "Pendiente",
-      "CONFIRMED": "Confirmado",
-      "CANCELLED": "Cancelado"
+      "PENDING": "PENDIENTE",
+      "CONFIRMED": "CONFIRMADO",
+      "CANCELLED": "CANCELADO"
     },
     "payment": {
       "ADVANCE": "Pago Anticipado",
@@ -125,8 +126,11 @@
         "ADVANCE": "Un pago parcial hacia el total"
       },
       "validation": {
-        "invalidAmount": "Por favor ingresa un monto válido mayor a 0",
-        "exceedsBalance": "El monto no puede exceder el saldo restante de ${{balance}}"
+        "invalidAmount": "Por favor ingrese un monto válido mayor a 0",
+        "exceedsBalance": "El monto no puede exceder el saldo restante de ${{balance}}",
+        "advanceMinimum": "El pago anticipado debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
+        "remainingMinimum": "El pago restante debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
+        "remainingExact": "El pago restante debe ser exactamente igual al saldo restante (${{expectedAmount}}), pero se recibió ${{actualAmount}}"
       },
       "buttons": {
         "cancel": "Cancelar",

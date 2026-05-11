@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { eventsApi } from '../../lib/api';
+import { eventsApi, translatePaymentError } from '../../lib/api';
 import type { PaymentType, PaymentSummary } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
 import { Button } from '../ui/button';
@@ -140,7 +140,8 @@ export function MakePaymentDialog({
       onOpenChange(false);
     } catch (err) {
       const apiError = err as ApiError;
-      setError(apiError.detail || apiError.message || t('events.makePayment.failedToCreate'));
+      const rawErrorMessage = apiError.detail || apiError.message || t('events.makePayment.failedToCreate');
+      setError(translatePaymentError(rawErrorMessage, t));
     } finally {
       setIsLoading(false);
     }

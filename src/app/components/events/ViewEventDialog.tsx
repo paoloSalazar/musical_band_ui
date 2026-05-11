@@ -154,7 +154,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                 event.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
                 'bg-gray-100 text-gray-800'
               }`}>
-                {event.status}
+                {t(`events.status.${event.status}`)}
               </span>
             </div>
 
@@ -222,7 +222,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                         type="number"
                         step="0.01"
                         min="0"
-                        value={priceInput}
+                        value={event.price !== undefined ? event.price : priceInput}
                         onChange={(e) => setPriceInput(e.target.value)}
                         placeholder={t('events.dialog.view.enterPrice')}
                         className="h-8 w-32"
@@ -255,7 +255,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                           onClick={handleStartEditPrice}
                           className="h-8"
                         >
-                          Set Price
+                          {t('events.dialog.view.setPrice')}
                         </Button>
                       )}
                     </div>
@@ -311,6 +311,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
               <Button
                 type="button"
                 variant="outline"
+                disabled={!event.price || event.price <= 0}
                 onClick={() => setShowPaymentDetails(true)}
               >
                 <CreditCard className="h-4 w-4 mr-2" />
@@ -323,6 +324,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
             <>
               <Button
                 type="button"
+                disabled={!event.price || event.price <= 0}
                 onClick={() => setShowMakePayment(true)}
               >
                 <Wallet className="h-4 w-4 mr-2" />
