@@ -195,7 +195,7 @@ export function ProfilePage() {
                         <div className="h-5 w-5 rounded-full bg-gray-200 mt-0.5" />
                       )}
                       <div>
-                        <p className="text-sm text-gray-500">{detail.detail_type}</p>
+                        <p className="text-sm text-gray-500">{t(`profile.addAdditionalInfo.detailTypes.${detail.detail_type}`)}</p>
                         <p className="font-medium">{detail.detail_value}</p>
                       </div>
                     </div>

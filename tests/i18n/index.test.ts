@@ -96,14 +96,14 @@ describe('i18n Configuration', () => {
     const esTranslations = await import('@/i18n/locales/es.json');
 
     // Check English event status
-    expect(enTranslations.default.events.status.PENDING).toBe('Pending');
-    expect(enTranslations.default.events.status.CONFIRMED).toBe('Confirmed');
-    expect(enTranslations.default.events.status.CANCELLED).toBe('Cancelled');
+    expect(enTranslations.default.events.status.PENDING).toBe('PENDING');
+    expect(enTranslations.default.events.status.CONFIRMED).toBe('CONFIRMED');
+    expect(enTranslations.default.events.status.CANCELLED).toBe('CANCELLED');
 
     // Check Spanish event status
-    expect(esTranslations.default.events.status.PENDING).toBe('Pendiente');
-    expect(esTranslations.default.events.status.CONFIRMED).toBe('Confirmado');
-    expect(esTranslations.default.events.status.CANCELLED).toBe('Cancelado');
+    expect(esTranslations.default.events.status.PENDING).toBe('PENDIENTE');
+    expect(esTranslations.default.events.status.CONFIRMED).toBe('CONFIRMADO');
+    expect(esTranslations.default.events.status.CANCELLED).toBe('CANCELADO');
   });
 
   it('should have payment type translations', async () => {

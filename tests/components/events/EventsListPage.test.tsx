@@ -21,7 +21,11 @@ const mockEventsApi = eventsApi;
 vi.mock('@/app/lib/timezone', () => ({
   formatDateTimeHumanReadable: vi.fn((date) => `formatted-${date}`),
   formatDate: vi.fn((date) => `date-${date}`),
+  formatTime: vi.fn((date) => `time-${date}`),
   formatDateTime: vi.fn((date) => `datetime-${date}`),
+  formatDateHumanReadable: vi.fn((date, lang) => `formatted-date-human-${date}-${lang}`),
+  formatTimeHumanReadable: vi.fn((date, lang) => `formatted-time-human-${date}-${lang}`),
+  formatDateTimeHumanReadableLocalized: vi.fn((date, lang) => `formatted-datetime-localized-${date}-${lang}`),
 }));
 
 // Mock react-i18next
@@ -52,6 +56,9 @@ vi.mock('react-i18next', () => ({
         'events.list.pagination.previous': 'Previous',
         'events.list.pagination.next': 'Next',
         'events.list.failedToLoad': 'Failed to load events',
+        'events.status.PENDING': 'PENDING',
+        'events.status.CONFIRMED': 'CONFIRMED',
+        'events.status.CANCELLED': 'CANCELLED',
       };
       const translation = translations[key] || key;
       if (options && typeof translation === 'string') {
@@ -59,6 +66,9 @@ vi.mock('react-i18next', () => ({
       }
       return translation;
     }),
+    i18n: {
+      language: 'en',
+    },
   }),
 }));
 
@@ -300,7 +310,7 @@ describe('EventsListPage', () => {
 
     // Check event data display
     expect(screen.getByText('Test Venue')).toBeTruthy();
-    expect(screen.getByText('formatted-2026-01-15T10:00:00Z')).toBeTruthy();
+    expect(screen.getByText('formatted-datetime-localized-2026-01-15T10:00:00Z-en')).toBeTruthy();
     expect(screen.getByText('25.50')).toBeTruthy();
     expect(screen.getByText('CONFIRMED')).toBeTruthy();
     expect(screen.getByText('PENDING')).toBeTruthy();

@@ -11,6 +11,7 @@ vi.mock('@/app/lib/api', () => ({
     getPaymentSummary: vi.fn(),
     createPayment: vi.fn(),
   },
+  translatePaymentError: vi.fn((message) => message), // Return message as-is for tests
 }));
 
 // Mock UI components

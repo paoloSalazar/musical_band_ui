@@ -11,6 +11,7 @@ vi.mock('@/app/lib/api', () => ({
   eventsApi: {
     getById: vi.fn(),
     updatePrice: vi.fn(),
+    getPrice: vi.fn(),
   },
 }));
 
@@ -18,6 +19,10 @@ vi.mock('@/app/lib/api', () => ({
 vi.mock('@/app/lib/timezone', () => ({
   formatDate: vi.fn((date) => `formatted-date-${date}`),
   formatTime: vi.fn((date) => `formatted-time-${date}`),
+  formatDateHumanReadable: vi.fn((date, lang) => `formatted-date-human-${date}-${lang}`),
+  formatTimeHumanReadable: vi.fn((date, lang) => `formatted-time-human-${date}-${lang}`),
+  formatDateTimeHumanReadable: vi.fn((date, lang) => `formatted-datetime-human-${date}-${lang}`),
+  formatDateTimeHumanReadableLocalized: vi.fn((date, lang) => `formatted-datetime-localized-${date}-${lang}`),
 }));
 
 // Mock react-i18next
@@ -42,6 +47,9 @@ vi.mock('react-i18next', () => ({
         'events.dialog.view.editEvent': 'Edit Event',
         'events.dialog.view.paymentDetails': 'Payment Details',
         'events.dialog.view.makePayment': 'Make Payment',
+        'events.status.PENDING': 'PENDING',
+        'events.status.CONFIRMED': 'CONFIRMED',
+        'events.status.CANCELLED': 'CANCELLED',
         'events.dialog.view.validation.invalidAmount': 'Please enter a valid number',
         'events.dialog.view.validation.priceNegative': 'Price cannot be negative',
         'events.dialog.view.failedToUpdate': 'Failed to update price',
@@ -67,6 +75,9 @@ vi.mock('react-i18next', () => ({
       }
       return translation;
     }),
+    i18n: {
+      language: 'en',
+    },
   }),
 }));
 
@@ -162,8 +173,9 @@ vi.mock('lucide-react', () => ({
 
 // Import after mocking to get the mocked version
 import { eventsApi } from '@/app/lib/api';
-const mockEventsApi = eventsApi;
 
+// Get the mocked eventsApi
+const mockEventsApi = vi.mocked(eventsApi);
 describe('ViewEventDialog', () => {
   const mockEvent = {
     id: 1,
@@ -191,6 +203,9 @@ describe('ViewEventDialog', () => {
     });
     mockEventsApi.updatePrice.mockResolvedValue({
       data: { ...mockEvent, price: 30.00 },
+    });
+    mockEventsApi.getPrice.mockResolvedValue({
+      data: 100.00,
     });
     mockUser.hasRole.mockReturnValue(false); // Regular user by default
   });

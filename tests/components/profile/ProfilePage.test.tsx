@@ -8,7 +8,47 @@ import { ProfilePage } from '@/app/components/profile/ProfilePage';
 
 // Mock react-i18next
 const mockT = vi.fn((key: string, options?: any) => {
-  // Handle interpolation
+  // Translation mappings
+  const translations: Record<string, string> = {
+    'profile.page.backToHome': 'Back to Home',
+    'profile.page.title': 'My Profile',
+    'profile.page.changePassword': 'Change Password',
+    'profile.page.editProfile': 'Edit Profile',
+    'profile.page.sections.email': 'Email',
+    'profile.page.sections.phoneNumber': 'Phone Number',
+    'profile.page.sections.role': 'Role',
+    'profile.page.sections.memberSince': 'Member Since',
+    'profile.page.sections.additionalInfo': 'Additional Information',
+    'profile.page.sections.addInfo': 'Add Info',
+    'profile.page.sections.noAdditionalInfo': 'No additional information added yet. Click "Add Info" to add details like address, city, or other information.',
+    'profile.page.sections.myPermissions': 'My Permissions',
+    'profile.page.userId': 'ID: {{id}}',
+    'profile.addAdditionalInfo.detailTypes.address': 'Address',
+    'profile.addAdditionalInfo.detailTypes.city': 'City',
+    'profile.addAdditionalInfo.detailTypes.state': 'State',
+    'profile.addAdditionalInfo.detailTypes.country': 'Country',
+    'profile.addAdditionalInfo.detailTypes.postal_code': 'Postal Code',
+    'profile.addAdditionalInfo.detailTypes.phone': 'Phone',
+    'profile.addAdditionalInfo.detailTypes.bio': 'Biography',
+    'profile.addAdditionalInfo.detailTypes.website': 'Website',
+    'profile.addAdditionalInfo.detailTypes.linkedin': 'LinkedIn',
+    'profile.addAdditionalInfo.detailTypes.twitter': 'Twitter',
+    'profile.addAdditionalInfo.detailTypes.instagram': 'Instagram',
+  };
+
+  // Check if we have a translation
+  if (translations[key]) {
+    let result = translations[key];
+    // Handle interpolation
+    if (options && typeof options === 'object') {
+      Object.keys(options).forEach(optKey => {
+        result = result.replace(`{{${optKey}}}`, options[optKey]);
+      });
+    }
+    return result;
+  }
+
+  // Handle interpolation for keys without translations
   if (options && typeof options === 'object') {
     let result = key;
     Object.keys(options).forEach(optKey => {
@@ -16,6 +56,7 @@ const mockT = vi.fn((key: string, options?: any) => {
     });
     return result;
   }
+
   return key;
 });
 vi.mock('react-i18next', () => ({
@@ -224,7 +265,16 @@ describe('ProfilePage Component', () => {
   it('should display additional details', async () => {
     mockT.mockImplementation((key: string) => {
       const translations = {
+        'profile.page.backToHome': 'Back to Home',
+        'profile.page.title': 'My Profile',
+        'profile.page.changePassword': 'Change Password',
+        'profile.page.editProfile': 'Edit Profile',
+        'profile.page.sections.email': 'Email',
+        'profile.page.sections.phoneNumber': 'Phone Number',
+        'profile.page.sections.role': 'Role',
+        'profile.page.sections.memberSince': 'Member Since',
         'profile.page.sections.additionalInfo': 'Additional Information',
+        'profile.page.sections.myPermissions': 'My Permissions',
         'profile.addAdditionalInfo.detailTypes.address': 'Address',
         'profile.addAdditionalInfo.detailTypes.city': 'City',
       };
