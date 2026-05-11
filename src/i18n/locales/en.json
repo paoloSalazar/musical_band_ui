@@ -509,10 +509,13 @@
     },
     "form": {
       "date": "Date",
+      "dateRequired": "Date is required",
       "reason": "Reason (optional)",
       "reasonPlaceholder": "e.g., Vacation, Family event, etc.",
       "addSingle": "Add Unavailable Date",
+      "addSingleDescription": "Select a date when you will be unavailable",
       "addBulk": "Add Multiple Dates",
+      "editDescription": "Update your availability information",
       "edit": "Edit Availability",
       "save": "Save Changes",
       "cancel": "Cancel"
@@ -528,6 +531,14 @@
       "error": "Failed to update availability",
       "pastDateError": "Cannot set past dates as unavailable",
       "duplicateError": "This date is already marked as unavailable"
+    },
+    "bulk": {
+      "description": "Select multiple dates to mark as unavailable",
+      "selectDates": "Select Dates",
+      "selectedCount": "{{count}} date(s) selected",
+      "addDates": "Add {{count}} Dates",
+      "noDatesSelected": "Please select at least one date",
+      "conflictingDates": "{{count}} selected date(s) are already unavailable"
     },
     "empty": {
       "title": "No unavailable dates",

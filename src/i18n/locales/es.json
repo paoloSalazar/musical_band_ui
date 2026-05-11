@@ -509,10 +509,13 @@
     },
     "form": {
       "date": "Fecha",
+      "dateRequired": "La fecha es obligatoria",
       "reason": "Motivo (opcional)",
       "reasonPlaceholder": "ej. Vacaciones, Evento familiar, etc.",
       "addSingle": "Agregar Fecha No Disponible",
+      "addSingleDescription": "Selecciona una fecha en la que no estarás disponible",
       "addBulk": "Agregar Múltiples Fechas",
+      "editDescription": "Actualiza tu información de disponibilidad",
       "edit": "Editar Disponibilidad",
       "save": "Guardar Cambios",
       "cancel": "Cancelar"
@@ -528,6 +531,14 @@
       "error": "Error al actualizar disponibilidad",
       "pastDateError": "No se pueden establecer fechas pasadas como no disponibles",
       "duplicateError": "Esta fecha ya está marcada como no disponible"
+    },
+    "bulk": {
+      "description": "Selecciona múltiples fechas para marcar como no disponibles",
+      "selectDates": "Seleccionar Fechas",
+      "selectedCount": "{{count}} fecha(s) seleccionada(s)",
+      "addDates": "Agregar {{count}} Fechas",
+      "noDatesSelected": "Por favor selecciona al menos una fecha",
+      "conflictingDates": "{{count}} fecha(s) seleccionada(s) ya están no disponibles"
     },
     "empty": {
       "title": "Sin fechas no disponibles",

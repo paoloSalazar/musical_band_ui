@@ -1,0 +1,228 @@
+import { useState } from 'react';
+import { MusicianAvailability } from '../../lib/api/musicianAvailability';
+
+interface AvailabilityCalendarProps {
+  availability: MusicianAvailability[];
+  onDateClick: (date: Date) => void;
+  onDateSelect: (dates: Date[]) => void;
+  selectedDates?: Date[];
+}
+
+export function AvailabilityCalendar({
+  availability,
+  onDateClick,
+  onDateSelect,
+  selectedDates = []
+}: AvailabilityCalendarProps) {
+  const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 1)); // April 2026
+
+  // Get unavailable dates as Set for quick lookup
+  const unavailableDates = new Set(
+    availability.map(item => item.unavailable_date)
+  );
+
+  // Check if a date is unavailable
+  const isUnavailable = (date: Date) => {
+    const dateString = date.toISOString().split('T')[0];
+    return unavailableDates.has(dateString);
+  };
+
+  // Check if a date is selected
+  const isSelected = (date: Date) => {
+    return selectedDates.some(selectedDate =>
+      selectedDate.toDateString() === date.toDateString()
+    );
+  };
+
+  // Generate calendar days for current month only
+  const generateCalendarDays = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+
+    const days = [];
+    const current = new Date(firstDay);
+
+    while (current <= lastDay) {
+      days.push(new Date(current));
+      current.setDate(current.getDate() + 1);
+    }
+
+    return days;
+  };
+
+  const handleDateClick = (date: Date) => {
+    if (isUnavailable(date)) return;
+
+    if (selectedDates.length > 0) {
+      // Bulk selection mode
+      const isCurrentlySelected = isSelected(date);
+      const newSelection = isCurrentlySelected
+        ? selectedDates.filter(d => d.toDateString() !== date.toDateString())
+        : [...selectedDates, date];
+      onDateSelect(newSelection);
+    } else {
+      // Single selection mode
+      onDateClick(date);
+    }
+  };
+
+  const navigateMonth = (direction: 'prev' | 'next') => {
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      if (direction === 'prev') {
+        newDate.setMonth(newDate.getMonth() - 1);
+      } else {
+        newDate.setMonth(newDate.getMonth() + 1);
+      }
+      return newDate;
+    });
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent, date: Date) => {
+    const { key } = event;
+    const isAvailable = !isUnavailable(date);
+
+    if ((key === 'Enter' || key === ' ') && isAvailable) {
+      event.preventDefault();
+      handleDateClick(date);
+    } else if (key.startsWith('Arrow') && isAvailable) {
+      event.preventDefault();
+      const currentIndex = gridDays.findIndex(d => d && d.toDateString() === date.toDateString());
+      if (currentIndex === -1) return;
+
+      let newIndex = currentIndex;
+      switch (key) {
+        case 'ArrowRight':
+          newIndex = currentIndex + 1;
+          break;
+        case 'ArrowLeft':
+          newIndex = currentIndex - 1;
+          break;
+        case 'ArrowDown':
+          newIndex = currentIndex + 7;
+          break;
+        case 'ArrowUp':
+          newIndex = currentIndex - 7;
+          break;
+      }
+
+      // Find next valid index within bounds with a valid date
+      while (newIndex >= 0 && newIndex < gridDays.length) {
+        const nextDate = gridDays[newIndex];
+        if (nextDate && !isUnavailable(nextDate)) {
+          const nextButton = document.querySelector(`[data-date="${nextDate.toISOString().split('T')[0]}"]`) as HTMLElement;
+          if (nextButton) {
+            nextButton.focus();
+          }
+          break;
+        }
+        // Continue in the same direction
+        if (key === 'ArrowRight' || key === 'ArrowDown') {
+          newIndex++;
+        } else {
+          newIndex--;
+        }
+      }
+    }
+  };
+
+  const calendarDays = generateCalendarDays();
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  // Create grid with empty cells for days before the first day of month
+  const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  const startingDayOfWeek = firstDayOfMonth.getDay(); // 0 = Sunday, 1 = Monday, etc.
+
+  const gridDays = [];
+  // Add empty cells for days before the first day
+  for (let i = 0; i < startingDayOfWeek; i++) {
+    gridDays.push(null);
+  }
+  // Add all the days of the month
+  gridDays.push(...calendarDays);
+
+  return (
+    <div className="calendar-container bg-white rounded-lg shadow-sm border p-4">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <button
+          onClick={() => navigateMonth('prev')}
+          className="p-2 hover:bg-gray-100 rounded-md"
+          aria-label="Previous month"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <h2 className="text-xl font-semibold">
+          {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+        </h2>
+
+        <button
+          onClick={() => navigateMonth('next')}
+          className="p-2 hover:bg-gray-100 rounded-md"
+          aria-label="Next month"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Day headers */}
+      <div className="grid grid-cols-7 gap-1 mb-2">
+        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+          <div key={day} className="p-2 text-center text-sm font-medium text-gray-500">
+            {day}
+          </div>
+        ))}
+      </div>
+
+      {/* Calendar grid */}
+      <div className="grid grid-cols-7 gap-1">
+        {gridDays.map((date, index) => {
+          if (!date) {
+            // Empty cell
+            return <div key={`empty-${index}`} className="p-3"></div>;
+          }
+
+          const unavailable = isUnavailable(date);
+          const selected = isSelected(date);
+          const today = new Date().toDateString() === date.toDateString();
+
+          return (
+            <button
+              key={date.toISOString()}
+              onClick={() => handleDateClick(date)}
+              onKeyDown={(e) => handleKeyDown(e, date)}
+              disabled={unavailable}
+              data-date={date.toISOString().split('T')[0]}
+              tabIndex={!unavailable ? 0 : -1}
+              className={`
+                p-3 text-sm rounded-md border transition-colors
+                ${unavailable ? 'bg-red-100 text-red-800 cursor-not-allowed unavailable-date' : 'hover:bg-blue-50 cursor-pointer'}
+                ${selected ? 'bg-blue-500 text-white selected-date' : ''}
+                ${today && !selected ? 'ring-2 ring-blue-400' : ''}
+                ${!unavailable && !selected ? 'available-date' : ''}
+              `}
+              aria-label={`${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} - ${
+                unavailable ? 'Unavailable' :
+                selected ? 'Selected' :
+                'Available'
+              }`}
+            >
+              {date.getDate()}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

@@ -9,6 +9,7 @@ import { RolesListPage } from './components/admin/roles/RolesListPage';
 import { PermissionsListPage } from './components/admin/permissions/PermissionsListPage';
 import { RolePermissionsPage } from './components/admin/role-permissions/RolePermissionsPage';
 import { UsersListPage } from './components/admin/users/UsersListPage';
+import { MusicianAvailabilityPage } from './components/musician-availability/MusicianAvailabilityPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function AppContent() {
@@ -32,6 +33,16 @@ function AppContent() {
         element={
           <ProtectedRoute requiredPermission="read:events">
             <EventsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Musician Availability Page - For musicians and auxiliar musicians */}
+      <Route
+        path="/musician-availability"
+        element={
+          <ProtectedRoute requiredPermission="read:musician_availability">
+            <MusicianAvailabilityPageWrapper />
           </ProtectedRoute>
         }
       />
@@ -67,6 +78,12 @@ function AppContent() {
 function HomePageWrapper() {
   const { logout } = useUser();
   return <HomePage onLogout={logout} />;
+}
+
+function MusicianAvailabilityPageWrapper() {
+  const { user } = useUser();
+  if (!user) return null;
+  return <MusicianAvailabilityPage musicianId={user.id} />;
 }
 
 function AdminDashboard() {
