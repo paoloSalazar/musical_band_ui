@@ -155,6 +155,7 @@ export function BulkAvailabilityDialog({
                 onDateClick={() => {}} // Not used in bulk mode
                 onDateSelect={handleDateSelect}
                 selectedDates={selectedDates}
+                mode="bulk"
               />
               {selectedDates.length > 0 && (
                 <p className="text-sm text-gray-600">

@@ -6,15 +6,17 @@ interface AvailabilityCalendarProps {
   onDateClick: (date: Date) => void;
   onDateSelect: (dates: Date[]) => void;
   selectedDates?: Date[];
+  mode: 'single' | 'bulk';
 }
 
 export function AvailabilityCalendar({
   availability,
   onDateClick,
   onDateSelect,
-  selectedDates = []
+  selectedDates = [],
+  mode
 }: AvailabilityCalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 3, 1)); // April 2026
+  const [currentDate, setCurrentDate] = useState(new Date()); // Current month
 
   // Get unavailable dates as Set for quick lookup
   const unavailableDates = new Set(
@@ -29,8 +31,9 @@ export function AvailabilityCalendar({
 
   // Check if a date is selected
   const isSelected = (date: Date) => {
+    const dateString = date.toISOString().split('T')[0];
     return selectedDates.some(selectedDate =>
-      selectedDate.toDateString() === date.toDateString()
+      selectedDate.toISOString().split('T')[0] === dateString
     );
   };
 
@@ -56,11 +59,12 @@ export function AvailabilityCalendar({
   const handleDateClick = (date: Date) => {
     if (isUnavailable(date)) return;
 
-    if (selectedDates.length > 0) {
+    if (mode === 'bulk') {
       // Bulk selection mode
       const isCurrentlySelected = isSelected(date);
+      const dateString = date.toISOString().split('T')[0];
       const newSelection = isCurrentlySelected
-        ? selectedDates.filter(d => d.toDateString() !== date.toDateString())
+        ? selectedDates.filter(d => d.toISOString().split('T')[0] !== dateString)
         : [...selectedDates, date];
       onDateSelect(newSelection);
     } else {
@@ -152,6 +156,7 @@ export function AvailabilityCalendar({
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <button
+          type="button"
           onClick={() => navigateMonth('prev')}
           className="p-2 hover:bg-gray-100 rounded-md"
           aria-label="Previous month"
@@ -166,6 +171,7 @@ export function AvailabilityCalendar({
         </h2>
 
         <button
+          type="button"
           onClick={() => navigateMonth('next')}
           className="p-2 hover:bg-gray-100 rounded-md"
           aria-label="Next month"
@@ -200,6 +206,7 @@ export function AvailabilityCalendar({
           return (
             <button
               key={date.toISOString()}
+              type="button"
               onClick={() => handleDateClick(date)}
               onKeyDown={(e) => handleKeyDown(e, date)}
               disabled={unavailable}

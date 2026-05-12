@@ -8,6 +8,14 @@ import { EditAvailabilityDialog } from './EditAvailabilityDialog';
 import { BulkAvailabilityDialog } from './BulkAvailabilityDialog';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../ui/dialog';
 import { Calendar, Plus, Edit, Trash2 } from 'lucide-react';
 
 interface MusicianAvailabilityPageProps {
@@ -24,7 +32,9 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [bulkDialogOpen, setBulkDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editingAvailability, setEditingAvailability] = useState<MusicianAvailability | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   useEffect(() => {
     loadAvailability();
@@ -57,14 +67,22 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
     setEditDialogOpen(true);
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm(t('musicianAvailability.actions.confirmDelete'))) return;
+  const handleDelete = (id: number) => {
+    setDeletingId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deletingId) return;
 
     try {
-      await musicianAvailabilityApi.delete(id);
+      await musicianAvailabilityApi.delete(deletingId);
       loadAvailability(); // Refresh data
     } catch (err) {
       setError(t('musicianAvailability.messages.error'));
+    } finally {
+      setDeleteDialogOpen(false);
+      setDeletingId(null);
     }
   };
 
@@ -113,7 +131,7 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
                   availability={availability}
                   onDateClick={handleDateClick}
                   onDateSelect={() => {}} // Not used in single view
-                  selectedDates={[]}
+                  mode="single"
                 />
               )}
             </CardContent>
@@ -228,6 +246,34 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
         onOpenChange={setEditDialogOpen}
         onSuccess={handleSuccess}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              {t('musicianAvailability.actions.confirmDelete')}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
