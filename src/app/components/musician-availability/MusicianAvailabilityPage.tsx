@@ -24,7 +24,7 @@ const formatLocalDate = (dateString: string, locale: string = 'en'): string => {
     return dateString;
   }
 };
-import type { MusicianAvailability } from '../../lib/api/musicianAvailability';
+import type { MusicianAvailability, MusicianAvailabilityByMonthResponse } from '../../lib/api/musicianAvailability';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
 import { AddAvailabilityDialog } from './AddAvailabilityDialog';
 import { EditAvailabilityDialog } from './EditAvailabilityDialog';
@@ -49,7 +49,10 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
   const { t, i18n } = useTranslation();
   const currentLanguage = i18n?.language || 'en';
   const [availability, setAvailability] = useState<MusicianAvailability[]>([]);
+  const [currentMonthAvailability, setCurrentMonthAvailability] = useState<MusicianAvailability[]>([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMonth, setIsLoadingMonth] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Dialog states
@@ -62,7 +65,12 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
 
   useEffect(() => {
     loadAvailability();
+    loadCurrentMonthAvailability();
   }, [musicianId]);
+
+  useEffect(() => {
+    loadCurrentMonthAvailability();
+  }, [currentMonth, availability]); // Reload when month changes or full availability updates
 
   const loadAvailability = async () => {
     try {
@@ -78,6 +86,36 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
       setError(t('musicianAvailability.messages.error'));
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadCurrentMonthAvailability = async () => {
+    try {
+      setIsLoadingMonth(true);
+      const year = currentMonth.getFullYear();
+      const month = currentMonth.getMonth() + 1; // JS months are 0-based, API expects 1-based
+      const response = await musicianAvailabilityApi.getByMusicianAndMonth(musicianId, year, month);
+      if (response.success) {
+        setCurrentMonthAvailability(response.data.unavailable_dates);
+      } else {
+        // If month API fails, fall back to filtering from full availability
+        const filtered = availability.filter(item => {
+          const itemDate = new Date(item.unavailable_date);
+          return itemDate.getFullYear() === year && itemDate.getMonth() === month - 1;
+        });
+        setCurrentMonthAvailability(filtered);
+      }
+    } catch (err) {
+      // Fall back to client-side filtering
+      const year = currentMonth.getFullYear();
+      const monthIndex = currentMonth.getMonth();
+      const filtered = availability.filter(item => {
+        const itemDate = new Date(item.unavailable_date);
+        return itemDate.getFullYear() === year && itemDate.getMonth() === monthIndex;
+      });
+      setCurrentMonthAvailability(filtered);
+    } finally {
+      setIsLoadingMonth(false);
     }
   };
 
@@ -110,8 +148,13 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
     }
   };
 
+  const handleMonthChange = (newMonth: Date) => {
+    setCurrentMonth(newMonth);
+  };
+
   const handleSuccess = () => {
-    loadAvailability(); // Refresh data after any operation
+    loadAvailability(); // Refresh full data for calendar
+    loadCurrentMonthAvailability(); // Refresh current month data for list
   };
 
 
@@ -156,6 +199,8 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
                   onDateClick={handleDateClick}
                   onDateSelect={() => {}} // Not used in single view
                   mode="single"
+                  onMonthChange={handleMonthChange}
+                  initialMonth={currentMonth}
                 />
               )}
             </CardContent>
@@ -195,11 +240,11 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
             <CardHeader>
               <CardTitle>{t('musicianAvailability.yourUnavailableDates')}</CardTitle>
               <CardDescription>
-                {t('musicianAvailability.summary.count', { count: availability.length })}
+                {t('musicianAvailability.summary.count', { count: currentMonthAvailability.length })}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {availability.length === 0 ? (
+              {currentMonthAvailability.length === 0 ? (
                 <div className="text-center py-8">
                   <Calendar className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -211,7 +256,7 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {availability.map((item) => (
+                  {currentMonthAvailability.map((item) => (
                     <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm">{formatLocalDate(item.unavailable_date, currentLanguage)}</p>

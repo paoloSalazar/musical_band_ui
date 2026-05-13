@@ -8,6 +8,8 @@ interface AvailabilityCalendarProps {
   onDateSelect: (dates: Date[]) => void;
   selectedDates?: Date[];
   mode: 'single' | 'bulk';
+  onMonthChange?: (month: Date) => void;
+  initialMonth?: Date;
 }
 
 export function AvailabilityCalendar({
@@ -15,10 +17,12 @@ export function AvailabilityCalendar({
   onDateClick,
   onDateSelect,
   selectedDates = [],
-  mode
+  mode,
+  onMonthChange,
+  initialMonth
 }: AvailabilityCalendarProps) {
   const { t } = useTranslation();
-  const [currentDate, setCurrentDate] = useState(new Date()); // Current month
+  const [currentDate, setCurrentDate] = useState(initialMonth || new Date()); // Current month
 
   // Get unavailable dates as Set for quick lookup
   const unavailableDates = new Set(
@@ -82,6 +86,9 @@ export function AvailabilityCalendar({
         newDate.setMonth(newDate.getMonth() - 1);
       } else {
         newDate.setMonth(newDate.getMonth() + 1);
+      }
+      if (onMonthChange) {
+        onMonthChange(newDate);
       }
       return newDate;
     });

@@ -31,6 +31,13 @@ export interface UpdateAvailabilityRequest {
   reason?: string;
 }
 
+export interface MusicianAvailabilityByMonthResponse {
+  musician_id: number;
+  year: number;
+  month: number;
+  unavailable_dates: MusicianAvailability[];
+}
+
 /**
  * Musician Availability API
  * Endpoints: /api/musician-availability/
@@ -90,5 +97,13 @@ export const musicianAvailabilityApi = {
    */
   deleteByDate: async (musicianId: number, date: string): Promise<ApiResponse<{ message: string }>> => {
     return apiClient.delete<{ message: string }>(`/musician-availability/${musicianId}/${date}`);
+  },
+
+  /**
+   * Get availability for a musician by month
+   * GET /api/musician-availability/{musician_id}/month/{year}/{month}
+   */
+  getByMusicianAndMonth: async (musicianId: number, year: number, month: number): Promise<ApiResponse<MusicianAvailabilityByMonthResponse>> => {
+    return apiClient.get<MusicianAvailabilityByMonthResponse>(`/musician-availability/${musicianId}/month/${year}/${month}`);
   },
 };

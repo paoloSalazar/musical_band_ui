@@ -307,3 +307,97 @@ Add new card for musician availability access:
 - **Mobile App**: Dedicated mobile interface for availability management
 
 This plan provides a comprehensive roadmap for implementing musician availability management with clear phases, deliverables, and success criteria. The implementation follows existing patterns in the codebase and integrates seamlessly with the current user experience.
+
+## New Requirements: Month-Based Availability List Filtering
+
+### Problem Statement
+The Availability List section currently accumulates all availability records for a musician, which can grow over time and negatively impact:
+- Page load performance
+- User experience with cluttered UI
+- Memory usage and rendering overhead
+
+### Solution
+Implement month-based filtering for the Availability List to show only records for the currently viewed month in the calendar.
+
+### API Endpoint
+```
+GET /api/musician-availability/{musician_id}/month/{year}/{month}
+```
+
+### API Response Format
+```json
+{
+  "musician_id": 5,
+  "year": 2026,
+  "month": 5,
+  "unavailable_dates": [
+    {
+      "id": 30,
+      "unavailable_date": "2026-05-13",
+      "reason": "Lage Weekend"
+    },
+    {
+      "id": 31,
+      "unavailable_date": "2026-05-14",
+      "reason": "Evento Familiar"
+    }
+  ]
+}
+```
+
+### Implementation Steps
+1. **Update API Layer**
+   - Add `MusicianAvailabilityByMonthResponse` interface
+   - Add `getByMusicianAndMonth(musicianId, year, month)` method
+   - Handle new response format with `unavailable_dates` array
+
+2. **Update Component Logic**
+   - Add state for `currentMonthAvailability` and `currentMonth`
+   - Implement `loadCurrentMonthAvailability()` function
+   - Add `handleMonthChange()` callback for calendar navigation
+   - Update Availability List to use month-specific data
+   - Maintain full availability data for calendar view
+
+3. **Calendar Integration**
+   - Add `onMonthChange` and `initialMonth` props to AvailabilityCalendar
+   - Trigger month data reload when calendar month changes
+   - Ensure seamless navigation between months
+
+4. **UI Updates**
+   - Update count display to show current month count
+   - Maintain existing functionality for add/edit/delete operations
+   - Handle empty states for months with no availability
+
+5. **Testing**
+   - Update tests to mock month-specific API calls
+   - Verify month navigation triggers correct data loading
+   - Test edge cases (empty months, API errors)
+
+### Benefits
+- **Performance**: Significantly reduced data transfer and rendering
+- **UX**: Cleaner, more focused list view
+- **Scalability**: Handles long-term musician availability histories
+- **Compatibility**: Maintains all existing features
+
+### Backward Compatibility
+- Calendar view continues to show all unavailable dates for proper visualization
+- Add/Edit/Delete operations work across all months
+- Existing API endpoints remain functional
+
+## Technical Considerations
+- Timezone handling for date comparisons
+- Error handling for invalid months/years
+- State synchronization between calendar and list
+- API error fallbacks
+
+## Testing Strategy
+- Unit tests for API methods
+- Component tests for month navigation
+- Integration tests for data flow
+- Performance tests for large datasets
+
+## Future Enhancements
+- Pagination for very large monthly datasets
+- Search/filter within month view
+- Calendar month caching for performance
+- Bulk operations across multiple months
