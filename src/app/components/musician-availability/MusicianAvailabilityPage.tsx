@@ -1,6 +1,29 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { musicianAvailabilityApi } from '../../lib/api';
+import { formatDateHumanReadable } from '../../lib/timezone';
+
+/**
+ * Format a date string as a local date without timezone conversion
+ * Used for displaying dates that should be shown as-is regardless of timezone
+ */
+const formatLocalDate = (dateString: string, locale: string = 'en'): string => {
+  if (!dateString) return '';
+
+  try {
+    // Create date object from the string (treat as local date)
+    const date = new Date(dateString + 'T00:00:00'); // Add time to ensure consistent parsing
+
+    return date.toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    console.warn('Error formatting local date:', error);
+    return dateString;
+  }
+};
 import type { MusicianAvailability } from '../../lib/api/musicianAvailability';
 import { AvailabilityCalendar } from './AvailabilityCalendar';
 import { AddAvailabilityDialog } from './AddAvailabilityDialog';
@@ -23,7 +46,8 @@ interface MusicianAvailabilityPageProps {
 }
 
 export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPageProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n?.language || 'en';
   const [availability, setAvailability] = useState<MusicianAvailability[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -112,10 +136,10 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Calendar className="mr-2 h-5 w-5" />
-                Calendar View
+                {t('musicianAvailability.calendarViewTitle')}
               </CardTitle>
               <CardDescription>
-                Click on available dates to add them as unavailable
+                {t('musicianAvailability.calendarViewSubTitle')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -143,8 +167,8 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
           {/* Quick Actions */}
           <Card>
             <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Add unavailable dates</CardDescription>
+              <CardTitle>{t('musicianAvailability.quickActions')}</CardTitle>
+              <CardDescription>{t('musicianAvailability.addUnavailableDates')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <Button
@@ -169,9 +193,9 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
           {/* Availability List */}
           <Card>
             <CardHeader>
-              <CardTitle>Your Unavailable Dates</CardTitle>
+              <CardTitle>{t('musicianAvailability.yourUnavailableDates')}</CardTitle>
               <CardDescription>
-                {availability.length} date{availability.length !== 1 ? 's' : ''} marked as unavailable
+                {t('musicianAvailability.summary.count', { count: availability.length })}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -190,7 +214,7 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
                   {availability.map((item) => (
                     <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm">{item.unavailable_date}</p>
+                        <p className="font-medium text-sm">{formatLocalDate(item.unavailable_date, currentLanguage)}</p>
                         {item.reason && (
                           <p className="text-xs text-gray-600 truncate">{item.reason}</p>
                         )}

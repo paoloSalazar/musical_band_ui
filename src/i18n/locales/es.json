@@ -501,11 +501,34 @@
   "musicianAvailability": {
     "title": "Mi Disponibilidad",
     "subtitle": "Gestiona tus fechas no disponibles",
+    "calendarViewTitle": "Vista de Calendario",
+    "calendarViewSubTitle": "Haz clic en las fechas disponibles para agregarlas como no disponibles",
+    "quickActions": "Acciones Rápidas",
+    "addUnavailableDates": "Agregar Fechas No Disponibles",
+    "yourUnavailableDates": "Tus Fechas No Disponibles",
     "calendar": {
       "today": "Hoy",
       "available": "Disponible",
       "unavailable": "No disponible",
-      "selectDate": "Seleccionar fecha"
+      "selected": "Seleccionado",
+      "selectDate": "Seleccionar fecha",
+      "months": [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre"
+      ],
+      "days": ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+      "previousMonth": "Mes anterior",
+      "nextMonth": "Mes siguiente"
     },
     "form": {
       "date": "Fecha",
@@ -539,6 +562,9 @@
       "addDates": "Agregar {{count}} Fechas",
       "noDatesSelected": "Por favor selecciona al menos una fecha",
       "conflictingDates": "{{count}} fecha(s) seleccionada(s) ya están no disponibles"
+    },
+    "summary": {
+      "count": "{{count}} fecha(s) marcada(s) como no disponible(s)"
     },
     "empty": {
       "title": "Sin fechas no disponibles",

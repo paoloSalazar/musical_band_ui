@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MusicianAvailability } from '../../lib/api/musicianAvailability';
 
 interface AvailabilityCalendarProps {
@@ -16,6 +17,7 @@ export function AvailabilityCalendar({
   selectedDates = [],
   mode
 }: AvailabilityCalendarProps) {
+  const { t } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date()); // Current month
 
   // Get unavailable dates as Set for quick lookup
@@ -134,10 +136,13 @@ export function AvailabilityCalendar({
   };
 
   const calendarDays = generateCalendarDays();
-  const monthNames = [
+  const monthNames = Array.isArray(t('musicianAvailability.calendar.months', { returnObjects: true })) ?
+    t('musicianAvailability.calendar.months', { returnObjects: true }) : [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
+  const dayNames = Array.isArray(t('musicianAvailability.calendar.days', { returnObjects: true })) ?
+    t('musicianAvailability.calendar.days', { returnObjects: true }) : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   // Create grid with empty cells for days before the first day of month
   const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -159,7 +164,7 @@ export function AvailabilityCalendar({
           type="button"
           onClick={() => navigateMonth('prev')}
           className="p-2 hover:bg-gray-100 rounded-md"
-          aria-label="Previous month"
+          aria-label={t('musicianAvailability.calendar.previousMonth') === 'musicianAvailability.calendar.previousMonth' ? 'Previous month' : t('musicianAvailability.calendar.previousMonth')}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -174,7 +179,7 @@ export function AvailabilityCalendar({
           type="button"
           onClick={() => navigateMonth('next')}
           className="p-2 hover:bg-gray-100 rounded-md"
-          aria-label="Next month"
+          aria-label={t('musicianAvailability.calendar.nextMonth') === 'musicianAvailability.calendar.nextMonth' ? 'Next month' : t('musicianAvailability.calendar.nextMonth')}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -184,7 +189,7 @@ export function AvailabilityCalendar({
 
       {/* Day headers */}
       <div className="grid grid-cols-7 gap-1 mb-2">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+        {dayNames.map((day: string) => (
           <div key={day} className="p-2 text-center text-sm font-medium text-gray-500">
             {day}
           </div>
@@ -220,9 +225,9 @@ export function AvailabilityCalendar({
                 ${!unavailable && !selected ? 'available-date' : ''}
               `}
               aria-label={`${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()} - ${
-                unavailable ? 'Unavailable' :
-                selected ? 'Selected' :
-                'Available'
+                unavailable ? (t('musicianAvailability.calendar.unavailable') === 'musicianAvailability.calendar.unavailable' ? 'Unavailable' : t('musicianAvailability.calendar.unavailable')) :
+                selected ? (t('musicianAvailability.calendar.selected') === 'musicianAvailability.calendar.selected' ? 'Selected' : t('musicianAvailability.calendar.selected')) :
+                (t('musicianAvailability.calendar.available') === 'musicianAvailability.calendar.available' ? 'Available' : t('musicianAvailability.calendar.available'))
               }`}
             >
               {date.getDate()}

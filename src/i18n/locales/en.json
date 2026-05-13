@@ -501,11 +501,34 @@
   "musicianAvailability": {
     "title": "My Availability",
     "subtitle": "Manage your unavailable dates",
+    "calendarViewTitle": "Calendar View",
+    "calendarViewSubTitle": "Click on available dates to add them as unavailable",
+    "quickActions": "Quick Actions",
+    "addUnavailableDates": "Add unavailable dates",
+    "yourUnavailableDates": "Your Unavailable Dates",
     "calendar": {
       "today": "Today",
       "available": "Available",
       "unavailable": "Unavailable",
-      "selectDate": "Select date"
+      "selected": "Selected",
+      "selectDate": "Select date",
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month"
     },
     "form": {
       "date": "Date",
@@ -539,6 +562,9 @@
       "addDates": "Add {{count}} Dates",
       "noDatesSelected": "Please select at least one date",
       "conflictingDates": "{{count}} selected date(s) are already unavailable"
+    },
+    "summary": {
+      "count": "{{count}} date(s) marked as unavailable"
     },
     "empty": {
       "title": "No unavailable dates",
