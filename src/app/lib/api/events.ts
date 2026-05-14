@@ -4,7 +4,7 @@
  */
 
 import { apiClient, type ApiResponse } from './client';
-import type { Event, EventFormData, Payment, PaymentSummary, PaymentFormData } from '../types';
+import type { Event, EventFormData, Payment, PaymentSummary, PaymentFormData, EventMusician, EventMusicianFormData, EventMusicianUpdateData } from '../types';
 
 /**
  * Translate payment validation error messages from backend
@@ -154,5 +154,37 @@ export const eventsApi = {
    */
   createPayment: async (eventId: number, data: PaymentFormData): Promise<ApiResponse<Payment>> => {
     return apiClient.post<Payment>(`/events/${eventId}/payments`, data);
+  },
+
+  /**
+   * Get musicians assigned to an event
+   * GET /api/events/{event_id}/musicians
+   */
+  getEventMusicians: async (eventId: number): Promise<ApiResponse<EventMusician[]>> => {
+    return apiClient.get<EventMusician[]>(`/events/${eventId}/musicians`);
+  },
+
+  /**
+   * Assign a musician to an event
+   * POST /api/events/{event_id}/musicians
+   */
+  assignMusician: async (eventId: number, data: EventMusicianFormData): Promise<ApiResponse<EventMusician>> => {
+    return apiClient.post<EventMusician>(`/events/${eventId}/musicians`, data);
+  },
+
+  /**
+   * Update a musician assignment
+   * PATCH /api/events/{event_id}/musicians/{musician_id}
+   */
+  updateMusicianAssignment: async (eventId: number, musicianId: number, data: EventMusicianUpdateData): Promise<ApiResponse<EventMusician>> => {
+    return apiClient.patch<EventMusician>(`/events/${eventId}/musicians/${musicianId}`, data);
+  },
+
+  /**
+   * Remove a musician from an event
+   * DELETE /api/events/{event_id}/musicians/{musician_id}
+   */
+  removeMusician: async (eventId: number, musicianId: number): Promise<ApiResponse<boolean>> => {
+    return apiClient.delete<boolean>(`/events/${eventId}/musicians/${musicianId}`);
   },
 };
