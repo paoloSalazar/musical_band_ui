@@ -98,6 +98,12 @@
         "close": "Cerrar"
       }
     },
+    "musicianManagement": {
+      "title": "Músicos para Evento {{eventId}}",
+      "description": "Gestionar músicos asignados a este evento",
+      "assignedMusicians": "Músicos Asignados",
+      "tableComingSoon": "La tabla de músicos se implementará aquí"
+    },
     "makePayment": {
       "title": "Realizar Pago",
       "description": "{{eventName}} - Registrar un pago para este evento",
@@ -155,6 +161,7 @@
         "noPrice": "Sin precio establecido",
         "createdBy": "Creado por",
         "editEvent": "Editar Evento",
+        "manageMusicians": "Gestionar Músicos",
         "paymentDetails": "Detalles de Pago",
         "makePayment": "Realizar Pago",
         "validation": {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { eventsApi } from '../../lib/api';
 import type { Event } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
@@ -15,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
-import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save, CreditCard, Wallet } from 'lucide-react';
+import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save, CreditCard, Wallet, Users } from 'lucide-react';
 import { ViewPaymentDetailsDialog } from './ViewPaymentDetailsDialog';
 import { MakePaymentDialog } from './MakePaymentDialog';
 
@@ -27,12 +28,15 @@ interface ViewEventDialogProps {
   canEditEvent?: boolean;
   onPriceUpdate?: (event: Event) => void;
   showEditButton?: boolean;
+  onManageMusicians?: (eventId: number) => void;
 }
 
-export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEvent, onPriceUpdate, showEditButton = true }: ViewEventDialogProps) {
+export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEvent, onPriceUpdate, showEditButton = true, onManageMusicians }: ViewEventDialogProps) {
   const { t, i18n } = useTranslation();
-  const { hasRole, user } = useUser();
+  const navigate = useNavigate();
+  const { hasRole, user, hasPermission } = useUser();
   const isAdmin = hasRole('admin');
+  const canManageMusicians = hasPermission('read:event_musician');
   
   const [event, setEvent] = useState<Event | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -75,6 +79,13 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   const handleEdit = () => {
     if (onEdit && eventId) {
       onEdit(eventId);
+      onOpenChange(false);
+    }
+  };
+
+  const handleManageMusicians = () => {
+    if (eventId) {
+      navigate(`/events/${eventId}/musicians`);
       onOpenChange(false);
     }
   };
@@ -299,6 +310,12 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
         ) : null}
 
         <DialogFooter>
+          {canManageMusicians && (
+            <Button type="button" variant="outline" onClick={handleManageMusicians}>
+              <Users className="h-4 w-4 mr-2" />
+              {t('events.dialog.view.manageMusicians')}
+            </Button>
+          )}
           {showEditButton && onEdit && canEditEvent && (
             <Button type="button" onClick={handleEdit}>
               <Pencil className="h-4 w-4 mr-2" />

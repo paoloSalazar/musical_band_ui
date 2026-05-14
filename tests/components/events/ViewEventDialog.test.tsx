@@ -47,6 +47,7 @@ vi.mock('react-i18next', () => ({
         'events.dialog.view.editEvent': 'Edit Event',
         'events.dialog.view.paymentDetails': 'Payment Details',
         'events.dialog.view.makePayment': 'Make Payment',
+        'events.dialog.view.manageMusicians': 'Manage Musicians',
         'events.status.PENDING': 'PENDING',
         'events.status.CONFIRMED': 'CONFIRMED',
         'events.status.CANCELLED': 'CANCELLED',
@@ -86,13 +87,21 @@ const mockUser = {
   id: 1,
   name: 'Test User',
   hasRole: vi.fn(),
+  hasPermission: vi.fn(),
 };
+
+const mockNavigate = vi.fn();
+
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
+}));
 
 vi.mock('@/app/contexts/UserContext', () => ({
   UserProvider: ({ children }) => <div data-testid="user-provider">{children}</div>,
   useUser: () => ({
     user: mockUser,
     hasRole: mockUser.hasRole,
+    hasPermission: mockUser.hasPermission,
   }),
 }));
 
@@ -164,6 +173,7 @@ vi.mock('lucide-react', () => ({
   MapPin: () => <div data-testid="map-pin-icon" />,
   Clock: () => <div data-testid="clock-icon" />,
   User: () => <div data-testid="user-icon" />,
+  Users: () => <div data-testid="users-icon" />,
   DollarSign: () => <div data-testid="dollar-sign-icon" />,
   Save: () => <div data-testid="save-icon" />,
   CreditCard: () => <div data-testid="credit-card-icon" />,
@@ -208,6 +218,7 @@ describe('ViewEventDialog', () => {
       data: 100.00,
     });
     mockUser.hasRole.mockReturnValue(false); // Regular user by default
+    mockUser.hasPermission.mockReturnValue(false); // No permissions by default
   });
 
   afterEach(() => {
@@ -798,5 +809,119 @@ describe('ViewEventDialog', () => {
     });
 
     expect(screen.queryByText('Edit Event')).toBeFalsy();
+  });
+
+  it('should show manage musicians button for admin users', async () => {
+    mockUser.hasRole.mockReturnValue(true); // Admin user
+    mockUser.hasPermission.mockReturnValue(true); // Has read:event_musician permission
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+          onManageMusicians={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('Manage Musicians')).toBeTruthy();
+  });
+
+  it('should show manage musicians button for musician users', async () => {
+    mockUser.hasRole.mockImplementation((role) => role === 'musician'); // Musician user
+    mockUser.hasPermission.mockReturnValue(true); // Has read:event_musician permission
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+          onManageMusicians={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('Manage Musicians')).toBeTruthy();
+  });
+
+  it('should show manage musicians button for auxiliar musician users', async () => {
+    mockUser.hasRole.mockImplementation((role) => role === 'auxiliar_musician'); // Auxiliar musician user
+    mockUser.hasPermission.mockReturnValue(true); // Has read:event_musician permission
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+          onManageMusicians={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.getByText('Manage Musicians')).toBeTruthy();
+  });
+
+  it('should hide manage musicians button for unauthorized users', async () => {
+    mockUser.hasRole.mockReturnValue(false); // Regular user
+    mockUser.hasPermission.mockReturnValue(false); // No permissions
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={() => {}}
+          onManageMusicians={() => {}}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    expect(screen.queryByText('Manage Musicians')).toBeFalsy();
+  });
+
+  it('should navigate to musician management when manage musicians button is clicked', async () => {
+    mockUser.hasRole.mockReturnValue(true); // Admin user
+    mockUser.hasPermission.mockReturnValue(true); // Has permission
+    const mockOnOpenChange = vi.fn();
+
+    render(
+      <UserProvider>
+        <ViewEventDialog
+          eventId={1}
+          open={true}
+          onOpenChange={mockOnOpenChange}
+        />
+      </UserProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Event')).toBeTruthy();
+    });
+
+    const manageButton = screen.getByText('Manage Musicians');
+    fireEvent.click(manageButton);
+
+    expect(mockNavigate).toHaveBeenCalledWith('/events/1/musicians');
+    expect(mockOnOpenChange).toHaveBeenCalledWith(false);
   });
 });

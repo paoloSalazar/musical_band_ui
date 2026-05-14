@@ -98,6 +98,12 @@
         "close": "Close"
       }
     },
+    "musicianManagement": {
+      "title": "Musicians for Event {{eventId}}",
+      "description": "Manage musicians assigned to this event",
+      "assignedMusicians": "Assigned Musicians",
+      "tableComingSoon": "Musician table will be implemented here"
+    },
     "makePayment": {
       "title": "Make Payment",
       "description": "{{eventName}} - Record a payment for this event",
@@ -155,6 +161,7 @@
         "noPrice": "No price set",
         "createdBy": "Created by",
         "editEvent": "Edit Event",
+        "manageMusicians": "Manage Musicians",
         "paymentDetails": "Payment Details",
         "makePayment": "Make Payment",
         "validation": {
