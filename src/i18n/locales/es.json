@@ -466,6 +466,11 @@
         "title": "Panel de Administrador",
         "description": "Gestión de usuarios y permisos",
         "button": "Administrar Admin"
+      },
+      "availability": {
+        "title": "Mi Disponibilidad",
+        "description": "Gestiona tus fechas no disponibles",
+        "button": "Administrar Disponibilidad"
       }
     },
     "stats": {
@@ -492,6 +497,79 @@
     "select": "Seleccionar Idioma",
     "english": "Inglés",
     "spanish": "Español"
+  },
+  "musicianAvailability": {
+    "title": "Mi Disponibilidad",
+    "subtitle": "Gestiona tus fechas no disponibles",
+    "calendarViewTitle": "Vista de Calendario",
+    "calendarViewSubTitle": "Haz clic en las fechas disponibles para agregarlas como no disponibles",
+    "quickActions": "Acciones Rápidas",
+    "addUnavailableDates": "Agregar Fechas No Disponibles",
+    "yourUnavailableDates": "Tus Fechas No Disponibles",
+    "calendar": {
+      "today": "Hoy",
+      "available": "Disponible",
+      "unavailable": "No disponible",
+      "selected": "Seleccionado",
+      "selectDate": "Seleccionar fecha",
+      "months": [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre"
+      ],
+      "days": ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+      "previousMonth": "Mes anterior",
+      "nextMonth": "Mes siguiente"
+    },
+    "form": {
+      "date": "Fecha",
+      "dateRequired": "La fecha es obligatoria",
+      "reason": "Motivo (opcional)",
+      "reasonPlaceholder": "ej. Vacaciones, Evento familiar, etc.",
+      "addSingle": "Agregar Fecha No Disponible",
+      "addSingleDescription": "Selecciona una fecha en la que no estarás disponible",
+      "addBulk": "Agregar Múltiples Fechas",
+      "editDescription": "Actualiza tu información de disponibilidad",
+      "edit": "Editar Disponibilidad",
+      "save": "Guardar Cambios",
+      "cancel": "Cancelar"
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "confirmDelete": "¿Eliminar esta fecha no disponible?"
+    },
+    "messages": {
+      "added": "Disponibilidad actualizada correctamente",
+      "deleted": "Disponibilidad eliminada correctamente",
+      "error": "Error al actualizar disponibilidad",
+      "pastDateError": "No se pueden establecer fechas pasadas como no disponibles",
+      "duplicateError": "Esta fecha ya está marcada como no disponible"
+    },
+    "bulk": {
+      "description": "Selecciona múltiples fechas para marcar como no disponibles",
+      "selectDates": "Seleccionar Fechas",
+      "selectedCount": "{{count}} fecha(s) seleccionada(s)",
+      "addDates": "Agregar {{count}} Fechas",
+      "noDatesSelected": "Por favor selecciona al menos una fecha",
+      "conflictingDates": "{{count}} fecha(s) seleccionada(s) ya están no disponibles"
+    },
+    "summary": {
+      "count": "{{count}} fecha(s) marcada(s) como no disponible(s)"
+    },
+    "empty": {
+      "title": "Sin fechas no disponibles",
+      "description": "Aún no has establecido fechas no disponibles."
+    }
   },
   "permissions": {
     "read:events": "Ver Eventos",
