@@ -1,14 +1,15 @@
 # Event Musician Management Feature Plan
 
 ## Overview
-This plan outlines the implementation of musician assignment management for events using a Test-Driven Development (TDD) approach. The feature will allow viewing, editing, and deleting musician assignments for specific events, starting from the ViewEventDialog component.
+This plan outlines the implementation of musician assignment management for events using a Test-Driven Development (TDD) approach. The feature will allow viewing, assigning, editing, and deleting musician assignments for specific events, starting from the ViewEventDialog component.
 
 ## Key Requirements
 - Navigation from ViewEventDialog.tsx to event musician management page
 - Table displaying assigned musicians with columns: musician_name, musician_lastname, role, salary, payment_status
-- Actions column with edit and delete options
-- Integration with existing API endpoints from `GET /api/events/{event_id}/musicians`
-- Admin-only permissions for edit/delete operations (based on API auth requirements)
+- Actions column with assign, edit, and delete options
+- "Assign Musician" button in table header to add new musicians to the event
+- Integration with existing API endpoints: `GET /api/events/{event_id}/musicians`, `POST /api/events/{event_id}/musicians`, `PATCH /api/events/{event_id}/musicians/{musician_id}`, `DELETE /api/events/{event_id}/musicians/{musician_id}`
+- Admin-only permissions for assign/edit/delete operations (based on API auth requirements)
 
 ## TDD Approach
 Following Test-Driven Development methodology:
@@ -73,23 +74,56 @@ Following Test-Driven Development methodology:
 - Create table component for displaying musicians
 - Implement column rendering for required fields
 - Add actions column with edit/delete buttons
+- Add "Assign Musician" button in table header
 
 ### Test Cases (Write First)
 1. Table renders correct columns (musician_name, musician_lastname, role, salary, payment_status, actions)
 2. Table displays data correctly from props
-3. Actions column shows edit and delete buttons
-4. Edit button triggers correct callback
-5. Delete button triggers correct callback
-6. Table handles empty data gracefully
-7. Table shows loading state
-8. Table shows error state
+3. Actions column shows edit and delete buttons for each row
+4. "Assign Musician" button renders in table header for admin users
+5. Assign button triggers correct callback
+6. Edit button triggers correct callback
+7. Delete button triggers correct callback
+8. Table handles empty data gracefully
+9. Table shows loading state
+10. Table shows error state
 
 ### Implementation Tasks
 1. Create EventMusicianTable component
 2. Implement column definitions and rendering
 3. Add actions column with button components
-4. Implement loading and error states
-5. Add proper TypeScript interfaces
+4. Add "Assign Musician" button to table header
+5. Implement loading and error states
+6. Add proper TypeScript interfaces
+
+## Phase 4.1: Assign Musicians Dialog (TDD)
+### Objectives
+- Create dialog for assigning new musicians to events
+- Implement form with musician selection, role, and salary fields
+- Integrate with API POST endpoint
+- Add "Assign Musician" button to table header
+
+### Test Cases (Write First)
+1. Assign button renders in table header for admin users
+2. Assign button opens dialog with form fields
+3. Form includes musician dropdown, role input, salary input
+4. Form validation prevents invalid submissions (musician required, salary > 0)
+5. Save button calls API POST with correct data
+6. Dialog closes on successful assignment
+7. Successful assignment adds musician to table
+8. Dialog shows loading during save
+9. Dialog handles API errors appropriately
+10. Cancel button closes dialog without changes
+
+### Implementation Tasks
+1. Create AssignMusicianDialog component
+2. Add musician selection dropdown (fetch available musicians)
+3. Implement form with role and salary fields
+4. Add form validation logic
+5. Integrate with API POST endpoint
+6. Add "Assign Musician" button to EventMusicianTable header
+7. Handle loading and error states
+8. Update table data after successful assignment
 
 ## Phase 5: Edit Dialog (TDD)
 ### Objectives
@@ -218,7 +252,8 @@ Following Test-Driven Development methodology:
 - Maintain test coverage above 80% for all new code
 
 ## Dependencies
-- Existing API endpoints (GET/PATCH/DELETE /api/events/{event_id}/musicians)
+- Existing API endpoints: `GET /api/events/{event_id}/musicians`, `POST /api/events/{event_id}/musicians`, `PATCH /api/events/{event_id}/musicians/{musician_id}`, `DELETE /api/events/{event_id}/musicians/{musician_id}`
+- API for fetching available musicians (e.g., users with musician role)
 - Authentication and authorization system
 - Existing routing and navigation patterns
 - UI component library (Material-UI)

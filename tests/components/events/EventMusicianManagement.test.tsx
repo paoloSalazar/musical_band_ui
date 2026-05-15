@@ -118,7 +118,7 @@ describe('EventMusicianManagement', () => {
       });
 
       expect(screen.getByText('Assigned Musicians')).toBeTruthy();
-      expect(screen.getByText('Loaded 1 musicians')).toBeTruthy();
+      expect(screen.getByText('John Doe')).toBeTruthy(); // Check musician name in table
     });
 
     it('should display correct title with event ID', async () => {
@@ -146,7 +146,7 @@ describe('EventMusicianManagement', () => {
       renderWithRouter(<EventMusicianManagement />);
 
       await waitFor(() => {
-        expect(screen.getByText('Error')).toBeTruthy();
+        expect(screen.getByText('Error:')).toBeTruthy();
       });
 
       expect(screen.getByText('API Error')).toBeTruthy();

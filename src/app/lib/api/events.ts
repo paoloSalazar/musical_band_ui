@@ -4,7 +4,7 @@
  */
 
 import { apiClient, type ApiResponse } from './client';
-import type { Event, EventFormData, Payment, PaymentSummary, PaymentFormData, EventMusician, EventMusicianFormData, EventMusicianUpdateData } from '../types';
+import type { Event, EventFormData, Payment, PaymentSummary, PaymentFormData, EventMusician, EventMusicianFormData, EventMusicianUpdateData, User } from '../types';
 
 /**
  * Translate payment validation error messages from backend
@@ -186,5 +186,13 @@ export const eventsApi = {
    */
   removeMusician: async (eventId: number, musicianId: number): Promise<ApiResponse<boolean>> => {
     return apiClient.delete<boolean>(`/events/${eventId}/musicians/${musicianId}`);
+  },
+
+  /**
+   * Get available musicians for assignment (users with musician roles)
+   * GET /api/users/?role=musician&role=auxiliar_musician
+   */
+  getAvailableMusicians: async (): Promise<ApiResponse<User[]>> => {
+    return apiClient.get<User[]>(`/users/?role=musician&role=auxiliar_musician`);
   },
 };
