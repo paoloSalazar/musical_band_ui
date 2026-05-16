@@ -5,7 +5,9 @@ import { eventsApi } from '../../lib/api';
 import type { EventMusician, Event } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
 import { EventMusicianTable } from './EventMusicianTable';
+import { EventMusicianService } from '../../lib/services/eventMusicianService';
 import { Button } from '../ui/button';
+import { ErrorBoundary } from '../ui/ErrorBoundary';
 import { ArrowLeft, Users } from 'lucide-react';
 import { EditMusicianAssignmentDialog } from './EditMusicianAssignmentDialog';
 import { AssignMusicianDialog } from './AssignMusicianDialog';
@@ -24,6 +26,7 @@ export function EventMusicianManagement() {
   const [musicians, setMusicians] = useState<EventMusician[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [notify, setNotify] = useState<string | null>(null);
 
   // Edit dialog state
   const [editing, setEditing] = useState<EventMusician | null>(null);
@@ -61,7 +64,6 @@ export function EventMusicianManagement() {
       console.error('Failed to load event details', err);
     }
   };
-
   const loadMusicians = async () => {
     if (!eventId) return;
 
@@ -94,12 +96,13 @@ export function EventMusicianManagement() {
       setMusicians((list) =>
         list.map((m) => (m.id === editing.id ? { ...m, ...updated } as EventMusician : m))
       );
+      await loadMusicians();
     } catch (err) {
       console.error('Failed to update musician assignment', err);
+    } finally {
+      setEditOpen(false);
     }
-    setEditOpen(false);
   };
-
   const handleAssign = () => {
     setAssignOpen(true);
   };
@@ -124,7 +127,8 @@ export function EventMusicianManagement() {
     if (!eventId) return;
     try {
       await eventsApi.removeMusician(parseInt(eventId), musicianId);
-      setMusicians((list) => list.filter((m) => m.musician_id !== musicianId));
+      // refresh list after delete
+      await loadMusicians();
     } catch (err) {
       console.error('Failed to delete musician', err);
     }
