@@ -100,6 +100,7 @@
     },
     "musicianManagement": {
       "title": "Músicos para Evento {{eventId}}",
+      "titleWithName": "Músicos para {{name}}",
       "description": "Gestionar músicos asignados a este evento",
       "assignedMusicians": "Músicos Asignados",
       "tableComingSoon": "La tabla de músicos se implementará aquí",
@@ -136,6 +137,18 @@
         "message": "¿Estás seguro de que quieres eliminar a {{name}} de este evento? Esta acción no se puede deshacer.",
         "cancel": "Cancelar",
         "delete": "Eliminar"
+      },
+      "editDialog": {
+        "title": "Editar Asignación de Músico",
+        "description": "Actualiza el rol y salario de {{name}} en el evento.",
+        "role": "Rol",
+        "rolePlaceholder": "Rol / Instrumento",
+        "salary": "Salario",
+        "salaryPlaceholder": "Salario",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "salaryError": "El salario debe ser un número positivo",
+        "fallbackName": "este músico"
       }
     },
     "makePayment": {

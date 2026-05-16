@@ -87,12 +87,16 @@ export function EventMusicianManagement() {
     setEditOpen(true);
   };
 
-  const handleEditSubmit = (updated: Partial<EventMusicianUpdateData>) => {
-    if (!editing) return;
-    // optimistic update
-    setMusicians((list) =>
-      list.map((m) => (m.id === editing.id ? { ...m, ...updated } as EventMusician : m))
-    );
+  const handleEditSubmit = async (updated: Partial<EventMusicianUpdateData>) => {
+    if (!editing || !eventId) return;
+    try {
+      await eventsApi.updateMusicianAssignment(parseInt(eventId), editing.musician_id, updated as EventMusicianUpdateData);
+      setMusicians((list) =>
+        list.map((m) => (m.id === editing.id ? { ...m, ...updated } as EventMusician : m))
+      );
+    } catch (err) {
+      console.error('Failed to update musician assignment', err);
+    }
     setEditOpen(false);
   };
 
@@ -149,9 +153,11 @@ export function EventMusicianManagement() {
             <div className="flex items-center gap-3">
               <Users className="h-6 w-6 text-green-600" />
               <div>
-                <h1 className="text-xl font-semibold">
-                  {event ? `Musicians for ${event.name}` : t('events.musicianManagement.title', { eventId })}
-                </h1>
+            <h1 className="text-xl font-semibold">
+              {event
+                ? t('events.musicianManagement.titleWithName', { name: event.name })
+                : t('events.musicianManagement.title', { eventId })}
+            </h1>
                 <p className="text-sm text-gray-600">
                   {event ? formatDateHumanReadable(event.start_datetime, i18n.language) : t('events.musicianManagement.description')}
                 </p>

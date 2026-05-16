@@ -100,6 +100,7 @@
     },
     "musicianManagement": {
       "title": "Musicians for Event {{eventId}}",
+      "titleWithName": "Musicians for {{name}}",
       "description": "Manage musicians assigned to this event",
       "assignedMusicians": "Assigned Musicians",
       "tableComingSoon": "Musician table will be implemented here",
@@ -136,6 +137,18 @@
         "message": "Are you sure you want to remove {{name}} from this event? This action cannot be undone.",
         "cancel": "Cancel",
         "delete": "Delete"
+      },
+      "editDialog": {
+        "title": "Edit Musician Assignment",
+        "description": "Update role and salary for {{name}} in the event.",
+        "role": "Role",
+        "rolePlaceholder": "Role / Instrument",
+        "salary": "Salary",
+        "salaryPlaceholder": "Salary",
+        "save": "Save",
+        "cancel": "Cancel",
+        "salaryError": "Salary must be a positive number",
+        "fallbackName": "this musician"
       }
     },
     "makePayment": {
