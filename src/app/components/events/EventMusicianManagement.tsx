@@ -6,9 +6,10 @@ import type { EventMusician, Event } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
 import { EventMusicianTable } from './EventMusicianTable';
 import { Button } from '../ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Users } from 'lucide-react';
 import { EditMusicianAssignmentDialog } from './EditMusicianAssignmentDialog';
 import { AssignMusicianDialog } from './AssignMusicianDialog';
+import { DeleteMusicianConfirmationDialog } from './DeleteMusicianConfirmationDialog';
 import type { EventMusicianUpdateData } from '../../lib/types';
 import { formatDateHumanReadable } from '../../lib/timezone';
 import { useTranslation } from 'react-i18next';
@@ -30,6 +31,10 @@ export function EventMusicianManagement() {
 
   // Assign dialog state
   const [assignOpen, setAssignOpen] = useState(false);
+
+  // Delete dialog state
+  const [deleting, setDeleting] = useState<EventMusician | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   // Check if user has permission to view this page
   const canViewMusicians = hasPermission('read:event_musician');
@@ -95,19 +100,31 @@ export function EventMusicianManagement() {
     setAssignOpen(true);
   };
 
-  const handleAssignSubmit = async (data: { musician_id: number; role: string; salary: number }) => {
-    if (!eventId) return;
+  const handleAssignSubmit = async (data: { event_id: number; musician_id: number; role: string; salary: number }) => {
     try {
-      await eventsApi.assignMusician(parseInt(eventId), data);
-      // Refresh data
+      await eventsApi.assignMusician(data.event_id, data);
       loadMusicians();
     } catch (err) {
       console.error('Failed to assign musician', err);
+      throw err;
     }
   };
 
-  const handleDelete = (_assignmentId: number) => {
-    // Placeholder for future delete wiring
+  const handleDelete = (musicianId: number) => {
+    const m = musicians.find((mm) => mm.musician_id === musicianId) || null;
+    setDeleting(m);
+    setDeleteOpen(true);
+  };
+
+  const handleDeleteConfirm = async (musicianId: number) => {
+    if (!eventId) return;
+    try {
+      await eventsApi.removeMusician(parseInt(eventId), musicianId);
+      setMusicians((list) => list.filter((m) => m.musician_id !== musicianId));
+    } catch (err) {
+      console.error('Failed to delete musician', err);
+    }
+    setDeleteOpen(false);
   };
 
   if (!canViewMusicians) {
@@ -129,13 +146,16 @@ export function EventMusicianManagement() {
               <ArrowLeft className="h-4 w-4" />
               <span>{t('common.back')}</span>
             </Button>
-            <div>
-              <h1 className="text-xl font-semibold">
-                {event ? `Musicians for ${event.name}` : t('events.musicianManagement.title', { eventId })}
-              </h1>
-              <p className="text-sm text-gray-600">
-                {event ? `(${formatDateHumanReadable(event.start_datetime, i18n.language)}) - Manage musicians assigned to this event` : t('events.musicianManagement.description')}
-              </p>
+            <div className="flex items-center gap-3">
+              <Users className="h-6 w-6 text-green-600" />
+              <div>
+                <h1 className="text-xl font-semibold">
+                  {event ? `Musicians for ${event.name}` : t('events.musicianManagement.title', { eventId })}
+                </h1>
+                <p className="text-sm text-gray-600">
+                  {event ? formatDateHumanReadable(event.start_datetime, i18n.language) : t('events.musicianManagement.description')}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -144,9 +164,13 @@ export function EventMusicianManagement() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
         {isLoading ? (
-          <div className="flex items-center justify-center py-8"><span>{t('common.loading')}</span></div>
+          <div className="flex items-center justify-center py-8">
+            <span>{t('common.loading')}</span>
+          </div>
         ) : error ? (
-          <div className="text-red-600 text-center py-4"><span>{t('common.error')}:</span> {error}</div>
+          <div className="text-red-600 text-center py-4">
+            <span>{t('common.error')}:</span> {error}
+          </div>
         ) : (
           <div className="space-y-6">
             <EventMusicianTable musicians={musicians} onEdit={handleEdit} onDelete={handleDelete} onAssign={handleAssign} />
@@ -166,8 +190,18 @@ export function EventMusicianManagement() {
       <AssignMusicianDialog
         open={assignOpen}
         onOpenChange={setAssignOpen}
+        eventId={parseInt(eventId!)}
         onSubmit={handleAssignSubmit}
       />
+
+      {deleting && (
+        <DeleteMusicianConfirmationDialog
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          assignment={deleting}
+          onConfirm={handleDeleteConfirm}
+        />
+      )}
     </div>
   );
 }

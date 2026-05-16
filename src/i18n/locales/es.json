@@ -102,7 +102,41 @@
       "title": "Músicos para Evento {{eventId}}",
       "description": "Gestionar músicos asignados a este evento",
       "assignedMusicians": "Músicos Asignados",
-      "tableComingSoon": "La tabla de músicos se implementará aquí"
+      "tableComingSoon": "La tabla de músicos se implementará aquí",
+      "assignMusician": "Asignar Músico",
+      "paymentStatus": {
+        "COMPLETED": "COMPLETADO",
+        "PENDING": "PENDIENTE",
+        "OVERDUE": "VENCIDO"
+      },
+      "table": {
+        "musician": "Músico",
+        "role": "Rol",
+        "salary": "Salario",
+        "paymentStatus": "Estado de Pago",
+        "actions": "Acciones"
+      },
+      "assignDialog": {
+        "title": "Asignar Músico al Evento",
+        "description": "Selecciona un músico y proporciona rol y salario.",
+        "musician": "Músico",
+        "musicianPlaceholder": "Escribe para filtrar músicos...",
+        "role": "Rol",
+        "rolePlaceholder": "Rol / Instrumento",
+        "salary": "Salario",
+        "assign": "Asignar",
+        "assigning": "Asignando...",
+        "cancel": "Cancelar",
+        "validationError": "Por favor completa todos los campos con datos válidos",
+        "alreadyAssigned": "El músico ya está asignado a este evento",
+        "error": "Error al asignar músico"
+      },
+      "deleteDialog": {
+        "title": "Eliminar Asignación de Músico",
+        "message": "¿Estás seguro de que quieres eliminar a {{name}} de este evento? Esta acción no se puede deshacer.",
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
     },
     "makePayment": {
       "title": "Realizar Pago",

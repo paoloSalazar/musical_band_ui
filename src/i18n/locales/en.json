@@ -102,7 +102,41 @@
       "title": "Musicians for Event {{eventId}}",
       "description": "Manage musicians assigned to this event",
       "assignedMusicians": "Assigned Musicians",
-      "tableComingSoon": "Musician table will be implemented here"
+      "tableComingSoon": "Musician table will be implemented here",
+      "assignMusician": "Assign Musician",
+      "paymentStatus": {
+        "COMPLETED": "COMPLETED",
+        "PENDING": "PENDING",
+        "OVERDUE": "OVERDUE"
+      },
+      "table": {
+        "musician": "Musician",
+        "role": "Role",
+        "salary": "Salary",
+        "paymentStatus": "Payment Status",
+        "actions": "Actions"
+      },
+      "assignDialog": {
+        "title": "Assign Musician to Event",
+        "description": "Select a musician and provide role and salary.",
+        "musician": "Musician",
+        "musicianPlaceholder": "Type to filter musicians...",
+        "role": "Role",
+        "rolePlaceholder": "Role / Instrument",
+        "salary": "Salary",
+        "assign": "Assign",
+        "assigning": "Assigning...",
+        "cancel": "Cancel",
+        "validationError": "Please fill all fields with valid data",
+        "alreadyAssigned": "Musician is already assigned to this event",
+        "error": "Failed to assign musician"
+      },
+      "deleteDialog": {
+        "title": "Delete Musician Assignment",
+        "message": "Are you sure you want to remove {{name}} from this event? This action cannot be undone.",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      }
     },
     "makePayment": {
       "title": "Make Payment",
