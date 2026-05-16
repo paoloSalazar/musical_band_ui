@@ -202,8 +202,11 @@ export function EventMusicianManagement() {
           </div>
         )}
         {isLoading ? (
-          <div className="flex items-center justify-center py-8">
-            <span>{t('common.loading')}</span>
+          <div className="space-y-3 py-8">
+            <span className="sr-only">{t('common.loading')}</span>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-12 animate-pulse rounded bg-gray-200" />
+            ))}
           </div>
         ) : error ? (
           <div className="text-red-600 text-center py-4">
