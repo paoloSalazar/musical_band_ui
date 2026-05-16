@@ -54,6 +54,13 @@ export function EventMusicianManagement() {
     }
   }, [eventId, canViewMusicians, navigate]);
 
+  // Auto-clear notification
+  useEffect(() => {
+    if (!notify) return;
+    const timer = setTimeout(() => setNotify(null), 2500);
+    return () => clearTimeout(timer);
+  }, [notify]);
+
   const loadEvent = async () => {
     if (!eventId) return;
 
@@ -97,8 +104,13 @@ export function EventMusicianManagement() {
         list.map((m) => (m.id === editing.id ? { ...m, ...updated } as EventMusician : m))
       );
       await loadMusicians();
-    } catch (err) {
-      console.error('Failed to update musician assignment', err);
+      setNotify('Musician updated');
+    } catch (err: any) {
+      if (err?.status === 403) {
+        setNotify('Unauthorized: admin role required');
+      } else {
+        console.error('Failed to update musician assignment', err);
+      }
     } finally {
       setEditOpen(false);
     }
@@ -110,9 +122,14 @@ export function EventMusicianManagement() {
   const handleAssignSubmit = async (data: { event_id: number; musician_id: number; role: string; salary: number }) => {
     try {
       await eventsApi.assignMusician(data.event_id, data);
-      loadMusicians();
-    } catch (err) {
-      console.error('Failed to assign musician', err);
+      await loadMusicians();
+      setNotify('Musician assigned');
+    } catch (err: any) {
+      if (err?.status === 403) {
+        setNotify('Unauthorized: admin role required');
+      } else {
+        console.error('Failed to assign musician', err);
+      }
       throw err;
     }
   };
@@ -129,8 +146,13 @@ export function EventMusicianManagement() {
       await eventsApi.removeMusician(parseInt(eventId), musicianId);
       // refresh list after delete
       await loadMusicians();
-    } catch (err) {
-      console.error('Failed to delete musician', err);
+      setNotify('Musician removed');
+    } catch (err: any) {
+      if (err?.status === 403) {
+        setNotify('Unauthorized: admin role required');
+      } else {
+        console.error('Failed to delete musician', err);
+      }
     }
     setDeleteOpen(false);
   };
@@ -172,7 +194,13 @@ export function EventMusicianManagement() {
       </header>
 
       {/* Main Content */}
+      <ErrorBoundary>
       <div className="container mx-auto px-4 py-6">
+        {notify && (
+          <div className="mb-4 rounded bg-green-50 px-4 py-2 text-sm text-green-700">
+            {notify}
+          </div>
+        )}
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
             <span>{t('common.loading')}</span>
@@ -187,6 +215,7 @@ export function EventMusicianManagement() {
           </div>
         )}
       </div>
+      </ErrorBoundary>
 
       {editing && (
         <EditMusicianAssignmentDialog

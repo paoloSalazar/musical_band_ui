@@ -62,12 +62,12 @@ export const EventMusicianTable: React.FC<Props> = ({ musicians, onEdit, onDelet
                           </span>
                 </TableCell>
                 <TableCell className="text-right space-x-2">
-                  {onEdit && (
+                  {isAdmin && onEdit && (
                     <Button size="sm" variant="ghost" aria-label={`edit-${m.id}`} onClick={() => onEdit(m.id)}>
                       <Pencil className="h-4 w-4" />
                     </Button>
                   )}
-                  {onDelete && (
+                  {isAdmin && onDelete && (
                     <Button size="sm" variant="ghost" aria-label={`delete-${m.musician_id}`} onClick={() => onDelete(m.musician_id)}>
                       <Trash2 className="h-4 w-4 text-red-600" />
                     </Button>
