@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from '../ui/dialog';
 import type { ApiError } from '../../lib/api/client';
+import { translateApiError } from '../../../i18n/utils';
 import { Loader2, Calendar } from 'lucide-react';
 
 interface AddAvailabilityDialogProps {
@@ -96,11 +97,9 @@ export function AddAvailabilityDialog({
       onSuccess();
     } catch (err) {
       const error = err as ApiError;
-      if (error.detail?.includes('duplicate') || error.message?.includes('duplicate')) {
-        setError(t('musicianAvailability.messages.duplicateError'));
-      } else {
-        setError(error.detail || error.message || t('musicianAvailability.messages.error'));
-      }
+      const rawMessage = error.detail || error.message || t('musicianAvailability.messages.error');
+      const translated = translateApiError(rawMessage);
+      setError(translated);
     } finally {
       setIsLoading(false);
     }

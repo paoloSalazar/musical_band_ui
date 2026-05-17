@@ -130,6 +130,7 @@
         "cancel": "Cancelar",
         "validationError": "Por favor completa todos los campos con datos válidos",
         "alreadyAssigned": "El músico ya está asignado a este evento",
+        "notAvailable": "El músico no está disponible para las fechas de este evento",
         "error": "Error al asignar músico"
       },
       "deleteDialog": {
@@ -607,7 +608,8 @@
       "deleted": "Disponibilidad eliminada correctamente",
       "error": "Error al actualizar disponibilidad",
       "pastDateError": "No se pueden establecer fechas pasadas como no disponibles",
-      "duplicateError": "Esta fecha ya está marcada como no disponible"
+      "duplicateError": "Esta fecha ya está marcada como no disponible",
+      "assignedToEvent": "No se puede marcar la fecha como no disponible – asignado al evento '{{eventName}}' el {{date}}"
     },
     "bulk": {
       "description": "Selecciona múltiples fechas para marcar como no disponibles",

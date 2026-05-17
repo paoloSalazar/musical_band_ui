@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from '../ui/dialog';
+import { translateApiError, translateUserRole, capitalizeFirstLetter } from '../../../i18n/utils';
+
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -60,11 +62,8 @@ export function AssignMusicianDialog({ open, onOpenChange, eventId, onSubmit }: 
       resetForm();
     } catch (err: any) {
       const msg = err?.message || t('events.musicianManagement.assignDialog.error');
-      if (msg.includes('already assigned')) {
-        setError(t('events.musicianManagement.assignDialog.alreadyAssigned'));
-      } else {
-        setError(msg);
-      }
+      const translated = translateApiError(msg);
+      setError(translated !== msg ? translated : msg);
     } finally {
       setIsLoading(false);
     }
@@ -122,7 +121,7 @@ export function AssignMusicianDialog({ open, onOpenChange, eventId, onSubmit }: 
                       setMusicianSearch(`${m.name} ${m.lastname}`);
                     }}
                   >
-                    {m.name} {m.lastname}
+                    {m.name} {m.lastname} <span className="text-sm text-muted-foreground">{translateUserRole(m.role)}</span>
                   </div>
                 ))}
             </div>

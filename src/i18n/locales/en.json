@@ -122,6 +122,7 @@
         "description": "Select a musician and provide role and salary.",
         "musician": "Musician",
         "musicianPlaceholder": "Type to filter musicians...",
+        "notAvailable": "The musician is not available for the dates of this event",
         "role": "Role",
         "rolePlaceholder": "Role / Instrument",
         "salary": "Salary",
@@ -607,7 +608,8 @@
       "deleted": "Availability removed successfully",
       "error": "Failed to update availability",
       "pastDateError": "Cannot set past dates as unavailable",
-      "duplicateError": "This date is already marked as unavailable"
+      "duplicateError": "This date is already marked as unavailable",
+      "assignedToEvent": "Cannot mark date unavailable – assigned to event '{{eventName}}' on {{date}}"
     },
     "bulk": {
       "description": "Select multiple dates to mark as unavailable",

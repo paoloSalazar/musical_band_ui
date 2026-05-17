@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { musicianAvailabilityApi } from '../../lib/api';
 import { formatDateHumanReadable } from '../../lib/timezone';
@@ -39,7 +40,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
-import { Calendar, Plus, Edit, Trash2 } from 'lucide-react';
+import { Calendar, Plus, Edit, Trash2, Home } from 'lucide-react';
+import { LanguageSelector } from '../i18n/LanguageSelector';
 
 interface MusicianAvailabilityPageProps {
   musicianId: number;
@@ -161,9 +163,21 @@ export function MusicianAvailabilityPage({ musicianId }: MusicianAvailabilityPag
 
   return (
     <div className="max-w-6xl mx-auto py-8 px-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">{t('musicianAvailability.title')}</h1>
-        <p className="text-gray-600 mt-2">{t('musicianAvailability.subtitle')}</p>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">{t('musicianAvailability.title')}</h1>
+          <p className="text-gray-600 mt-2">{t('musicianAvailability.subtitle')}</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <LanguageSelector />
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <Home className="h-4 w-4" />
+            {t('navigation.home')}
+          </Link>
+        </div>
       </div>
 
       {error && (

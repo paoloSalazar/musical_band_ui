@@ -14,6 +14,7 @@ import {
   DialogTitle,
 } from '../ui/dialog';
 import type { ApiError } from '../../lib/api/client';
+import { translateApiError } from '../../../i18n/utils';
 import { Loader2, Calendar } from 'lucide-react';
 
 interface BulkAvailabilityDialogProps {
@@ -113,7 +114,9 @@ export function BulkAvailabilityDialog({
       onSuccess();
     } catch (err) {
       const error = err as ApiError;
-      setError(error.detail || error.message || t('musicianAvailability.messages.error'));
+      const rawMessage = error.detail || error.message || t('musicianAvailability.messages.error');
+      const translated = translateApiError(rawMessage);
+      setError(translated);
     } finally {
       setIsLoading(false);
     }

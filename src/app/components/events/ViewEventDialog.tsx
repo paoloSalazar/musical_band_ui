@@ -311,7 +311,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
 
         <DialogFooter>
           {canManageMusicians && (
-            <Button type="button" variant="outline" onClick={handleManageMusicians}>
+            <Button type="button" variant="outline" onClick={handleManageMusicians} disabled={event?.status !== 'CONFIRMED'}>
               <Users className="h-4 w-4 mr-2" />
               {t('events.dialog.view.manageMusicians')}
             </Button>

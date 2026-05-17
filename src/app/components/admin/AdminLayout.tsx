@@ -25,7 +25,7 @@ import {
 } from '../ui/sheet';
 
 import { useTranslation } from "react-i18next";
-// import { LanguageSelector } from "@/app/components/i18n/LanguageSelector";
+import { LanguageSelector } from "@/app/components/i18n/LanguageSelector";
 
 /**
  * Admin Layout Component
@@ -146,6 +146,7 @@ export function AdminLayout() {
               <h1 className="text-xl font-semibold">{t('admin.title')}</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <LanguageSelector />
               <span className="text-sm text-gray-600 hidden sm:block">
                 {t('admin.logged_in_as', { name: user?.name })}
               </span>
