@@ -150,6 +150,30 @@
         "cancel": "Cancel",
         "salaryError": "Salary must be a positive number",
         "fallbackName": "this musician"
+      },
+      "musicianPayments": {
+        "addTitle": "Record Musician Payment",
+        "addDescription": "Record a payment for {{name}}",
+        "viewTitle": "Payments for {{name}}",
+        "form": {
+          "amount": "Amount",
+          "paymentType": "Payment Type",
+          "notes": "Notes",
+          "notesPlaceholder": "Optional notes",
+          "save": "Save Payment"
+        },
+        "validation": {
+          "invalidAmount": "Please enter a valid amount",
+          "advanceLimit": "ADVANCE cannot exceed 50% of salary"
+        },
+        "messages": {
+          "error": "Failed to process payment"
+        },
+        "summary": {
+          "totalPaid": "Total Paid"
+        },
+        "history": "Payment History",
+        "noPayments": "No payments recorded yet"
       }
     },
     "makePayment": {

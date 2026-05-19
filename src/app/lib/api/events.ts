@@ -195,4 +195,36 @@ export const eventsApi = {
   getAvailableMusicians: async (): Promise<ApiResponse<User[]>> => {
     return apiClient.get<User[]>(`/users/?roles=musician&roles=auxiliar_musician`);
   },
+
+  /**
+   * Add a payment for a musician in an event
+   * POST /api/events/{event_id}/musicians/{musician_id}/payments
+   */
+  addMusicianPayment: async (
+    eventId: number,
+    musicianId: number,
+    data: { amount: number; payment_type: string; notes?: string }
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.post<any>(`/events/${eventId}/musicians/${musicianId}/payments`, data);
+  },
+
+  /**
+   * Get all payments for a musician in an event
+   */
+  getMusicianPayments: async (
+    eventId: number,
+    musicianId: number
+  ): Promise<ApiResponse<any[]>> => {
+    return apiClient.get<any[]>(`/events/${eventId}/musicians/${musicianId}/payments`);
+  },
+
+  /**
+   * Get payment summary for a musician in an event
+   */
+  getMusicianPaymentSummary: async (
+    eventId: number,
+    musicianId: number
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.get<any>(`/events/${eventId}/musicians/${musicianId}/payments/summary`);
+  },
 };
