@@ -88,10 +88,10 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
     }
   };
 
-  // Sort events by start_datetime ascending
+  // Sort events by start_datetime descending (most recent first)
   const sortedEvents = useMemo(() => {
     return [...events].sort((a, b) => {
-      return new Date(a.start_datetime).getTime() - new Date(b.start_datetime).getTime();
+      return new Date(b.start_datetime).getTime() - new Date(a.start_datetime).getTime();
     });
   }, [events]);
 
@@ -191,7 +191,7 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                       <TableHead>{t('events.list.table.place')}</TableHead>
                       <TableHead>{t('events.list.table.startDate')}</TableHead>
                       <TableHead>{t('events.list.table.endDate')}</TableHead>
-                      <TableHead>{t('events.list.table.price')}</TableHead>
+                      {isAdmin && <TableHead>{t('events.list.table.price')}</TableHead>}
                       <TableHead>{t('events.list.table.status')}</TableHead>
                       <TableHead className="text-right">{t('events.list.table.actions')}</TableHead>
                     </TableRow>
@@ -209,9 +209,11 @@ export function EventsListPage({ onEditEvent, onEventUpdated }: EventsListPagePr
                         <TableCell className="text-gray-600">
                           {event.is_all_day ? formatDateHumanReadable(event.end_datetime, i18n.language) : formatDateTimeHumanReadableLocalized(event.end_datetime, i18n.language)}
                         </TableCell>
-                        <TableCell className="text-gray-600">
-                          {event.price !== undefined && event.price !== null ? `${event.price.toFixed(2)}` : '-'}
-                        </TableCell>
+                        {isAdmin && (
+                          <TableCell className="text-gray-600">
+                            {event.price !== undefined && event.price !== null ? `${event.price.toFixed(2)}` : '-'}
+                          </TableCell>
+                        )}
                         <TableCell>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             event.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
