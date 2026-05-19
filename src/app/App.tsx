@@ -4,6 +4,7 @@ import { LoginForm } from './components/login/LoginForm';
 import { HomePage } from './components/home/HomePage';
 import { ProfilePage } from './components/profile/ProfilePage';
 import { EventsPage } from './components/events/EventsPage';
+import { EventMusicianManagement } from './components/events/EventMusicianManagement';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { RolesListPage } from './components/admin/roles/RolesListPage';
 import { PermissionsListPage } from './components/admin/permissions/PermissionsListPage';
@@ -33,6 +34,16 @@ function AppContent() {
         element={
           <ProtectedRoute requiredPermission="read:events">
             <EventsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Event Musician Management - Available to users with read:event_musician permission */}
+      <Route
+        path="/events/:eventId/musicians"
+        element={
+          <ProtectedRoute requiredPermission="read:event_musician">
+            <EventMusicianManagement />
           </ProtectedRoute>
         }
       />

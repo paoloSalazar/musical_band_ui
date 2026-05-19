@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
-import { Calendar, List } from 'lucide-react';
+import { Calendar, List, Home } from 'lucide-react';
+import { LanguageSelector } from '../i18n/LanguageSelector';
 import { useUser } from '../../contexts/UserContext';
 import { EventsListPage } from './EventsListPage';
 import { CalendarView } from './CalendarView';
@@ -29,6 +31,14 @@ export function EventsPage() {
               <h1 className="text-xl font-semibold">{t('events.page.title')}</h1>
             </div>
             <div className="flex items-center space-x-4">
+              <LanguageSelector />
+              <Link
+                to="/"
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <Home className="h-4 w-4" />
+                {t('navigation.home')}
+              </Link>
               <span className="text-sm text-gray-600 hidden sm:block">
                 {t('events.page.loggedInAs', { name: user?.name })}
               </span>

@@ -310,6 +310,39 @@ export function translateApiError(errorMessage: string, context?: string): strin
       regex: /^This permission cannot be deleted because it is assigned to (\d+) roles \('([^']+)'\)\. Please remove this permission from the roles first\.$/i,
       key: 'permissions.errors.cannotDeletePermissionWithRoles',
       extractor: (match: RegExpMatchArray) => ({ count: parseInt(match[1], 10), role: match[2] })
+    },
+    {
+      regex: /^Musician is already assigned to this event$/i,
+      key: 'events.musicianManagement.assignDialog.alreadyAssigned',
+      extractor: () => ({})
+    },
+    {
+      regex: /^The musician is not available for the dates of this event$/i,
+      key: 'events.musicianManagement.assignDialog.notAvailable',
+      extractor: () => ({})
+    },
+    {
+      regex: /^Cannot mark date unavailable – assigned to event '(.+)' on (this date|\d{4}-\d{2}-\d{2})$/i,
+      key: 'musicianAvailability.messages.assignedToEvent',
+      extractor: (match: RegExpMatchArray) => {
+        const eventName = match[1];
+        const datePart = match[2];
+        if (datePart === 'this date') {
+          return { eventName, date: 'this date' };
+        }
+        // Format date to human readable format
+        try {
+          const date = new Date(datePart + 'T00:00:00');
+          const formattedDate = date.toLocaleDateString(i18n.language || 'en', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+          return { eventName, date: formattedDate };
+        } catch {
+          return { eventName, date: datePart };
+        }
+      }
     }
   ];
 

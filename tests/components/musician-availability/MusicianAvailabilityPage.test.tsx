@@ -63,6 +63,10 @@ const mockT = vi.fn((key: string, options?: any) => {
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: mockT,
+    i18n: {
+      language: 'en',
+      changeLanguage: vi.fn(),
+    },
   }),
 }));
 

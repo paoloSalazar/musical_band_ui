@@ -16,7 +16,7 @@ vi.mock('@/app/lib/api/client', () => ({
 
 import { eventsApi, type PaginatedEventsResponse } from '@/app/lib/api/events';
 import { apiClient } from '@/app/lib/api/client';
-import type { Event, EventFormData, Payment, PaymentSummary, PaymentFormData, PaymentType } from '@/app/lib/types';
+import type { Event, EventFormData, Payment, PaymentSummary, PaymentFormData, PaymentType, EventMusician, EventMusicianFormData, EventMusicianUpdateData, MusicianPaymentStatus } from '@/app/lib/types';
 
 describe('eventsApi', () => {
   let mockGet: ReturnType<typeof vi.fn>;
@@ -371,6 +371,167 @@ describe('eventsApi', () => {
 
       expect(mockPost).toHaveBeenCalledWith('/events/1/payments', paymentData);
       expect(result.data.id).toBe(1);
+    });
+  });
+
+  describe('getEventMusicians', () => {
+    it('should fetch musicians assigned to an event', async () => {
+      const mockMusicians: EventMusician[] = [
+        {
+          id: 1,
+          event_id: 3,
+          musician_id: 5,
+          role: 'Pianist',
+          salary: 400.00,
+          payment_status: 'PENDING' as MusicianPaymentStatus,
+          musician_name: 'John',
+          musician_lastname: 'Doe',
+          created_at: '2026-04-10T09:00:00',
+          updated_at: '2026-04-10T09:00:00'
+        },
+        {
+          id: 2,
+          event_id: 3,
+          musician_id: 6,
+          role: 'Guitarist',
+          salary: 500.00,
+          payment_status: 'PARTIAL' as MusicianPaymentStatus,
+          musician_name: 'Jane',
+          musician_lastname: 'Smith',
+          created_at: '2026-04-10T09:15:00',
+          updated_at: '2026-04-10T09:15:00'
+        }
+      ];
+
+      mockGet.mockResolvedValue({
+        data: mockMusicians,
+        success: true,
+      });
+
+      const result = await eventsApi.getEventMusicians(3);
+
+      expect(mockGet).toHaveBeenCalledWith('/events/3/musicians');
+      expect(result.data).toHaveLength(2);
+      expect(result.data[0].musician_name).toBe('John');
+      expect(result.data[0].role).toBe('Pianist');
+    });
+
+    it('should handle API errors gracefully', async () => {
+      const error = new Error('Network error');
+      mockGet.mockRejectedValue(error);
+
+      await expect(eventsApi.getEventMusicians(3)).rejects.toThrow('Network error');
+    });
+  });
+
+  describe('assignMusician', () => {
+    it('should assign a musician to an event', async () => {
+      const assignmentData: EventMusicianFormData = {
+        musician_id: 5,
+        role: 'Pianist',
+        salary: 400.00
+      };
+
+      const createdAssignment: EventMusician = {
+        id: 3,
+        event_id: 3,
+        musician_id: 5,
+        role: 'Pianist',
+        salary: 400.00,
+        payment_status: 'PENDING' as MusicianPaymentStatus,
+        musician_name: 'John',
+        musician_lastname: 'Doe',
+        created_at: '2026-04-15T12:00:00',
+        updated_at: '2026-04-15T12:00:00'
+      };
+
+      mockPost.mockResolvedValue({
+        data: createdAssignment,
+        success: true,
+      });
+
+      const result = await eventsApi.assignMusician(3, assignmentData);
+
+      expect(mockPost).toHaveBeenCalledWith('/events/3/musicians', assignmentData);
+      expect(result.data.id).toBe(3);
+      expect(result.data.role).toBe('Pianist');
+    });
+  });
+
+  describe('updateMusicianAssignment', () => {
+    it('should update a musician assignment', async () => {
+      const updateData: EventMusicianUpdateData = {
+        role: 'Solo Guitarist',
+        salary: 600.00
+      };
+
+      const updatedAssignment: EventMusician = {
+        id: 1,
+        event_id: 6,
+        musician_id: 5,
+        role: 'Solo Guitarist',
+        salary: 600.00,
+        payment_status: 'PARTIAL' as MusicianPaymentStatus,
+        musician_name: 'John',
+        musician_lastname: 'Doe',
+        created_at: '2026-04-10T09:00:00',
+        updated_at: '2026-04-15T12:30:00'
+      };
+
+      mockPatch.mockResolvedValue({
+        data: updatedAssignment,
+        success: true,
+      });
+
+      const result = await eventsApi.updateMusicianAssignment(6, 5, updateData);
+
+      expect(mockPatch).toHaveBeenCalledWith('/events/6/musicians/5', updateData);
+      expect(result.data.role).toBe('Solo Guitarist');
+      expect(result.data.salary).toBe(600.00);
+    });
+
+    it('should update only specified fields', async () => {
+      const updateData: EventMusicianUpdateData = {
+        salary: 550.00
+      };
+
+      const updatedAssignment: EventMusician = {
+        id: 1,
+        event_id: 6,
+        musician_id: 5,
+        role: 'Pianist', // unchanged
+        salary: 550.00, // updated
+        payment_status: 'PARTIAL' as MusicianPaymentStatus,
+        musician_name: 'John',
+        musician_lastname: 'Doe',
+        created_at: '2026-04-10T09:00:00',
+        updated_at: '2026-04-15T12:30:00'
+      };
+
+      mockPatch.mockResolvedValue({
+        data: updatedAssignment,
+        success: true,
+      });
+
+      const result = await eventsApi.updateMusicianAssignment(6, 5, updateData);
+
+      expect(mockPatch).toHaveBeenCalledWith('/events/6/musicians/5', updateData);
+      expect(result.data.role).toBe('Pianist'); // unchanged
+      expect(result.data.salary).toBe(550.00); // updated
+    });
+  });
+
+  describe('removeMusician', () => {
+    it('should remove a musician from an event', async () => {
+      mockDelete.mockResolvedValue({
+        data: true,
+        success: true,
+      });
+
+      const result = await eventsApi.removeMusician(6, 5);
+
+      expect(mockDelete).toHaveBeenCalledWith('/events/6/musicians/5');
+      expect(result.data).toBe(true);
     });
   });
 });

@@ -220,3 +220,46 @@ export interface PaymentFormData {
   payment_type: PaymentType;
   notes?: string;
 }
+
+// ============ Event Musician Types ============
+
+/**
+ * Payment status enum for musician assignments
+ */
+export type MusicianPaymentStatus = 'PENDING' | 'PARTIAL' | 'COMPLETED';
+
+/**
+ * Musician assignment to an event
+ * From GET /api/events/{event_id}/musicians endpoint
+ */
+export interface EventMusician {
+  id: number;
+  event_id: number;
+  musician_id: number;
+  role: string;
+  salary: number;
+  payment_status: MusicianPaymentStatus;
+  musician_name: string;
+  musician_lastname: string;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Form data for assigning a musician to an event
+ * For POST /api/events/{event_id}/musicians endpoint
+ */
+export interface EventMusicianFormData {
+  musician_id: number;
+  role: string;
+  salary: number;
+}
+
+/**
+ * Form data for updating a musician assignment
+ * For PATCH /api/events/{event_id}/musicians/{musician_id} endpoint
+ */
+export interface EventMusicianUpdateData {
+  role?: string;
+  salary?: number;
+}

@@ -98,6 +98,60 @@
         "close": "Cerrar"
       }
     },
+    "musicianManagement": {
+      "title": "Músicos para Evento {{eventId}}",
+      "titleWithName": "Músicos para {{name}}",
+      "description": "Gestionar músicos asignados a este evento",
+      "assignedMusicians": "Músicos Asignados",
+      "tableComingSoon": "La tabla de músicos se implementará aquí",
+      "assignMusician": "Asignar Músico",
+      "paymentStatus": {
+        "COMPLETED": "COMPLETADO",
+        "PENDING": "PENDIENTE",
+        "OVERDUE": "VENCIDO"
+      },
+      "table": {
+        "musician": "Músico",
+        "role": "Rol",
+        "salary": "Salario",
+        "paymentStatus": "Estado de Pago",
+        "actions": "Acciones"
+      },
+      "assignDialog": {
+        "title": "Asignar Músico al Evento",
+        "description": "Selecciona un músico y proporciona rol y salario.",
+        "musician": "Músico",
+        "musicianPlaceholder": "Escribe para filtrar músicos...",
+        "role": "Rol",
+        "rolePlaceholder": "Rol / Instrumento",
+        "salary": "Salario",
+        "assign": "Asignar",
+        "assigning": "Asignando...",
+        "cancel": "Cancelar",
+        "validationError": "Por favor completa todos los campos con datos válidos",
+        "alreadyAssigned": "El músico ya está asignado a este evento",
+        "notAvailable": "El músico no está disponible para las fechas de este evento",
+        "error": "Error al asignar músico"
+      },
+      "deleteDialog": {
+        "title": "Eliminar Asignación de Músico",
+        "message": "¿Estás seguro de que quieres eliminar a {{name}} de este evento? Esta acción no se puede deshacer.",
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      },
+      "editDialog": {
+        "title": "Editar Asignación de Músico",
+        "description": "Actualiza el rol y salario de {{name}} en el evento.",
+        "role": "Rol",
+        "rolePlaceholder": "Rol / Instrumento",
+        "salary": "Salario",
+        "salaryPlaceholder": "Salario",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "salaryError": "El salario debe ser un número positivo",
+        "fallbackName": "este músico"
+      }
+    },
     "makePayment": {
       "title": "Realizar Pago",
       "description": "{{eventName}} - Registrar un pago para este evento",
@@ -155,6 +209,7 @@
         "noPrice": "Sin precio establecido",
         "createdBy": "Creado por",
         "editEvent": "Editar Evento",
+        "manageMusicians": "Gestionar Músicos",
         "paymentDetails": "Detalles de Pago",
         "makePayment": "Realizar Pago",
         "validation": {
@@ -553,7 +608,8 @@
       "deleted": "Disponibilidad eliminada correctamente",
       "error": "Error al actualizar disponibilidad",
       "pastDateError": "No se pueden establecer fechas pasadas como no disponibles",
-      "duplicateError": "Esta fecha ya está marcada como no disponible"
+      "duplicateError": "Esta fecha ya está marcada como no disponible",
+      "assignedToEvent": "No se puede marcar la fecha como no disponible – asignado al evento '{{eventName}}' el {{date}}"
     },
     "bulk": {
       "description": "Selecciona múltiples fechas para marcar como no disponibles",
