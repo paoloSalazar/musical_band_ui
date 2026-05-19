@@ -298,6 +298,7 @@ describe('EventsListPage', () => {
   });
 
   it('should display event details correctly', async () => {
+    mockUser.hasRole.mockReturnValue(true); // Admin to show price column
     render(
       <UserProvider>
         <EventsListPage />

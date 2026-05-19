@@ -3,6 +3,7 @@
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { EventsPage } from '@/app/components/events/EventsPage';
 import { UserProvider } from '@/app/contexts/UserContext';
 
@@ -26,6 +27,7 @@ vi.mock('react-i18next', () => ({
         'events.page.description': 'Manage your band events and schedule',
         'events.page.views.list': 'List View',
         'events.page.views.calendar': 'Calendar View',
+        'navigation.home': 'Home',
       };
       const translation = translations[key] || key;
       if (options && typeof translation === 'string') {
@@ -33,6 +35,10 @@ vi.mock('react-i18next', () => ({
       }
       return translation;
     }),
+    i18n: {
+      language: 'en',
+      changeLanguage: vi.fn(),
+    },
   }),
 }));
 
@@ -76,6 +82,8 @@ vi.mock('@/app/components/events/CalendarView', () => ({
 vi.mock('lucide-react', () => ({
   Calendar: () => <div data-testid="calendar-icon" />,
   List: () => <div data-testid="list-icon" />,
+  Home: () => <div data-testid="home-icon" />,
+  Languages: () => <div data-testid="languages-icon" />,
 }));
 
 describe('EventsPage', () => {
@@ -85,9 +93,11 @@ describe('EventsPage', () => {
 
   it('should render the events page with user name and default list view', () => {
     render(
-      <UserProvider>
-        <EventsPage />
-      </UserProvider>
+      <MemoryRouter>
+        <UserProvider>
+          <EventsPage />
+        </UserProvider>
+      </MemoryRouter>
     );
 
     // Check header elements
@@ -106,9 +116,11 @@ describe('EventsPage', () => {
 
   it('should switch to calendar view when calendar tab is clicked', () => {
     render(
-      <UserProvider>
-        <EventsPage />
-      </UserProvider>
+      <MemoryRouter>
+        <UserProvider>
+          <EventsPage />
+        </UserProvider>
+      </MemoryRouter>
     );
 
     const tabs = screen.getByTestId('tabs');
@@ -121,9 +133,11 @@ describe('EventsPage', () => {
 
   it('should refresh list view when event is updated', () => {
     render(
-      <UserProvider>
-        <EventsPage />
-      </UserProvider>
+      <MemoryRouter>
+        <UserProvider>
+          <EventsPage />
+        </UserProvider>
+      </MemoryRouter>
     );
 
     const updateButton = screen.getByTestId('trigger-update');
@@ -135,9 +149,11 @@ describe('EventsPage', () => {
 
   it('should refresh calendar view when event is updated', () => {
     render(
-      <UserProvider>
-        <EventsPage />
-      </UserProvider>
+      <MemoryRouter>
+        <UserProvider>
+          <EventsPage />
+        </UserProvider>
+      </MemoryRouter>
     );
 
     // Switch to calendar view
