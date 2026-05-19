@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Pencil, Trash2, UserPlus } from 'lucide-react';
+import { Pencil, Trash2, UserPlus, DollarSign, CreditCard } from 'lucide-react';
 
 import type { EventMusician } from '../../lib/types';
 import { useUser } from '../../contexts/UserContext';
@@ -13,9 +13,11 @@ type Props = {
   onEdit?: (assignmentId: number) => void;
   onDelete?: (musicianId: number) => void;
   onAssign?: () => void;
+  onRecordPayment?: (musicianId: number) => void;
+  onViewPayments?: (musicianId: number) => void;
 };
 
-export const EventMusicianTable: React.FC<Props> = ({ musicians, onEdit, onDelete, onAssign }) => {
+export const EventMusicianTable: React.FC<Props> = ({ musicians, onEdit, onDelete, onAssign, onRecordPayment, onViewPayments }) => {
   const { t } = useTranslation();
   const { hasRole } = useUser();
   const isAdmin = hasRole('admin');
@@ -73,18 +75,40 @@ export const EventMusicianTable: React.FC<Props> = ({ musicians, onEdit, onDelet
                       <Pencil className="h-4 w-4" />
                     </Button>
                   )}
-                  {isAdmin && onDelete && (
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      aria-label={`Delete ${m.musician_name}`}
-                      onClick={() => onDelete(m.musician_id)}
-                      onKeyDown={(e) => e.key === 'Enter' && onDelete(m.musician_id)}
-                    >
-                      <Trash2 className="h-4 w-4 text-red-600" />
-                    </Button>
-                  )}
-                </TableCell>
+                   {isAdmin && onDelete && (
+                     <Button
+                       size="sm"
+                       variant="ghost"
+                       aria-label={`Delete ${m.musician_name}`}
+                       onClick={() => onDelete(m.musician_id)}
+                       onKeyDown={(e) => e.key === 'Enter' && onDelete(m.musician_id)}
+                     >
+                       <Trash2 className="h-4 w-4 text-red-600" />
+                     </Button>
+                   )}
+
+                   {/* Payment actions */}
+                   {isAdmin && onRecordPayment && (
+                     <Button
+                       size="sm"
+                       variant="ghost"
+                       aria-label="Record Payment"
+                       onClick={() => onRecordPayment(m.musician_id)}
+                     >
+                       <DollarSign className="h-4 w-4 text-green-600" />
+                     </Button>
+                   )}
+                   {isAdmin && onViewPayments && (
+                     <Button
+                       size="sm"
+                       variant="ghost"
+                       aria-label="View Payments"
+                       onClick={() => onViewPayments(m.musician_id)}
+                     >
+                       <CreditCard className="h-4 w-4 text-blue-600" />
+                     </Button>
+                   )}
+                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
