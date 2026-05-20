@@ -105,11 +105,12 @@
       "assignedMusicians": "Assigned Musicians",
       "tableComingSoon": "Musician table will be implemented here",
       "assignMusician": "Assign Musician",
-      "paymentStatus": {
-        "COMPLETED": "COMPLETED",
-        "PENDING": "PENDING",
-        "OVERDUE": "OVERDUE"
-      },
+       "paymentStatus": {
+         "COMPLETED": "COMPLETED",
+         "PENDING": "PENDING",
+         "PARTIAL": "PARTIAL",
+         "OVERDUE": "OVERDUE"
+       },
       "table": {
         "musician": "Musician",
         "role": "Role",
@@ -150,30 +151,6 @@
         "cancel": "Cancel",
         "salaryError": "Salary must be a positive number",
         "fallbackName": "this musician"
-      },
-      "musicianPayments": {
-        "addTitle": "Record Musician Payment",
-        "addDescription": "Record a payment for {{name}}",
-        "viewTitle": "Payments for {{name}}",
-        "form": {
-          "amount": "Amount",
-          "paymentType": "Payment Type",
-          "notes": "Notes",
-          "notesPlaceholder": "Optional notes",
-          "save": "Save Payment"
-        },
-        "validation": {
-          "invalidAmount": "Please enter a valid amount",
-          "advanceLimit": "ADVANCE cannot exceed 50% of salary"
-        },
-        "messages": {
-          "error": "Failed to process payment"
-        },
-        "summary": {
-          "totalPaid": "Total Paid"
-        },
-        "history": "Payment History",
-        "noPayments": "No payments recorded yet"
       }
     },
     "makePayment": {
@@ -271,9 +248,40 @@
         "previous": "Previous",
         "next": "Next"
       },
-      "failedToLoad": "Failed to load events"
-    },
-    "calendar": {
+       "failedToLoad": "Failed to load events"
+     },
+     "musicianPayments": {
+       "addTitle": "Record Musician Payment",
+       "addDescription": "Record a payment for {{name}}",
+       "viewTitle": "Payments for {{name}}",
+       "viewDescription": "View payment history and total amount paid to this musician",
+       "form": {
+         "amount": "Amount",
+         "paymentType": "Payment Type",
+         "notes": "Notes",
+         "notesPlaceholder": "Optional notes",
+         "save": "Save Payment"
+       },
+       "paymentTypes": {
+         "ADVANCE": "ADVANCE",
+         "REMAINING": "REMAINING",
+         "TOTAL": "TOTAL"
+       },
+       "validation": {
+         "invalidAmount": "Please enter a valid amount",
+         "advanceLimit": "ADVANCE cannot exceed 50% of salary"
+       },
+       "messages": {
+         "error": "Failed to process payment"
+       },
+       "summary": {
+         "salary": "Assigned Salary",
+         "totalPaid": "Total Paid"
+       },
+       "history": "Payment History",
+       "noPayments": "No payments recorded yet"
+     },
+     "calendar": {
       "loading": "Loading calendar...",
       "error": "Error loading events",
       "tryAgain": "Try Again",

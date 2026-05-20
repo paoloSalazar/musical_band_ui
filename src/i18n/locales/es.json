@@ -105,11 +105,12 @@
       "assignedMusicians": "Músicos Asignados",
       "tableComingSoon": "La tabla de músicos se implementará aquí",
       "assignMusician": "Asignar Músico",
-      "paymentStatus": {
-        "COMPLETED": "COMPLETADO",
-        "PENDING": "PENDIENTE",
-        "OVERDUE": "VENCIDO"
-      },
+       "paymentStatus": {
+         "COMPLETED": "COMPLETADO",
+         "PENDING": "PENDIENTE",
+         "PARTIAL": "PARCIAL",
+         "OVERDUE": "VENCIDO"
+       },
       "table": {
         "musician": "Músico",
         "role": "Rol",
@@ -149,10 +150,10 @@
         "save": "Guardar",
         "cancel": "Cancelar",
         "salaryError": "El salario debe ser un número positivo",
-        "fallbackName": "este músico"
-      }
-    },
-    "makePayment": {
+         "fallbackName": "este músico"
+       }
+     },
+     "makePayment": {
       "title": "Realizar Pago",
       "description": "{{eventName}} - Registrar un pago para este evento",
       "loadingSummary": "Cargando resumen...",
@@ -247,9 +248,40 @@
         "previous": "Anterior",
         "next": "Siguiente"
       },
-      "failedToLoad": "Error al cargar eventos"
-    },
-    "calendar": {
+       "failedToLoad": "Error al cargar eventos"
+     },
+     "musicianPayments": {
+       "addTitle": "Registrar Pago de Músico",
+       "addDescription": "Registrar un pago para {{name}}",
+       "viewTitle": "Pagos de {{name}}",
+       "viewDescription": "Ver historial de pagos y total pagado a este músico",
+       "form": {
+         "amount": "Monto",
+         "paymentType": "Tipo de Pago",
+         "notes": "Notas",
+         "notesPlaceholder": "Notas opcionales",
+         "save": "Guardar Pago"
+       },
+       "paymentTypes": {
+         "ADVANCE": "ADELANTO",
+         "REMAINING": "SALDO",
+         "TOTAL": "TOTAL"
+       },
+       "validation": {
+         "invalidAmount": "Por favor ingrese un monto válido",
+         "advanceLimit": "El anticipo no puede exceder el 50% del salario"
+       },
+       "messages": {
+         "error": "Error al procesar el pago"
+       },
+       "summary": {
+         "salary": "Salario Asignado",
+         "totalPaid": "Total Pagado"
+       },
+       "history": "Historial de Pagos",
+       "noPayments": "Aún no se han registrado pagos"
+     },
+     "calendar": {
       "loading": "Cargando calendario...",
       "error": "Error al cargar eventos",
       "tryAgain": "Intentar de Nuevo",

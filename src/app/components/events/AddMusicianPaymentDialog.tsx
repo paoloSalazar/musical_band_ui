@@ -67,6 +67,8 @@ export function AddMusicianPaymentDialog({
 
     try {
       await eventsApi.addMusicianPayment(eventId, musicianId, {
+        event_id: eventId,
+        musician_id: musicianId,
         amount: amountValue,
         payment_type: paymentType,
         notes: notes || undefined,
@@ -113,9 +115,9 @@ export function AddMusicianPaymentDialog({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="ADVANCE">ADVANCE</SelectItem>
-                <SelectItem value="REMAINING">REMAINING</SelectItem>
-                <SelectItem value="TOTAL">TOTAL</SelectItem>
+                <SelectItem value="ADVANCE">{t('events.musicianPayments.paymentTypes.ADVANCE')}</SelectItem>
+                <SelectItem value="REMAINING">{t('events.musicianPayments.paymentTypes.REMAINING')}</SelectItem>
+                <SelectItem value="TOTAL">{t('events.musicianPayments.paymentTypes.TOTAL')}</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -203,7 +203,7 @@ export const eventsApi = {
   addMusicianPayment: async (
     eventId: number,
     musicianId: number,
-    data: { amount: number; payment_type: string; notes?: string }
+    data: { event_id: number; musician_id: number; amount: number; payment_type: string; notes?: string }
   ): Promise<ApiResponse<any>> => {
     return apiClient.post<any>(`/events/${eventId}/musicians/${musicianId}/payments`, data);
   },
