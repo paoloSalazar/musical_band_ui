@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { eventsApi } from '../../lib/api';
-import type { Event } from '../../lib/types';
+import type { Event, EventMusician } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
+import { ViewMusicianPaymentsDialog } from './ViewMusicianPaymentsDialog';
 import { formatDateHumanReadable, formatTimeHumanReadable } from '../../lib/timezone';
 import { useUser } from '../../contexts/UserContext';
 import { Button } from '../ui/button';
@@ -37,6 +38,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   const { hasRole, user, hasPermission } = useUser();
   const isAdmin = hasRole('admin');
   const canManageMusicians = hasPermission('read:event_musician');
+  const isMusicianUser = hasRole('musician') || hasRole('auxiliar_musician') || hasRole('helper');
   
   const [event, setEvent] = useState<Event | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,11 +51,27 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   const [showPaymentDetails, setShowPaymentDetails] = useState(false);
   const [showMakePayment, setShowMakePayment] = useState(false);
 
+  // Personal musician payment summary (for musician/auxiliar/helper roles)
+  const [myMusicianAssignment, setMyMusicianAssignment] = useState<EventMusician | null>(null);
+  const [showMyMusicianPayments, setShowMyMusicianPayments] = useState(false);
+
   useEffect(() => {
     if (open && eventId) {
       loadEvent();
+    } else if (!open) {
+      setMyMusicianAssignment(null);
+      setShowMyMusicianPayments(false);
     }
   }, [open, eventId]);
+
+  // Load personal musician assignment for non-admin musician roles (to allow viewing own payment summary)
+  useEffect(() => {
+    if (event && user && isMusicianUser && !isAdmin) {
+      loadMyMusicianAssignment();
+    } else {
+      setMyMusicianAssignment(null);
+    }
+  }, [event, user, isMusicianUser, isAdmin]);
 
   const loadEvent = async () => {
     try {
@@ -65,6 +83,21 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
       setError(err instanceof Error ? err.message : 'Failed to load event');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadMyMusicianAssignment = async () => {
+    if (!user || !eventId) {
+      setMyMusicianAssignment(null);
+      return;
+    }
+    try {
+      const response = await eventsApi.getEventMusicians(eventId);
+      const assignment = response.data.find((m: EventMusician) => m.musician_id === user.id) || null;
+      setMyMusicianAssignment(assignment);
+    } catch (err) {
+      // Non-fatal; button simply won't appear
+      setMyMusicianAssignment(null);
     }
   };
 
@@ -318,6 +351,16 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
               {t('events.dialog.view.manageMusicians')}
             </Button>
           )}
+          {myMusicianAssignment && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowMyMusicianPayments(true)}
+            >
+              <CreditCard className="h-4 w-4 mr-2" />
+              {t('events.dialog.view.viewMyPayments')}
+            </Button>
+          )}
           {showEditButton && onEdit && canEditEvent && (
             <Button type="button" onClick={handleEdit}>
               <Pencil className="h-4 w-4 mr-2" />
@@ -371,6 +414,18 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
         userId={user.id}
         open={showMakePayment}
         onOpenChange={setShowMakePayment}
+      />
+    )}
+
+    {/* Personal Musician Payment Summary Dialog (for musician/auxiliar_musician/helper roles viewing their own assignment) */}
+    {event && myMusicianAssignment && (
+      <ViewMusicianPaymentsDialog
+        eventId={event.id}
+        musicianId={myMusicianAssignment.musician_id}
+        musicianName={`${myMusicianAssignment.musician_name} ${myMusicianAssignment.musician_lastname}`}
+        salary={myMusicianAssignment.salary}
+        open={showMyMusicianPayments}
+        onOpenChange={setShowMyMusicianPayments}
       />
     )}
     </Dialog>

@@ -217,6 +217,7 @@
         "manageMusicians": "Manage Musicians",
         "paymentDetails": "Payment Details",
         "makePayment": "Make Payment",
+        "viewMyPayments": "View My Payments",
         "validation": {
           "invalidAmount": "Please enter a valid number",
           "priceNegative": "Price cannot be negative"
