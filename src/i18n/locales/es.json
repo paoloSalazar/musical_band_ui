@@ -20,15 +20,18 @@
     "no": "No",
     "ok": "OK",
     "tryAgain": "Intentar de Nuevo",
-    "this": "este",
-    "these": "estos",
-    "user": "usuario",
-    "users": "usuarios",
-    "verbs": {
-      "is": "está",
-      "are": "están"
-    }
-  },
+     "this": "este",
+     "these": "estos",
+     "user": "usuario",
+     "users": "usuarios",
+     "paymentRecord": "registro de pago",
+     "paymentRecords": "registros de pago",
+     "verbs": {
+       "is": "está",
+       "are": "están"
+     }
+   },
+
   "auth": {
     "login": "Iniciar Sesión",
     "logout": "Cerrar Sesión",
@@ -138,7 +141,8 @@
         "title": "Eliminar Asignación de Músico",
         "message": "¿Estás seguro de que quieres eliminar a {{name}} de este evento? Esta acción no se puede deshacer.",
         "cancel": "Cancelar",
-        "delete": "Eliminar"
+        "delete": "Eliminar",
+        "cannotDeleteWithPayments": "Esta asignación de músico no se puede eliminar porque ya existe {{count}} {{record}} para este músico y evento."
       },
       "editDialog": {
         "title": "Editar Asignación de Músico",
@@ -532,12 +536,12 @@
     "logged_in_as": "Conectado como {{name}}"
   },
   "home": {
-    "title": "The Electric Dreams",
-    "subtitle": "Banda de rock creando experiencias musicales inolvidables desde 2015",
+    "title": "Gestión de Eventos Musicales",
+    "subtitle": "App para gestionar los eventos y horarios de tu banda",
     "profile": "Mi Perfil",
     "logout": "Cerrar Sesión",
-    "welcome": "Bienvenido al Panel de Administrador",
-    "description": "Administra tu sitio web de banda desde aquí",
+    "welcome": "Bienvenido a la App de Gestión de Eventos Musicales",
+    "description": "Gestiona tus eventos, horarios y miembros de la banda todo en un solo lugar. Usa las tarjetas a continuación para navegar.",
     "cards": {
       "members": {
         "title": "Miembros de la Banda",

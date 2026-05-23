@@ -72,7 +72,7 @@ describe('DeleteMusicianConfirmationDialog', () => {
     expect(screen.getByText('Are you sure you want to remove John Doe (Pianist) from this event?')).toBeInTheDocument();
   });
 
-  it('should call onConfirm and onOpenChange when Delete button is clicked', () => {
+  it('should call onConfirm and onOpenChange when Delete button is clicked', async () => {
     render(
       <DeleteMusicianConfirmationDialog
         open={true}
@@ -86,7 +86,9 @@ describe('DeleteMusicianConfirmationDialog', () => {
     fireEvent.click(deleteButton);
 
     expect(mockOnConfirm).toHaveBeenCalledWith(mockAssignment.musician_id);
-    expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+    await waitFor(() => {
+      expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+    });
   });
 
   it('should call onOpenChange when Cancel button is clicked', () => {

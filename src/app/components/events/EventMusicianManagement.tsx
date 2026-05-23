@@ -155,14 +155,17 @@ export function EventMusicianManagement() {
       // refresh list after delete
       await loadMusicians();
       setNotify('Musician removed');
+      setDeleteOpen(false);
     } catch (err: any) {
       if (err?.status === 403) {
         setNotify('Unauthorized: admin role required');
+        setDeleteOpen(false);
       } else {
         console.error('Failed to delete musician', err);
+        // rethrow so that DeleteMusicianConfirmationDialog can catch and display the exact error to user
+        throw err;
       }
     }
-    setDeleteOpen(false);
   };
 
   const handleRecordPayment = (musicianId: number) => {

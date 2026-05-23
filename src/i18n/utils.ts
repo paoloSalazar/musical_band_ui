@@ -322,6 +322,21 @@ export function translateApiError(errorMessage: string, context?: string): strin
       extractor: () => ({})
     },
     {
+      regex: /^This musician assignment cannot be deleted because there (is|are) (\d+) payment records? for this musician and event\.$/i,
+      key: 'events.musicianManagement.deleteDialog.cannotDeleteWithPayments',
+      extractor: (match: RegExpMatchArray) => {
+        const count = parseInt(match[2], 10);
+        const isSingular = count === 1;
+        const determinerKey = isSingular ? 'this' : 'these';
+        const recordKey = isSingular ? 'paymentRecord' : 'paymentRecords';
+        const verbKey = isSingular ? 'is' : 'are';
+        const verb = i18n.t(`common.verbs.${verbKey}`, { defaultValue: isSingular ? 'is' : 'are' });
+        const record = i18n.t(`common.${recordKey}`, { defaultValue: isSingular ? 'payment record' : 'payment records' });
+        const determiner = i18n.t(`common.${determinerKey}`, { defaultValue: isSingular ? 'this' : 'these' });
+        return { count, verb, record, determiner };
+      }
+    },
+    {
       regex: /^Cannot mark date unavailable – assigned to event '(.+)' on (this date|\d{4}-\d{2}-\d{2})$/i,
       key: 'musicianAvailability.messages.assignedToEvent',
       extractor: (match: RegExpMatchArray) => {

@@ -20,15 +20,18 @@
     "no": "No",
     "ok": "OK",
     "tryAgain": "Try Again",
-    "this": "this",
-    "these": "these",
-    "user": "user",
-    "users": "users",
-    "verbs": {
-      "is": "is",
-      "are": "are"
-    }
-  },
+     "this": "this",
+     "these": "these",
+     "user": "user",
+     "users": "users",
+     "paymentRecord": "payment record",
+     "paymentRecords": "payment records",
+     "verbs": {
+       "is": "is",
+       "are": "are"
+     }
+   },
+
   "auth": {
     "login": "Login",
     "logout": "Logout",
@@ -138,7 +141,8 @@
         "title": "Delete Musician Assignment",
         "message": "Are you sure you want to remove {{name}} from this event? This action cannot be undone.",
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete",
+        "cannotDeleteWithPayments": "This musician assignment cannot be deleted because there {{verb}} already {{count}} {{record}} for this musician and event."
       },
       "editDialog": {
         "title": "Edit Musician Assignment",
@@ -532,12 +536,12 @@
     "logged_in_as": "Logged in as {{name}}"
   },
   "home": {
-    "title": "The Electric Dreams",
-    "subtitle": "Rock band creating unforgettable music experiences since 2015",
+    "title": "Music Events Management",
+    "subtitle": "App to Manage Your Band's Events and Schedule",
     "profile": "My Profile",
     "logout": "Logout",
-    "welcome": "Welcome to Admin Dashboard",
-    "description": "Manage your band website from here",
+    "welcome": "Welcome to Music Events Management App",
+    "description": "Manage your events, schedule, and band members all in one place. Use the cards below to navigate.",
     "cards": {
       "members": {
         "title": "Band Members",
