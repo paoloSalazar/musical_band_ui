@@ -123,7 +123,7 @@ export function HomePage({ onLogout }: HomePageProps) {
           </Can>
 
           {/* Musician Availability - For musicians and auxiliar musicians */}
-          <CanRole roles={['musician', 'auxiliar_musician']}>
+          <CanRole roles={['musician', 'auxiliar_musician', 'helper']}>
             <Link to="/musician-availability">
               <Card className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>

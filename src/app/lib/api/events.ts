@@ -193,7 +193,7 @@ export const eventsApi = {
    * GET /api/users/?role=musician&role=auxiliar_musician
    */
   getAvailableMusicians: async (): Promise<ApiResponse<User[]>> => {
-    return apiClient.get<User[]>(`/users/?roles=musician&roles=auxiliar_musician`);
+    return apiClient.get<User[]>(`/users/?roles=musician&roles=auxiliar_musician&roles=helper`);
   },
 
   /**
