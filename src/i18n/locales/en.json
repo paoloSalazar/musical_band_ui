@@ -799,6 +799,7 @@
     "manager": "Manager",
     "staff": "Staff",
     "auxiliar_musician": "Auxiliar Musician",
+    "helper": "Helper",
     "title": "User Roles",
     "subtitle": "Manage user roles and their permissions",
     "createRole": "Create Role",

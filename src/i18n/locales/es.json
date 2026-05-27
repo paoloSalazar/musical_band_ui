@@ -905,6 +905,7 @@
     "manager": "Gerente",
     "staff": "Personal",
     "auxiliar_musician": "Músico Auxiliar",
+    "helper": "Ayudante",
     "title": "Roles de Usuario",
     "subtitle": "Administrar roles de usuario y sus permisos",
     "createRole": "Crear Rol",

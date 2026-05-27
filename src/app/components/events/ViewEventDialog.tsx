@@ -102,7 +102,7 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   };
 
   const formatDate = (dateString: string) => {
-    return formatDateUtil(dateString);
+    // return formatDateUtil(dateString);
   };
 
   const formatTimeOnly = (dateString: string) => {
