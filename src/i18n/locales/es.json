@@ -184,13 +184,15 @@
         "REMAINING": "Paga todo el saldo restante",
         "ADVANCE": "Un pago parcial hacia el total"
       },
-      "validation": {
-        "invalidAmount": "Por favor ingrese un monto válido mayor a 0",
-        "exceedsBalance": "El monto no puede exceder el saldo restante de ${{balance}}",
-        "advanceMinimum": "El pago anticipado debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
-        "remainingMinimum": "El pago restante debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
-        "remainingExact": "El pago restante debe ser exactamente igual al saldo restante (${{expectedAmount}}), pero se recibió ${{actualAmount}}"
-      },
+       "validation": {
+         "invalidAmount": "Por favor ingrese un monto válido mayor a 0",
+         "exceedsBalance": "El monto no puede exceder el saldo restante de ${{balance}}",
+         "advanceMinimum": "El pago anticipado debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
+         "remainingMinimum": "El pago restante debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
+         "remainingExact": "El pago restante debe ser exactamente igual al saldo restante (${{expectedAmount}}), pero se recibió ${{actualAmount}}",
+         "advanceTiming": "Los pagos anticipados deben realizarse al menos 24 horas antes del inicio del evento",
+         "totalWithExistingPartials": "No se puede crear un pago de TOTAL cuando existen pagos de ADELANTO o SALDO. Use el tipo de pago SALDO para completar el balance."
+       },
       "buttons": {
         "cancel": "Cancelar",
         "submitPayment": "Enviar Pago"
@@ -272,13 +274,19 @@
          "REMAINING": "SALDO",
          "TOTAL": "TOTAL"
        },
-       "validation": {
-         "invalidAmount": "Por favor ingrese un monto válido",
-         "advanceLimit": "El anticipo no puede exceder el 50% del salario"
-       },
-       "messages": {
-         "error": "Error al procesar el pago"
-       },
+        "validation": {
+          "invalidAmount": "Por favor ingrese un monto válido",
+          "advanceLimit": "El anticipo no puede exceder el 50% del salario",
+          "advanceTiming": "Los pagos de ADELANTO solo se pueden realizar antes de la fecha de inicio del evento. El evento comienza: {{eventStart}}, Hora actual: {{currentTime}}",
+          "totalPaymentMismatch": "El pago de TOTAL debe ser igual al monto total del salario. Esperado: {{expected}}, Obtenido: {{got}}",
+          "remainingPaymentMismatch": "El pago de SALDO debe ser igual al saldo restante. Esperado: {{expected}}, Obtenido: {{got}}",
+          "remainingPaymentExceeds": "El pago de SALDO excedería el saldo restante. Ya pagado: {{alreadyPaid}}, Monto del pago: {{paymentAmount}}, Salario: {{salary}}",
+          "totalPaymentWithPartials": "No se puede crear un pago de TOTAL cuando existen pagos parciales"
+        },
+        "messages": {
+          "error": "Error al procesar el pago",
+          "remainingPaymentWithoutAdvance": "No se puede crear un pago de SALDO sin pagos de ADELANTO previos. Use el tipo de pago TOTAL en su lugar."
+        },
        "summary": {
          "salary": "Salario Asignado",
          "totalPaid": "Total Pagado"

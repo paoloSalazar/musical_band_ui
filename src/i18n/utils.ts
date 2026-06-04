@@ -322,6 +322,11 @@ export function translateApiError(errorMessage: string, context?: string): strin
       extractor: () => ({})
     },
     {
+      regex: /^Musician is not available on the event date$/i,
+      key: 'events.musicianManagement.assignDialog.notAvailable',
+      extractor: () => ({})
+    },
+    {
       regex: /^This musician assignment cannot be deleted because there (is|are) (\d+) payment records? for this musician and event\.$/i,
       key: 'events.musicianManagement.deleteDialog.cannotDeleteWithPayments',
       extractor: (match: RegExpMatchArray) => {
@@ -335,6 +340,49 @@ export function translateApiError(errorMessage: string, context?: string): strin
         const determiner = i18n.t(`common.${determinerKey}`, { defaultValue: isSingular ? 'this' : 'these' });
         return { count, verb, record, determiner };
       }
+    },
+    {
+      regex: /^Cannot create REMAINING payment without prior ADVANCE payments\. Use TOTAL payment type instead\.$/i,
+      key: 'events.musicianPayments.messages.remainingPaymentWithoutAdvance',
+      extractor: () => ({})
+    },
+    {
+      regex: /^ADVANCE payments can only be made before event start date\. Event starts: (.+), Current time: (.+)$/i,
+      key: 'events.musicianPayments.validation.advanceTiming',
+      extractor: (match: RegExpMatchArray) => ({
+        eventStart: match[1],
+        currentTime: match[2]
+      })
+    },
+    {
+      regex: /^TOTAL payment must equal the full salary amount\. Expected: ([0-9]+\.?[0-9]*), Got: ([0-9]+\.?[0-9]*)\s*$/i,
+      key: 'events.musicianPayments.validation.totalPaymentMismatch',
+      extractor: (match: RegExpMatchArray) => ({
+        expected: match[1],
+        got: match[2]
+      })
+    },
+    {
+      regex: /^REMAINING payment must equal the full remaining salary\. Expected: ([0-9]+\.?[0-9]*), Got: ([0-9]+\.?[0-9]*)\s*$/i,
+      key: 'events.musicianPayments.validation.remainingPaymentMismatch',
+      extractor: (match: RegExpMatchArray) => ({
+        expected: match[1],
+        got: match[2]
+      })
+    },
+    {
+      regex: /^REMAINING payment would exceed remaining salary\. Already paid: ([0-9]+\.?[0-9]*), Payment amount: ([0-9]+\.?[0-9]*), Salary: ([0-9]+\.?[0-9]*)$/i,
+      key: 'events.musicianPayments.validation.remainingPaymentExceeds',
+      extractor: (match: RegExpMatchArray) => ({
+        alreadyPaid: match[1],
+        paymentAmount: match[2],
+        salary: match[3]
+      })
+    },
+    {
+      regex: /^Cannot create TOTAL payment when partial payments exist$/i,
+      key: 'events.musicianPayments.validation.totalPaymentWithPartials',
+      extractor: () => ({})
     },
     {
       regex: /^Cannot mark date unavailable – assigned to event '(.+)' on (this date|\d{4}-\d{2}-\d{2})$/i,

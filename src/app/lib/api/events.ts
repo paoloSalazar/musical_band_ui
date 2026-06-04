@@ -48,6 +48,18 @@ export const translatePaymentError = (errorMessage: string, t: (key: string, opt
     });
   }
 
+  // Parse ADVANCE payment timing error (must be at least 24 hours before event start)
+  const advanceTimingMatch = errorMessage.match(/ADVANCE payments must be made at least 24 hours before event start/);
+  if (advanceTimingMatch) {
+    return t('events.makePayment.validation.advanceTiming');
+  }
+
+  // Parse error for TOTAL payment when partial payments exist
+  const totalWithPartialsMatch = errorMessage.match(/Cannot create TOTAL payment when there are existing ADVANCE or REMAINING payments\. Use REMAINING payment type to complete the balance\./);
+  if (totalWithPartialsMatch) {
+    return t('events.makePayment.validation.totalWithExistingPartials');
+  }
+
   // Return original message if no pattern matches
   return errorMessage;
 };

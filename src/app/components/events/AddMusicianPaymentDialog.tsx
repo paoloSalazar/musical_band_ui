@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { eventsApi } from '../../lib/api';
 import type { ApiError } from '../../lib/api/client';
@@ -22,6 +22,7 @@ import {
 } from '../ui/select';
 import { Label } from '../ui/label';
 import { Loader2 } from 'lucide-react';
+import { translateApiError } from '../../../i18n/utils';
 
 interface AddMusicianPaymentDialogProps {
   eventId: number;
@@ -48,6 +49,17 @@ export function AddMusicianPaymentDialog({
   const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Reset form when dialog opens
+  useEffect(() => {
+    if (open) {
+      setAmount('');
+      setPaymentType('ADVANCE');
+      setNotes('');
+      setError(null);
+      setIsLoading(false);
+    }
+  }, [open]);
 
   const handleSubmit = async () => {
     const amountValue = parseFloat(amount);
@@ -78,12 +90,12 @@ export function AddMusicianPaymentDialog({
       onOpenChange(false);
       setAmount('');
       setNotes('');
-    } catch (err) {
-      const apiError = err as ApiError;
-      setError(apiError.detail || t('events.musicianPayments.messages.error'));
-    } finally {
-      setIsLoading(false);
-    }
+     } catch (err) {
+       const apiError = err as ApiError;
+       setError(apiError.detail ? translateApiError(apiError.detail) : t('events.musicianPayments.messages.error'));
+     } finally {
+       setIsLoading(false);
+     }
   };
 
   return (
