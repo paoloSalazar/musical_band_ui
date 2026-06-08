@@ -81,7 +81,7 @@ export function HomePage({ onLogout }: HomePageProps) {
         {/* Quick Actions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Band Members - Visible to all authenticated users */}
-          <Can permission="read:users">
+          {/* <Can permission="read:users">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>
                 <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center mb-4">
@@ -98,7 +98,7 @@ export function HomePage({ onLogout }: HomePageProps) {
                 </Button>
               </CardContent>
             </Card>
-          </Can>
+          </Can> */}
 
           {/* Events - Visible to all authenticated users */}
           <Can permission="read:events">
@@ -123,7 +123,7 @@ export function HomePage({ onLogout }: HomePageProps) {
           </Can>
 
           {/* Musician Availability - For musicians and auxiliar musicians */}
-          <CanRole roles={['musician', 'auxiliar_musician']}>
+          <CanRole roles={['musician', 'auxiliar_musician', 'helper']}>
             <Link to="/musician-availability">
               <Card className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>
@@ -169,7 +169,7 @@ export function HomePage({ onLogout }: HomePageProps) {
 
         {/* Stats Section */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Can permission="read:users">
+          {/* <Can permission="read:users">
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription>{t("home.stats.members.title")}</CardDescription>
@@ -203,7 +203,7 @@ export function HomePage({ onLogout }: HomePageProps) {
                 <p className="text-sm text-muted-foreground">{t("home.stats.admins.description")}</p>
               </CardContent>
             </Card>
-          </CanRole>
+          </CanRole> */}
         </div>
         
         {/* User Permissions Debug - Useful for development */}

@@ -12,6 +12,8 @@ import { ArrowLeft, Users } from 'lucide-react';
 import { EditMusicianAssignmentDialog } from './EditMusicianAssignmentDialog';
 import { AssignMusicianDialog } from './AssignMusicianDialog';
 import { DeleteMusicianConfirmationDialog } from './DeleteMusicianConfirmationDialog';
+import { AddMusicianPaymentDialog } from './AddMusicianPaymentDialog';
+import { ViewMusicianPaymentsDialog } from './ViewMusicianPaymentsDialog';
 import type { EventMusicianUpdateData } from '../../lib/types';
 import { formatDateHumanReadable } from '../../lib/timezone';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +40,12 @@ export function EventMusicianManagement() {
   // Delete dialog state
   const [deleting, setDeleting] = useState<EventMusician | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
+
+  // Payment dialogs state
+  const [recordingPayment, setRecordingPayment] = useState<EventMusician | null>(null);
+  const [recordPaymentOpen, setRecordPaymentOpen] = useState(false);
+  const [viewingPayments, setViewingPayments] = useState<EventMusician | null>(null);
+  const [viewPaymentsOpen, setViewPaymentsOpen] = useState(false);
 
   // Check if user has permission to view this page
   const canViewMusicians = hasPermission('read:event_musician');
@@ -147,14 +155,35 @@ export function EventMusicianManagement() {
       // refresh list after delete
       await loadMusicians();
       setNotify('Musician removed');
+      setDeleteOpen(false);
     } catch (err: any) {
       if (err?.status === 403) {
         setNotify('Unauthorized: admin role required');
+        setDeleteOpen(false);
       } else {
         console.error('Failed to delete musician', err);
+        // rethrow so that DeleteMusicianConfirmationDialog can catch and display the exact error to user
+        throw err;
       }
     }
-    setDeleteOpen(false);
+  };
+
+  const handleRecordPayment = (musicianId: number) => {
+    const m = musicians.find((mm) => mm.musician_id === musicianId) || null;
+    setRecordingPayment(m);
+    setRecordPaymentOpen(true);
+  };
+
+  const handleViewPayments = (musicianId: number) => {
+    const m = musicians.find((mm) => mm.musician_id === musicianId) || null;
+    setViewingPayments(m);
+    setViewPaymentsOpen(true);
+  };
+
+  const handlePaymentSuccess = async () => {
+    // Refresh musicians list after payment (optimistic refresh)
+    await loadMusicians();
+    setNotify('Payment recorded successfully');
   };
 
   if (!canViewMusicians) {
@@ -214,7 +243,14 @@ export function EventMusicianManagement() {
           </div>
         ) : (
           <div className="space-y-6">
-            <EventMusicianTable musicians={musicians} onEdit={handleEdit} onDelete={handleDelete} onAssign={handleAssign} />
+            <EventMusicianTable
+              musicians={musicians}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onAssign={handleAssign}
+              onRecordPayment={handleRecordPayment}
+              onViewPayments={handleViewPayments}
+            />
           </div>
         )}
       </div>
@@ -242,6 +278,29 @@ export function EventMusicianManagement() {
           onOpenChange={setDeleteOpen}
           assignment={deleting}
           onConfirm={handleDeleteConfirm}
+        />
+      )}
+
+      {recordingPayment && (
+        <AddMusicianPaymentDialog
+          eventId={parseInt(eventId!)}
+          musicianId={recordingPayment.musician_id}
+          musicianName={`${recordingPayment.musician_name} ${recordingPayment.musician_lastname}`}
+          salary={recordingPayment.salary}
+          open={recordPaymentOpen}
+          onOpenChange={setRecordPaymentOpen}
+          onSuccess={handlePaymentSuccess}
+        />
+      )}
+
+      {viewingPayments && (
+        <ViewMusicianPaymentsDialog
+          eventId={parseInt(eventId!)}
+          musicianId={viewingPayments.musician_id}
+          musicianName={`${viewingPayments.musician_name} ${viewingPayments.musician_lastname}`}
+          salary={viewingPayments.salary}
+          open={viewPaymentsOpen}
+          onOpenChange={setViewPaymentsOpen}
         />
       )}
     </div>

@@ -20,15 +20,18 @@
     "no": "No",
     "ok": "OK",
     "tryAgain": "Intentar de Nuevo",
-    "this": "este",
-    "these": "estos",
-    "user": "usuario",
-    "users": "usuarios",
-    "verbs": {
-      "is": "está",
-      "are": "están"
-    }
-  },
+     "this": "este",
+     "these": "estos",
+     "user": "usuario",
+     "users": "usuarios",
+     "paymentRecord": "registro de pago",
+     "paymentRecords": "registros de pago",
+     "verbs": {
+       "is": "está",
+       "are": "están"
+     }
+   },
+
   "auth": {
     "login": "Iniciar Sesión",
     "logout": "Cerrar Sesión",
@@ -105,11 +108,12 @@
       "assignedMusicians": "Músicos Asignados",
       "tableComingSoon": "La tabla de músicos se implementará aquí",
       "assignMusician": "Asignar Músico",
-      "paymentStatus": {
-        "COMPLETED": "COMPLETADO",
-        "PENDING": "PENDIENTE",
-        "OVERDUE": "VENCIDO"
-      },
+       "paymentStatus": {
+         "COMPLETED": "COMPLETADO",
+         "PENDING": "PENDIENTE",
+         "PARTIAL": "PARCIAL",
+         "OVERDUE": "VENCIDO"
+       },
       "table": {
         "musician": "Músico",
         "role": "Rol",
@@ -137,7 +141,8 @@
         "title": "Eliminar Asignación de Músico",
         "message": "¿Estás seguro de que quieres eliminar a {{name}} de este evento? Esta acción no se puede deshacer.",
         "cancel": "Cancelar",
-        "delete": "Eliminar"
+        "delete": "Eliminar",
+        "cannotDeleteWithPayments": "Esta asignación de músico no se puede eliminar porque ya existe {{count}} {{record}} para este músico y evento."
       },
       "editDialog": {
         "title": "Editar Asignación de Músico",
@@ -149,10 +154,10 @@
         "save": "Guardar",
         "cancel": "Cancelar",
         "salaryError": "El salario debe ser un número positivo",
-        "fallbackName": "este músico"
-      }
-    },
-    "makePayment": {
+         "fallbackName": "este músico"
+       }
+     },
+     "makePayment": {
       "title": "Realizar Pago",
       "description": "{{eventName}} - Registrar un pago para este evento",
       "loadingSummary": "Cargando resumen...",
@@ -179,13 +184,15 @@
         "REMAINING": "Paga todo el saldo restante",
         "ADVANCE": "Un pago parcial hacia el total"
       },
-      "validation": {
-        "invalidAmount": "Por favor ingrese un monto válido mayor a 0",
-        "exceedsBalance": "El monto no puede exceder el saldo restante de ${{balance}}",
-        "advanceMinimum": "El pago anticipado debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
-        "remainingMinimum": "El pago restante debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
-        "remainingExact": "El pago restante debe ser exactamente igual al saldo restante (${{expectedAmount}}), pero se recibió ${{actualAmount}}"
-      },
+       "validation": {
+         "invalidAmount": "Por favor ingrese un monto válido mayor a 0",
+         "exceedsBalance": "El monto no puede exceder el saldo restante de ${{balance}}",
+         "advanceMinimum": "El pago anticipado debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
+         "remainingMinimum": "El pago restante debe ser al menos {{percentage}}% (${{minAmount}} de ${{totalAmount}})",
+         "remainingExact": "El pago restante debe ser exactamente igual al saldo restante (${{expectedAmount}}), pero se recibió ${{actualAmount}}",
+         "advanceTiming": "Los pagos anticipados deben realizarse al menos 24 horas antes del inicio del evento",
+         "totalWithExistingPartials": "No se puede crear un pago de TOTAL cuando existen pagos de ADELANTO o SALDO. Use el tipo de pago SALDO para completar el balance."
+       },
       "buttons": {
         "cancel": "Cancelar",
         "submitPayment": "Enviar Pago"
@@ -212,6 +219,7 @@
         "manageMusicians": "Gestionar Músicos",
         "paymentDetails": "Detalles de Pago",
         "makePayment": "Realizar Pago",
+        "viewMyPayments": "Ver Mis Pagos",
         "validation": {
           "invalidAmount": "Por favor ingresa un número válido",
           "priceNegative": "El precio no puede ser negativo"
@@ -247,9 +255,46 @@
         "previous": "Anterior",
         "next": "Siguiente"
       },
-      "failedToLoad": "Error al cargar eventos"
-    },
-    "calendar": {
+       "failedToLoad": "Error al cargar eventos"
+     },
+     "musicianPayments": {
+       "addTitle": "Registrar Pago de Músico",
+       "addDescription": "Registrar un pago para {{name}}",
+       "viewTitle": "Pagos de {{name}}",
+       "viewDescription": "Ver historial de pagos y total pagado a este músico",
+       "form": {
+         "amount": "Monto",
+         "paymentType": "Tipo de Pago",
+         "notes": "Notas",
+         "notesPlaceholder": "Notas opcionales",
+         "save": "Guardar Pago"
+       },
+       "paymentTypes": {
+         "ADVANCE": "ADELANTO",
+         "REMAINING": "SALDO",
+         "TOTAL": "TOTAL"
+       },
+        "validation": {
+          "invalidAmount": "Por favor ingrese un monto válido",
+          "advanceLimit": "El anticipo no puede exceder el 50% del salario",
+          "advanceTiming": "Los pagos de ADELANTO solo se pueden realizar antes de la fecha de inicio del evento. El evento comienza: {{eventStart}}, Hora actual: {{currentTime}}",
+          "totalPaymentMismatch": "El pago de TOTAL debe ser igual al monto total del salario. Esperado: {{expected}}, Obtenido: {{got}}",
+          "remainingPaymentMismatch": "El pago de SALDO debe ser igual al saldo restante. Esperado: {{expected}}, Obtenido: {{got}}",
+          "remainingPaymentExceeds": "El pago de SALDO excedería el saldo restante. Ya pagado: {{alreadyPaid}}, Monto del pago: {{paymentAmount}}, Salario: {{salary}}",
+          "totalPaymentWithPartials": "No se puede crear un pago de TOTAL cuando existen pagos parciales"
+        },
+        "messages": {
+          "error": "Error al procesar el pago",
+          "remainingPaymentWithoutAdvance": "No se puede crear un pago de SALDO sin pagos de ADELANTO previos. Use el tipo de pago TOTAL en su lugar."
+        },
+       "summary": {
+         "salary": "Salario Asignado",
+         "totalPaid": "Total Pagado"
+       },
+       "history": "Historial de Pagos",
+       "noPayments": "Aún no se han registrado pagos"
+     },
+     "calendar": {
       "loading": "Cargando calendario...",
       "error": "Error al cargar eventos",
       "tryAgain": "Intentar de Nuevo",
@@ -500,12 +545,12 @@
     "logged_in_as": "Conectado como {{name}}"
   },
   "home": {
-    "title": "The Electric Dreams",
-    "subtitle": "Banda de rock creando experiencias musicales inolvidables desde 2015",
+    "title": "Gestión de Eventos Musicales",
+    "subtitle": "App para gestionar los eventos y horarios de tu banda",
     "profile": "Mi Perfil",
     "logout": "Cerrar Sesión",
-    "welcome": "Bienvenido al Panel de Administrador",
-    "description": "Administra tu sitio web de banda desde aquí",
+    "welcome": "Bienvenido a la App de Gestión de Eventos Musicales",
+    "description": "Gestiona tus eventos, horarios y miembros de la banda todo en un solo lugar. Usa las tarjetas a continuación para navegar.",
     "cards": {
       "members": {
         "title": "Miembros de la Banda",
@@ -868,6 +913,7 @@
     "manager": "Gerente",
     "staff": "Personal",
     "auxiliar_musician": "Músico Auxiliar",
+    "helper": "Ayudante",
     "title": "Roles de Usuario",
     "subtitle": "Administrar roles de usuario y sus permisos",
     "createRole": "Crear Rol",

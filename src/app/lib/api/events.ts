@@ -48,6 +48,18 @@ export const translatePaymentError = (errorMessage: string, t: (key: string, opt
     });
   }
 
+  // Parse ADVANCE payment timing error (must be at least 24 hours before event start)
+  const advanceTimingMatch = errorMessage.match(/ADVANCE payments must be made at least 24 hours before event start/);
+  if (advanceTimingMatch) {
+    return t('events.makePayment.validation.advanceTiming');
+  }
+
+  // Parse error for TOTAL payment when partial payments exist
+  const totalWithPartialsMatch = errorMessage.match(/Cannot create TOTAL payment when there are existing ADVANCE or REMAINING payments\. Use REMAINING payment type to complete the balance\./);
+  if (totalWithPartialsMatch) {
+    return t('events.makePayment.validation.totalWithExistingPartials');
+  }
+
   // Return original message if no pattern matches
   return errorMessage;
 };
@@ -193,6 +205,38 @@ export const eventsApi = {
    * GET /api/users/?role=musician&role=auxiliar_musician
    */
   getAvailableMusicians: async (): Promise<ApiResponse<User[]>> => {
-    return apiClient.get<User[]>(`/users/?roles=musician&roles=auxiliar_musician`);
+    return apiClient.get<User[]>(`/users/?roles=musician&roles=auxiliar_musician&roles=helper`);
+  },
+
+  /**
+   * Add a payment for a musician in an event
+   * POST /api/events/{event_id}/musicians/{musician_id}/payments
+   */
+  addMusicianPayment: async (
+    eventId: number,
+    musicianId: number,
+    data: { event_id: number; musician_id: number; amount: number; payment_type: string; notes?: string }
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.post<any>(`/events/${eventId}/musicians/${musicianId}/payments`, data);
+  },
+
+  /**
+   * Get all payments for a musician in an event
+   */
+  getMusicianPayments: async (
+    eventId: number,
+    musicianId: number
+  ): Promise<ApiResponse<any[]>> => {
+    return apiClient.get<any[]>(`/events/${eventId}/musicians/${musicianId}/payments`);
+  },
+
+  /**
+   * Get payment summary for a musician in an event
+   */
+  getMusicianPaymentSummary: async (
+    eventId: number,
+    musicianId: number
+  ): Promise<ApiResponse<any>> => {
+    return apiClient.get<any>(`/events/${eventId}/musicians/${musicianId}/payments/summary`);
   },
 };

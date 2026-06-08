@@ -20,15 +20,18 @@
     "no": "No",
     "ok": "OK",
     "tryAgain": "Try Again",
-    "this": "this",
-    "these": "these",
-    "user": "user",
-    "users": "users",
-    "verbs": {
-      "is": "is",
-      "are": "are"
-    }
-  },
+     "this": "this",
+     "these": "these",
+     "user": "user",
+     "users": "users",
+     "paymentRecord": "payment record",
+     "paymentRecords": "payment records",
+     "verbs": {
+       "is": "is",
+       "are": "are"
+     }
+   },
+
   "auth": {
     "login": "Login",
     "logout": "Logout",
@@ -105,11 +108,12 @@
       "assignedMusicians": "Assigned Musicians",
       "tableComingSoon": "Musician table will be implemented here",
       "assignMusician": "Assign Musician",
-      "paymentStatus": {
-        "COMPLETED": "COMPLETED",
-        "PENDING": "PENDING",
-        "OVERDUE": "OVERDUE"
-      },
+       "paymentStatus": {
+         "COMPLETED": "COMPLETED",
+         "PENDING": "PENDING",
+         "PARTIAL": "PARTIAL",
+         "OVERDUE": "OVERDUE"
+       },
       "table": {
         "musician": "Musician",
         "role": "Role",
@@ -131,13 +135,13 @@
         "cancel": "Cancel",
         "validationError": "Please fill all fields with valid data",
         "alreadyAssigned": "Musician is already assigned to this event",
-        "error": "Failed to assign musician"
-      },
+        "error": "Failed to assign musician"      },
       "deleteDialog": {
         "title": "Delete Musician Assignment",
         "message": "Are you sure you want to remove {{name}} from this event? This action cannot be undone.",
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete",
+        "cannotDeleteWithPayments": "This musician assignment cannot be deleted because there {{verb}} already {{count}} {{record}} for this musician and event."
       },
       "editDialog": {
         "title": "Edit Musician Assignment",
@@ -179,13 +183,15 @@
         "REMAINING": "Pays the full remaining balance",
         "ADVANCE": "A partial payment towards the total"
       },
-      "validation": {
-        "invalidAmount": "Please enter a valid amount greater than 0",
-        "exceedsBalance": "Amount cannot exceed the remaining balance of ${{balance}}",
-        "advanceMinimum": "Advance payment must be at least {{percentage}}% (${{minAmount}} of ${{totalAmount}})",
-        "remainingMinimum": "Remaining payment must be at least {{percentage}}% (${{minAmount}} of ${{totalAmount}})",
-        "remainingExact": "Remaining payment must equal exactly the remaining balance (${{expectedAmount}}), but got ${{actualAmount}}"
-      },
+       "validation": {
+         "invalidAmount": "Please enter a valid amount greater than 0",
+         "exceedsBalance": "Amount cannot exceed the remaining balance of ${{balance}}",
+         "advanceMinimum": "Advance payment must be at least {{percentage}}% (${{minAmount}} of ${{totalAmount}})",
+         "remainingMinimum": "Remaining payment must be at least {{percentage}}% (${{minAmount}} of ${{totalAmount}})",
+         "remainingExact": "Remaining payment must equal exactly the remaining balance (${{expectedAmount}}), but got ${{actualAmount}}",
+         "advanceTiming": "ADVANCE payments must be made at least 24 hours before event start",
+         "totalWithExistingPartials": "Cannot create TOTAL payment when there are existing ADVANCE or REMAINING payments. Use REMAINING payment type to complete the balance."
+       },
       "buttons": {
         "cancel": "Cancel",
         "submitPayment": "Submit Payment"
@@ -212,6 +218,7 @@
         "manageMusicians": "Manage Musicians",
         "paymentDetails": "Payment Details",
         "makePayment": "Make Payment",
+        "viewMyPayments": "View My Payments",
         "validation": {
           "invalidAmount": "Please enter a valid number",
           "priceNegative": "Price cannot be negative"
@@ -247,9 +254,46 @@
         "previous": "Previous",
         "next": "Next"
       },
-      "failedToLoad": "Failed to load events"
-    },
-    "calendar": {
+       "failedToLoad": "Failed to load events"
+     },
+     "musicianPayments": {
+       "addTitle": "Record Musician Payment",
+       "addDescription": "Record a payment for {{name}}",
+       "viewTitle": "Payments for {{name}}",
+       "viewDescription": "View payment history and total amount paid to this musician",
+       "form": {
+         "amount": "Amount",
+         "paymentType": "Payment Type",
+         "notes": "Notes",
+         "notesPlaceholder": "Optional notes",
+         "save": "Save Payment"
+       },
+       "paymentTypes": {
+         "ADVANCE": "ADVANCE",
+         "REMAINING": "REMAINING",
+         "TOTAL": "TOTAL"
+       },
+        "validation": {
+          "invalidAmount": "Please enter a valid amount",
+          "advanceLimit": "ADVANCE cannot exceed 50% of salary",
+          "advanceTiming": "ADVANCE payments can only be made before event start date. Event starts: {{eventStart}}, Current time: {{currentTime}}",
+          "totalPaymentMismatch": "TOTAL payment must equal the full salary amount. Expected: {{expected}}, Got: {{got}}",
+          "remainingPaymentMismatch": "REMAINING payment must equal the full remaining salary. Expected: {{expected}}, Got: {{got}}",
+          "remainingPaymentExceeds": "REMAINING payment would exceed remaining salary. Already paid: {{alreadyPaid}}, Payment amount: {{paymentAmount}}, Salary: {{salary}}",
+          "totalPaymentWithPartials": "Cannot create TOTAL payment when partial payments exist"
+        },
+        "messages": {
+          "error": "Failed to process payment",
+          "remainingPaymentWithoutAdvance": "Cannot create REMAINING payment without prior ADVANCE payments. Use TOTAL payment type instead."
+        },
+       "summary": {
+         "salary": "Assigned Salary",
+         "totalPaid": "Total Paid"
+       },
+       "history": "Payment History",
+       "noPayments": "No payments recorded yet"
+     },
+     "calendar": {
       "loading": "Loading calendar...",
       "error": "Error loading events",
       "tryAgain": "Try Again",
@@ -500,12 +544,12 @@
     "logged_in_as": "Logged in as {{name}}"
   },
   "home": {
-    "title": "The Electric Dreams",
-    "subtitle": "Rock band creating unforgettable music experiences since 2015",
+    "title": "Music Events Management",
+    "subtitle": "App to Manage Your Band's Events and Schedule",
     "profile": "My Profile",
     "logout": "Logout",
-    "welcome": "Welcome to Admin Dashboard",
-    "description": "Manage your band website from here",
+    "welcome": "Welcome to Music Events Management App",
+    "description": "Manage your events, schedule, and band members all in one place. Use the cards below to navigate.",
     "cards": {
       "members": {
         "title": "Band Members",
@@ -762,6 +806,7 @@
     "manager": "Manager",
     "staff": "Staff",
     "auxiliar_musician": "Auxiliar Musician",
+    "helper": "Helper",
     "title": "User Roles",
     "subtitle": "Manage user roles and their permissions",
     "createRole": "Create Role",

@@ -129,9 +129,15 @@ export function UserProvider({ children }: UserProviderProps) {
       if (userResponse.ok) {
         const userData = await userResponse.json();
         setUser(userData);
+        const minimalUser = { id: userData.id, name: userData.name, lastname: userData.lastname, email: userData.email };
+        localStorage.setItem('user', JSON.stringify(minimalUser));
       } else {
         // Fallback to user data from login response
         setUser(data.user);
+        if (data.user) {
+          const minimalUser = { id: data.user.id, name: data.user.name, lastname: data.user.lastname, email: data.user.email };
+          localStorage.setItem('user', JSON.stringify(minimalUser));
+        }
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Login failed';
@@ -161,6 +167,7 @@ export function UserProvider({ children }: UserProviderProps) {
     } finally {
       apiClient.setToken(null);
       localStorage.removeItem('auth_token');
+      localStorage.removeItem('user');
       setUser(null);
       setError(null);
     }
@@ -185,6 +192,8 @@ export function UserProvider({ children }: UserProviderProps) {
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
+          const minimalUser = { id: userData.id, name: userData.name, lastname: userData.lastname, email: userData.email };
+          localStorage.setItem('user', JSON.stringify(minimalUser));
           apiClient.setToken(token);
         } else {
           // Token invalid, clear it
