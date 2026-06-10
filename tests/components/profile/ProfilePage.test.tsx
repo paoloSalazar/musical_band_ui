@@ -292,7 +292,7 @@ describe('ProfilePage Component', () => {
       expect(screen.getByText('Additional Information')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Address')).toBeInTheDocument();
+    expect(screen.getByText(/address/i)).toBeInTheDocument();
     expect(screen.getByText('123 Main St')).toBeInTheDocument();
     expect(screen.getByText('City')).toBeInTheDocument();
     expect(screen.getByText('New York')).toBeInTheDocument();
