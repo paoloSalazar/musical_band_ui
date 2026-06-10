@@ -143,10 +143,10 @@ describe('MusicianAvailabilityPage', () => {
         {
           id: 1,
           musician_id: 1,
-          unavailable_date: '2026-05-22',
+          unavailable_date: '2026-06-22',
           reason: 'Holiday trip',
-          created_at: '2026-05-15T10:30:00',
-          updated_at: '2026-05-15T10:30:00'
+          created_at: '2026-06-15T10:30:00',
+          updated_at: '2026-06-15T10:30:00'
         }
       ];
 
@@ -159,7 +159,7 @@ describe('MusicianAvailabilityPage', () => {
         data: {
           musician_id: 1,
           year: 2026,
-          month: 5,
+          month: 6,
           unavailable_dates: mockAvailability
         },
         success: true
@@ -170,7 +170,7 @@ describe('MusicianAvailabilityPage', () => {
       await waitFor(() => {
         // Wait for the data to be loaded and rendered
         expect(mockMusicianAvailabilityApi.getByMusician).toHaveBeenCalledWith(1);
-        expect(mockMusicianAvailabilityApi.getByMusicianAndMonth).toHaveBeenCalledWith(1, 2026, 5);
+        expect(mockMusicianAvailabilityApi.getByMusicianAndMonth).toHaveBeenCalledWith(1, 2026, 6);
       });
 
       // Check that the availability list is rendered
@@ -187,7 +187,7 @@ describe('MusicianAvailabilityPage', () => {
         data: {
           musician_id: 1,
           year: 2026,
-          month: 5,
+          month: 6,
           unavailable_dates: []
         },
         success: true
@@ -220,18 +220,18 @@ describe('MusicianAvailabilityPage', () => {
         {
           id: 1,
           musician_id: 1,
-          unavailable_date: '2026-04-22',
+          unavailable_date: '2026-05-22',
           reason: 'Holiday trip',
-          created_at: '2026-04-15T10:30:00',
-          updated_at: '2026-04-15T10:30:00'
+          created_at: '2026-05-15T10:30:00',
+          updated_at: '2026-05-15T10:30:00'
         },
         {
           id: 2,
           musician_id: 1,
-          unavailable_date: '2026-05-10',
+          unavailable_date: '2026-06-10',
           reason: 'Family event',
-          created_at: '2026-04-15T10:30:00',
-          updated_at: '2026-04-15T10:30:00'
+          created_at: '2026-05-15T10:30:00',
+          updated_at: '2026-05-15T10:30:00'
         }
       ];
 
@@ -239,10 +239,10 @@ describe('MusicianAvailabilityPage', () => {
         {
           id: 2,
           musician_id: 1,
-          unavailable_date: '2026-05-10',
+          unavailable_date: '2026-06-10',
           reason: 'Family event',
-          created_at: '2026-04-15T10:30:00',
-          updated_at: '2026-04-15T10:30:00'
+          created_at: '2026-05-15T10:30:00',
+          updated_at: '2026-05-15T10:30:00'
         }
       ];
 
@@ -255,7 +255,7 @@ describe('MusicianAvailabilityPage', () => {
         data: {
           musician_id: 1,
           year: 2026,
-          month: 5,
+          month: 6,
           unavailable_dates: mockMonthAvailability
         },
         success: true
@@ -265,10 +265,10 @@ describe('MusicianAvailabilityPage', () => {
 
       await waitFor(() => {
         expect(mockMusicianAvailabilityApi.getByMusician).toHaveBeenCalledWith(1);
-        expect(mockMusicianAvailabilityApi.getByMusicianAndMonth).toHaveBeenCalledWith(1, 2026, 5);
+        expect(mockMusicianAvailabilityApi.getByMusicianAndMonth).toHaveBeenCalledWith(1, 2026, 6);
       });
 
-      // Should only show May availability in the list
+      // Should only show June availability in the list
       expect(screen.getByText('Family event')).toBeInTheDocument();
       expect(screen.queryByText('Holiday trip')).not.toBeInTheDocument();
     });
