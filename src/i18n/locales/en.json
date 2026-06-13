@@ -198,34 +198,46 @@
       },
       "failedToCreate": "Failed to create payment"
     },
-    "dialog": {
-      "view": {
-        "title": "Event Details",
-        "description": "View event information",
-        "loading": "Loading event...",
-        "error": "Error",
-        "description": "Description",
-        "date": "Date",
-        "time": "Time",
-        "allDay": "All day event",
-        "location": "Location",
-        "price": "Price",
-        "enterPrice": "Enter price",
-        "setPrice": "Set Price",
-        "noPrice": "No price set",
-        "createdBy": "Created by",
-        "editEvent": "Edit Event",
-        "manageMusicians": "Manage Musicians",
-        "paymentDetails": "Payment Details",
-        "makePayment": "Make Payment",
-        "viewMyPayments": "View My Payments",
-        "validation": {
-          "invalidAmount": "Please enter a valid number",
-          "priceNegative": "Price cannot be negative"
-        },
-        "failedToUpdate": "Failed to update price"
-      }
-    },
+"dialog": {
+        "view": {
+          "title": "Event Details",
+          "description": "View event information",
+          "loading": "Loading event...",
+          "error": "Error",
+          "date": "Date",
+         "time": "Time",
+         "allDay": "All day event",
+         "location": "Location",
+         "price": "Price",
+         "enterPrice": "Enter price",
+         "setPrice": "Set Price",
+         "noPrice": "No price set",
+         "createdBy": "Created by",
+         "editEvent": "Edit Event",
+         "manageMusicians": "Manage Musicians",
+         "paymentDetails": "Payment Details",
+         "makePayment": "Make Payment",
+"viewMyPayments": "View My Payments",
+          "reports": "Reports",
+          "billingSummaryLabel": "Billing Summary",
+          "musicianPaymentSummaryLabel": "Musician Payment Summary",
+          "billingSummaryTitle": "Billing Summary",
+          "musicianPaymentSummaryTitle": "Musician Payment Summary",
+          "eventName": "Event Name",
+          "eventPrice": "Event Price",
+          "paymentDone": "Payment Done",
+          "remainingPayment": "Remaining Payment",
+          "sumOfMusicianSalaries": "Sum of Musician Salaries",
+          "paymentDoneToMusicians": "Payment Done to Musicians",
+          "noData": "No data available",
+          "musicianName": "Musician Name",
+         "validation": {
+           "invalidAmount": "Please enter a valid number",
+           "priceNegative": "Price cannot be negative"
+         },
+         "failedToUpdate": "Failed to update price"
+       }
+     },
     "list": {
       "title": "All Events",
       "totalEvents": "Total: {{total}} event(s) - Page {{current}} of {{totalPages}}",

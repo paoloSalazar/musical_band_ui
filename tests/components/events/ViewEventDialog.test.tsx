@@ -12,6 +12,11 @@ vi.mock('@/app/lib/api', () => ({
     getById: vi.fn(),
     updatePrice: vi.fn(),
     getPrice: vi.fn(),
+    getPaymentSummary: vi.fn(),
+    getMusicianPaymentSummary: vi.fn(),
+    getEventMusicians: vi.fn(),
+    getEventBillingSummary: vi.fn(),
+    getEventMusicianPaymentSummary: vi.fn(),
   },
 }));
 
@@ -29,53 +34,69 @@ vi.mock('@/app/lib/timezone', () => ({
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: vi.fn((key, options) => {
-      // Return mocked translations for common keys
-      const translations = {
-        'events.dialog.view.title': 'Event Details',
-        'events.dialog.view.description': 'View event information',
-        'events.dialog.view.loading': 'Loading event...',
-        'events.dialog.view.error': 'Error',
-        'events.dialog.view.date': 'Date',
-        'events.dialog.view.time': 'Time',
-        'events.dialog.view.allDay': 'All day event',
-        'events.dialog.view.location': 'Location',
-        'events.dialog.view.price': 'Price',
-        'events.dialog.view.enterPrice': 'Enter price',
-        'events.dialog.view.setPrice': 'Set Price',
-        'events.dialog.view.noPrice': 'No price set',
-        'events.dialog.view.createdBy': 'Created by',
-        'events.dialog.view.editEvent': 'Edit Event',
-        'events.dialog.view.paymentDetails': 'Payment Details',
-        'events.dialog.view.makePayment': 'Make Payment',
-        'events.dialog.view.manageMusicians': 'Manage Musicians',
-        'events.status.PENDING': 'PENDING',
-        'events.status.CONFIRMED': 'CONFIRMED',
-        'events.status.CANCELLED': 'CANCELLED',
-        'events.dialog.view.validation.invalidAmount': 'Please enter a valid number',
-        'events.dialog.view.validation.priceNegative': 'Price cannot be negative',
-        'events.dialog.view.failedToUpdate': 'Failed to update price',
-        'events.payment.title': 'Payment Details',
-        'events.payment.description': '{{eventName}} - Payment history and summary',
-        'events.payment.loading': 'Loading payment details...',
-        'events.payment.error': 'Error',
-        'events.payment.summary.title': 'Payment Summary',
-        'events.payment.summary.finalPrice': 'Final Price',
-        'events.payment.summary.totalPaid': 'Total Paid',
-        'events.payment.summary.remaining': 'Remaining',
-        'events.payment.history.title': 'Payment History',
-        'events.payment.history.noPayments': 'No payments have been made yet.',
-        'events.payment.ADVANCE': 'Advance Payment',
-        'events.payment.REMAINING': 'Remaining Balance',
-        'events.payment.TOTAL': 'Full Payment',
-        'events.payment.buttons.close': 'Close',
-        'common.cancel': 'Cancel',
-      };
-      const translation = translations[key] || key;
-      if (options && typeof translation === 'string' && translation.includes('{{')) {
-        return translation.replace('{{eventName}}', options.eventName || '');
-      }
-      return translation;
-    }),
+       // Return mocked translations for common keys
+       const translations = {
+         'events.dialog.view.title': 'Event Details',
+         'events.dialog.view.description': 'View event information',
+         'events.dialog.view.loading': 'Loading event...',
+         'events.dialog.view.error': 'Error',
+         'events.dialog.view.date': 'Date',
+         'events.dialog.view.time': 'Time',
+         'events.dialog.view.allDay': 'All day event',
+         'events.dialog.view.location': 'Location',
+         'events.dialog.view.price': 'Price',
+         'events.dialog.view.enterPrice': 'Enter price',
+         'events.dialog.view.setPrice': 'Set Price',
+         'events.dialog.view.noPrice': 'No price set',
+         'events.dialog.view.createdBy': 'Created by',
+         'events.dialog.view.editEvent': 'Edit Event',
+         'events.dialog.view.manageMusicians': 'Manage Musicians',
+         'events.dialog.view.paymentDetails': 'Payment Details',
+         'events.dialog.view.makePayment': 'Make Payment',
+         'events.dialog.view.viewMyPayments': 'View My Payments',
+         'events.dialog.view.reports': 'Reports',
+         'events.dialog.view.billingSummaryLabel': 'Billing Summary',
+         'events.dialog.view.musicianPaymentSummaryLabel': 'Musician Payment Summary',
+         'events.dialog.view.billingSummaryTitle': 'Billing Summary',
+         'events.dialog.view.musicianPaymentSummaryTitle': 'Musician Payment Summary',
+         'events.dialog.view.eventName': 'Event Name',
+         'events.dialog.view.eventPrice': 'Event Price',
+         'events.dialog.view.paymentDone': 'Payment Done',
+         'events.dialog.view.remainingPayment': 'Remaining Payment',
+         'events.dialog.view.sumOfMusicianSalaries': 'Sum of Musician Salaries',
+         'events.dialog.view.paymentDoneToMusicians': 'Payment Done to Musicians',
+         'events.dialog.view.noData': 'No data available',
+         'events.status.PENDING': 'PENDING',
+         'events.status.CONFIRMED': 'CONFIRMED',
+         'events.status.CANCELLED': 'CANCELLED',
+         'events.dialog.view.validation.invalidAmount': 'Please enter a valid number',
+         'events.dialog.view.validation.priceNegative': 'Price cannot be negative',
+         'events.dialog.view.failedToUpdate': 'Failed to update price',
+         'events.payment.title': 'Payment Details',
+         'events.payment.description': '{{eventName}} - Payment history and summary',
+         'events.payment.loading': 'Loading payment details...',
+         'events.payment.error': 'Error',
+         'events.payment.summary.title': 'Payment Summary',
+         'events.payment.summary.finalPrice': 'Final Price',
+         'events.payment.summary.totalPaid': 'Total Paid',
+         'events.payment.summary.remaining': 'Remaining',
+         'events.payment.history.title': 'Payment History',
+         'events.payment.history.noPayments': 'No payments have been made yet.',
+         'events.payment.ADVANCE': 'Advance Payment',
+         'events.payment.REMAINING': 'Remaining Balance',
+         'events.payment.TOTAL': 'Full Payment',
+         'events.payment.buttons.close': 'Close',
+         'common.cancel': 'Cancel',
+         'events.dialog.view.musicianName': 'Musician Name',
+         'events.dialog.view.role': 'Role',
+         'events.dialog.view.salary': 'Salary',
+       };
+     const translation = translations[key] || key;
+     if (options && typeof translation === 'string' && translation.includes('{{')) {
+       return translation.replace('{{eventName}}', options.eventName || '');
+     }
+     return translation;
+   }),
     i18n: {
       language: 'en',
     },
@@ -179,6 +200,7 @@ vi.mock('lucide-react', () => ({
   CreditCard: () => <div data-testid="credit-card-icon" />,
   Wallet: () => <div data-testid="wallet-icon" />,
   Loader2: () => <div data-testid="loader-icon" />,
+  PieChart: () => <div data-testid="pie-chart-icon" />,
 }));
 
 // Import after mocking to get the mocked version
@@ -921,7 +943,62 @@ describe('ViewEventDialog', () => {
     const manageButton = screen.getByText('Manage Musicians');
     fireEvent.click(manageButton);
 
-    expect(mockNavigate).toHaveBeenCalledWith('/events/1/musicians');
-    expect(mockOnOpenChange).toHaveBeenCalledWith(false);
-  });
-});
+     expect(mockNavigate).toHaveBeenCalledWith('/events/1/musicians');
+     expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+   });
+
+   describe('Reports section', () => {
+     it('should render Reports section with title and two icon-only buttons', async () => {
+       render(
+         <UserProvider>
+           <ViewEventDialog
+             eventId={1}
+             open={true}
+             onOpenChange={() => {}}
+           />
+         </UserProvider>
+       );
+
+       await waitFor(() => {
+         expect(screen.getByText('Test Event')).toBeTruthy();
+       });
+
+       // Check Reports section title
+       expect(screen.getByText('Reports')).toBeTruthy();
+
+       // Check two icon-only buttons (they should have aria-label or title for accessibility)
+       const reportButtons = screen.getAllByRole('button', { name: /^(billing summary|musician payment summary)$/i });
+       expect(reportButtons).toHaveLength(2);
+
+       // Alternatively, check by testid or label if we implement with aria-label
+       // We'll check for buttons that contain icons (we can check for the icon testids)
+       const billingButton = screen.getByLabelText(/billing summary/i);
+       const musicianButton = screen.getByLabelText(/musician payment summary/i);
+       expect(billingButton).toBeTruthy();
+       expect(musicianButton).toBeTruthy();
+     });
+
+     it('should have accessible labels on report buttons', async () => {
+       render(
+         <UserProvider>
+           <ViewEventDialog
+             eventId={1}
+             open={true}
+             onOpenChange={() => {}}
+           />
+         </UserProvider>
+       );
+
+       await waitFor(() => {
+         expect(screen.getByText('Test Event')).toBeTruthy();
+       });
+
+       // Check that buttons have accessible labels (aria-label or title)
+       const billingButton = screen.getByLabelText(/billing summary/i);
+       expect(billingButton).toHaveAttribute('aria-label');
+       
+       const musicianButton = screen.getByLabelText(/musician payment summary/i);
+       expect(musicianButton).toHaveAttribute('aria-label');
+     });
+   });
+ });

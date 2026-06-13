@@ -199,14 +199,13 @@
       },
       "failedToCreate": "Error al crear pago"
     },
-    "dialog": {
-      "view": {
-        "title": "Detalles del Evento",
-        "description": "Ver información del evento",
-        "loading": "Cargando evento...",
-        "error": "Error",
-        "description": "Descripción",
-        "date": "Fecha",
+"dialog": {
+       "view": {
+         "title": "Detalles del Evento",
+         "description": "Ver información del evento",
+         "loading": "Cargando evento...",
+         "error": "Error",
+         "date": "Fecha",
         "time": "Hora",
         "allDay": "Evento de todo el día",
         "location": "Ubicación",
@@ -218,8 +217,21 @@
         "editEvent": "Editar Evento",
         "manageMusicians": "Gestionar Músicos",
         "paymentDetails": "Detalles de Pago",
-        "makePayment": "Realizar Pago",
-        "viewMyPayments": "Ver Mis Pagos",
+"makePayment": "Realizar Pago",
+          "viewMyPayments": "Ver Mis Pagos",
+          "reports": "Reportes",
+          "billingSummaryLabel": "Resumen de Facturación",
+          "musicianPaymentSummaryLabel": "Resumen de Pago de Músicos",
+          "billingSummaryTitle": "Resumen de Facturación",
+          "musicianPaymentSummaryTitle": "Resumen de Pago de Músicos",
+          "eventName": "Nombre del Evento",
+          "eventPrice": "Precio del Evento",
+          "paymentDone": "Pago Completado",
+          "remainingPayment": "Pago Restante",
+          "sumOfMusicianSalaries": "Suma de Salarios de Músicos",
+          "paymentDoneToMusicians": "Pago Realizado a Músicos",
+          "noData": "No hay datos disponibles",
+          "musicianName": "Nombre del Músico",
         "validation": {
           "invalidAmount": "Por favor ingresa un número válido",
           "priceNegative": "El precio no puede ser negativo"

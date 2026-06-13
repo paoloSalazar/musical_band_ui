@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
-import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save, CreditCard, Wallet, Users } from 'lucide-react';
+import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save, CreditCard, Wallet, Users, PieChart } from 'lucide-react';
 import { ViewPaymentDetailsDialog } from './ViewPaymentDetailsDialog';
 import { MakePaymentDialog } from './MakePaymentDialog';
 
@@ -54,6 +54,17 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   // Personal musician payment summary (for musician/auxiliar/helper roles)
   const [myMusicianAssignment, setMyMusicianAssignment] = useState<EventMusician | null>(null);
   const [showMyMusicianPayments, setShowMyMusicianPayments] = useState(false);
+
+  // Reports state
+  const [billingSummaryLoading, setBillingSummaryLoading] = useState(false);
+  const [billingSummaryData, setBillingSummaryData] = useState<any>(null);
+  const [billingSummaryError, setBillingSummaryError] = useState<string | null>(null);
+  const [showBillingSummaryPopup, setShowBillingSummaryPopup] = useState(false);
+
+  const [musicianSummaryLoading, setMusicianSummaryLoading] = useState(false);
+  const [musicianSummaryData, setMusicianSummaryData] = useState<any[]>([]);
+  const [musicianSummaryError, setMusicianSummaryError] = useState<string | null>(null);
+  const [showMusicianSummaryPopup, setShowMusicianSummaryPopup] = useState(false);
 
   useEffect(() => {
     if (open && eventId) {
@@ -162,10 +173,85 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
     } catch (err) {
       const apiError = err as ApiError;
       setPriceError(apiError.detail || apiError.message || t('events.dialog.view.failedToUpdate'));
-    } finally {
-      setIsUpdatingPrice(false);
-    }
-  };
+     } finally {
+       setIsUpdatingPrice(false);
+     }
+   };
+
+   const handleFetchBillingSummary = async () => {
+     if (!event) return;
+     
+     setBillingSummaryLoading(true);
+     setBillingSummaryError(null);
+     try {
+       // TODO: Replace with actual API call when endpoint is available
+       // const response = await eventsApi.getEventBillingSummary(event.id);
+       // setBillingSummaryData(response.data);
+       
+       // For now, simulating API call with mock data
+       await new Promise(resolve => setTimeout(resolve, 1000));
+       setBillingSummaryData({
+         eventName: event.name,
+         eventPrice: event.price || 0,
+         paymentDone: Math.floor((event.price || 0) * 0.6),
+         remainingPayment: Math.floor((event.price || 0) * 0.4),
+         sumOfMusicianSalaries: Math.floor((event.price || 0) * 2.5),
+         paymentDoneToMusicians: Math.floor((event.price || 0) * 1.2)
+       });
+       
+       setShowBillingSummaryPopup(true);
+     } catch (err) {
+       const apiError = err as ApiError;
+       setBillingSummaryError(apiError.detail || apiError.message || 'Failed to load billing summary');
+     } finally {
+       setBillingSummaryLoading(false);
+     }
+   };
+
+   const handleFetchMusicianPaymentSummary = async () => {
+     if (!event) return;
+     
+     setMusicianSummaryLoading(true);
+     setMusicianSummaryError(null);
+     try {
+       // TODO: Replace with actual API call when endpoint is available
+       // const response = await eventsApi.getEventMusicianPaymentSummary(event.id);
+       // setMusicianSummaryData(response.data);
+       
+       // For now, simulating API call with mock data
+       await new Promise(resolve => setTimeout(resolve, 1000));
+       setMusicianSummaryData([
+         {
+           musicianName: 'John Doe',
+           role: 'Violinist',
+           salary: 500.00,
+           paymentDone: 250.00,
+           remainingPayment: 250.00
+         },
+         {
+           musicianName: 'Jane Smith',
+           role: 'Pianist',
+           salary: 400.00,
+           paymentDone: 400.00,
+           remainingPayment: 0.00
+         },
+         {
+           musicianName: 'Bob Johnson',
+           role: 'Drummer',
+           salary: 300.00,
+           paymentDone: 150.00,
+           remainingPayment: 150.00
+         }
+       ]);
+       
+       setShowMusicianSummaryPopup(true);
+     } catch (err) {
+       const apiError = err as ApiError;
+       setMusicianSummaryError(apiError.detail || apiError.message || 'Failed to load musician payment summary');
+     } finally {
+       setMusicianSummaryLoading(false);
+     }
+   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -328,20 +414,64 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
               </div>
             )}
 
-            {/* Created By */}
-            {event.created_by && (
-              <div className="flex items-start space-x-2">
-                <User className="h-4 w-4 mt-1 text-gray-500" />
-                <div>
-                  <p className="text-sm text-gray-500">{t('events.dialog.view.createdBy')}</p>
-                  <p className="text-sm">
-                    {event.created_by.name} {event.created_by.lastname}
-                  </p>
-                  <p className="text-xs text-gray-500">{event.created_by.email}</p>
-                </div>
-              </div>
-            )}
-          </div>
+             {/* Created By */}
+             {event.created_by && (
+               <div className="flex items-start space-x-2">
+                 <User className="h-4 w-4 mt-1 text-gray-500" />
+                 <div>
+                   <p className="text-sm text-gray-500">{t('events.dialog.view.createdBy')}</p>
+                   <p className="text-sm">
+                     {event.created_by.name} {event.created_by.lastname}
+                   </p>
+                   <p className="text-xs text-gray-500">{event.created_by.email}</p>
+                 </div>
+               </div>
+             )}
+             
+             {/* Reports section */}
+             {event && (
+               <div className="space-y-4">
+                 <div className="space-y-1">
+                   <h3 className="text-xl font-semibold">{t('events.dialog.view.reports')}</h3>
+                 </div>
+                 
+                 {/* Report buttons container */}
+                 <div className="flex items-start space-x-2">
+                    {/* Billing summary button */}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleFetchBillingSummary}
+                      disabled={billingSummaryLoading}
+                      aria-label={t('events.dialog.view.billingSummaryLabel')}
+                      {...(billingSummaryLoading ? { 'aria-busy': 'true' } : {})}
+                    >
+                      {billingSummaryLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <PieChart className="h-4 w-4" />
+                      )}
+                    </Button>
+                    
+                    {/* Musician payment summary button */}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleFetchMusicianPaymentSummary}
+                      disabled={musicianSummaryLoading}
+                      aria-label={t('events.dialog.view.musicianPaymentSummaryLabel')}
+                      {...(musicianSummaryLoading ? { 'aria-busy': 'true' } : {})}
+                    >
+                      {musicianSummaryLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Users className="h-4 w-4" />
+                      )}
+                    </Button>
+                 </div>
+               </div>
+             )}
+           </div>
         ) : null}
 
         <DialogFooter>
@@ -417,17 +547,190 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
       />
     )}
 
-    {/* Personal Musician Payment Summary Dialog (for musician/auxiliar_musician/helper roles viewing their own assignment) */}
-    {event && myMusicianAssignment && (
-      <ViewMusicianPaymentsDialog
-        eventId={event.id}
-        musicianId={myMusicianAssignment.musician_id}
-        musicianName={`${myMusicianAssignment.musician_name} ${myMusicianAssignment.musician_lastname}`}
-        salary={myMusicianAssignment.salary}
-        open={showMyMusicianPayments}
-        onOpenChange={setShowMyMusicianPayments}
-      />
-    )}
-    </Dialog>
+     {/* Personal Musician Payment Summary Dialog (for musician/auxiliar_musician/helper roles viewing their own assignment) */}
+     {event && myMusicianAssignment && (
+       <ViewMusicianPaymentsDialog
+         eventId={event.id}
+         musicianId={myMusicianAssignment.musician_id}
+         musicianName={`${myMusicianAssignment.musician_name} ${myMusicianAssignment.musician_lastname}`}
+         salary={myMusicianAssignment.salary}
+         open={showMyMusicianPayments}
+         onOpenChange={setShowMyMusicianPayments}
+       />
+     )}
+     
+     {/* Billing Summary Popup */}
+     {event && (
+       <div data-testid="billing-summary-popup" data-open={showBillingSummaryPopup}>
+         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+           <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
+             <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setShowBillingSummaryPopup(false)}>
+               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+               </svg>
+             </button>
+             <h3 className="text-lg font-bold mb-4">{t('events.dialog.view.billingSummaryTitle')}</h3>
+             {billingSummaryLoading ? (
+               <div className="flex items-center justify-center py-8">
+                 <Loader2 className="h-6 w-6 animate-spin" />
+               </div>
+             ) : billingSummaryError ? (
+               <p className="text-red-600 text-center">{billingSummaryError}</p>
+             ) : billingSummaryData ? (
+               <div className="space-y-4">
+                 <div className="grid grid-cols-2 gap-4">
+                   <div>
+                     <p className="text-sm text-gray-500">{t('events.dialog.view.eventName')}</p>
+                     <p className="text-xl font-semibold">{billingSummaryData.eventName}</p>
+                   </div>
+                   <div>
+                     <p className="text-sm text-gray-500">{t('events.dialog.view.eventPrice')}</p>
+                     <p className="text-xl font-semibold">{billingSummaryData.eventPrice.toFixed(2)}</p>
+                   </div>
+                 </div>
+                 <div className="grid grid-cols-2 gap-4">
+                   <div>
+                     <p className="text-sm text-gray-500">{t('events.dialog.view.paymentDone')}</p>
+                     <p className={`
+                       text-xl font-semibold ${ 
+                         billingSummaryData.paymentDone < billingSummaryData.eventPrice 
+                           ? 'text-amber-600' 
+                           : billingSummaryData.paymentDone === billingSummaryData.eventPrice 
+                             ? 'text-green-600' 
+                             : 'text-red-600'
+                       }
+                     `}>
+                       {billingSummaryData.paymentDone.toFixed(2)}
+                     </p>
+                   </div>
+                   <div>
+                     <p className="text-sm text-gray-500">{t('events.dialog.view.remainingPayment')}</p>
+                     <p className={`
+                       text-xl font-semibold ${ 
+                         billingSummaryData.paymentDone < billingSummaryData.eventPrice 
+                           ? 'text-red-600' 
+                           : 'text-gray-600'
+                       }
+                     `}>
+                       {billingSummaryData.remainingPayment.toFixed(2)}
+                     </p>
+                   </div>
+                 </div>
+                 <div className="grid grid-cols-2 gap-4">
+                   <div>
+                     <p className="text-sm text-gray-500">{t('events.dialog.view.sumOfMusicianSalaries')}</p>
+                     <p className="text-xl font-semibold">{billingSummaryData.sumOfMusicianSalaries.toFixed(2)}</p>
+                   </div>
+                   <div>
+                     <p className="text-sm text-gray-500">{t('events.dialog.view.paymentDoneToMusicians')}</p>
+                     <p className={`
+                       text-xl font-semibold ${ 
+                         billingSummaryData.sumOfMusicianSalaries > billingSummaryData.paymentDoneToMusicians 
+                           ? 'text-amber-600' 
+                           : billingSummaryData.sumOfMusicianSalaries === billingSummaryData.paymentDoneToMusicians 
+                             ? 'text-green-600' 
+                             : 'text-red-600'
+                       }
+                     `}>
+                       {billingSummaryData.paymentDoneToMusicians.toFixed(2)}
+                     </p>
+                   </div>
+                 </div>
+               </div>
+             ) : (
+               <p className="text-center">{t('events.dialog.view.noData')}</p>
+             )}
+             <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => setShowBillingSummaryPopup(false)}>
+               {t('common.close')}
+             </button>
+           </div>
+         </div>
+       </div>
+     )}
+
+     {/* Musician Payment Summary Popup */}
+     {event && (
+       <div data-testid="musician-summary-popup" data-open={showMusicianSummaryPopup}>
+         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+           <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
+             <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setShowMusicianSummaryPopup(false)}>
+               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+               </svg>
+             </button>
+             <h3 className="text-lg font-bold mb-4">{t('events.dialog.view.musicianPaymentSummaryTitle')}</h3>
+             {musicianSummaryLoading ? (
+               <div className="flex items-center justify-center py-8">
+                 <Loader2 className="h-6 w-6 animate-spin" />
+               </div>
+             ) : musicianSummaryError ? (
+               <p className="text-red-600 text-center">{musicianSummaryError}</p>
+             ) : musicianSummaryData && musicianSummaryData.length > 0 ? (
+               <div className="space-y-4">
+                 <table className="min-w-full divide-y divide-gray-200">
+                   <thead className="bg-gray-50">
+                     <tr>
+                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.musicianName')}</th>
+                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.role')}</th>
+                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.salary')}</th>
+                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.paymentDone')}</th>
+                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.remainingPayment')}</th>
+                     </tr>
+                   </thead>
+                   <tbody className="bg-white divide-y divide-gray-200">
+                     {musicianSummaryData.map((musician, index) => (
+                       <tr key={index} className="hover:bg-gray-50">
+                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                           {musician.musicianName}
+                         </td>
+                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                           {musician.role}
+                         </td>
+                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                           {musician.salary.toFixed(2)}
+                         </td>
+                         <td className="px-6 py-4 whitespace-nowrap">
+                           <span className={`
+                             px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ 
+                               musician.paymentDone < musician.salary 
+                                 ? 'bg-amber-100 text-amber-800'
+                                 : musician.paymentDone === musician.salary
+                                   ? 'bg-green-100 text-green-800'
+                                   : 'bg-red-100 text-red-800'
+                             }
+                           `}>
+                             {musician.paymentDone.toFixed(2)}
+                           </span>
+                         </td>
+                         <td className="px-6 py-4 whitespace-nowrap">
+                           <span className={`
+                             px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ 
+                               musician.paymentDone < musician.salary 
+                                 ? 'bg-red-100 text-red-600'
+                                 : 'bg-gray-100 text-gray-600'
+                             }
+                           `}>
+                             {musician.remainingPayment.toFixed(2)}
+                           </span>
+                         </td>
+                       </tr>
+                     ))}
+                   </tbody>
+                 </table>
+                 {musicianSummaryData.length === 0 && (
+                   <p className="text-center">{t('events.dialog.view.noData')}</p>
+                 )}
+               </div>
+             ) : (
+               <p className="text-center">{t('events.dialog.view.noData')}</p>
+             )}
+             <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => setShowMusicianSummaryPopup(false)}>
+               {t('common.close')}
+             </button>
+           </div>
+         </div>
+       </div>
+     )}
+     </Dialog>
   );
 }
