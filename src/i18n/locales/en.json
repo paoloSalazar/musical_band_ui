@@ -231,11 +231,13 @@
           "paymentDoneToMusicians": "Payment Done to Musicians",
           "noData": "No data available",
           "musicianName": "Musician Name",
-         "validation": {
-           "invalidAmount": "Please enter a valid number",
-           "priceNegative": "Price cannot be negative"
-         },
-         "failedToUpdate": "Failed to update price"
+"validation": {
+            "invalidAmount": "Please enter a valid number",
+            "priceNegative": "Price cannot be negative"
+          },
+          "failedToUpdate": "Failed to update price",
+          "failedToLoadBillingSummary": "Failed to load billing summary",
+          "failedToLoadMusicianPaymentSummary": "Failed to load musician payment summary"
        }
      },
     "list": {

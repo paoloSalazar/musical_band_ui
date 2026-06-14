@@ -232,11 +232,13 @@
           "paymentDoneToMusicians": "Pago Realizado a Músicos",
           "noData": "No hay datos disponibles",
           "musicianName": "Nombre del Músico",
-        "validation": {
-          "invalidAmount": "Por favor ingresa un número válido",
-          "priceNegative": "El precio no puede ser negativo"
-        },
-        "failedToUpdate": "Error al actualizar el precio"
+"validation": {
+           "invalidAmount": "Por favor ingresa un número válido",
+           "priceNegative": "El precio no puede ser negativo"
+         },
+         "failedToUpdate": "Error al actualizar el precio",
+         "failedToLoadBillingSummary": "Error al cargar el resumen de facturación",
+         "failedToLoadMusicianPaymentSummary": "Error al cargar el resumen de pago de músicos"
       }
     },
     "list": {

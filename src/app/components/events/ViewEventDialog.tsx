@@ -178,80 +178,39 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
      }
    };
 
-   const handleFetchBillingSummary = async () => {
-     if (!event) return;
-     
-     setBillingSummaryLoading(true);
-     setBillingSummaryError(null);
-     try {
-       // TODO: Replace with actual API call when endpoint is available
-       // const response = await eventsApi.getEventBillingSummary(event.id);
-       // setBillingSummaryData(response.data);
-       
-       // For now, simulating API call with mock data
-       await new Promise(resolve => setTimeout(resolve, 1000));
-       setBillingSummaryData({
-         eventName: event.name,
-         eventPrice: event.price || 0,
-         paymentDone: Math.floor((event.price || 0) * 0.6),
-         remainingPayment: Math.floor((event.price || 0) * 0.4),
-         sumOfMusicianSalaries: Math.floor((event.price || 0) * 2.5),
-         paymentDoneToMusicians: Math.floor((event.price || 0) * 1.2)
-       });
-       
-       setShowBillingSummaryPopup(true);
-     } catch (err) {
-       const apiError = err as ApiError;
-       setBillingSummaryError(apiError.detail || apiError.message || 'Failed to load billing summary');
-     } finally {
-       setBillingSummaryLoading(false);
-     }
-   };
+const handleFetchBillingSummary = async () => {
+      if (!event) return;
+      
+      setBillingSummaryLoading(true);
+      setBillingSummaryError(null);
+      try {
+        const response = await eventsApi.getEventBillingSummary(event.id);
+        setBillingSummaryData(response.data);
+        setShowBillingSummaryPopup(true);
+      } catch (err) {
+        const apiError = err as ApiError;
+        setBillingSummaryError(apiError.detail || apiError.message || t('events.dialog.view.failedToLoadBillingSummary'));
+      } finally {
+        setBillingSummaryLoading(false);
+      }
+    };
 
-   const handleFetchMusicianPaymentSummary = async () => {
-     if (!event) return;
-     
-     setMusicianSummaryLoading(true);
-     setMusicianSummaryError(null);
-     try {
-       // TODO: Replace with actual API call when endpoint is available
-       // const response = await eventsApi.getEventMusicianPaymentSummary(event.id);
-       // setMusicianSummaryData(response.data);
-       
-       // For now, simulating API call with mock data
-       await new Promise(resolve => setTimeout(resolve, 1000));
-       setMusicianSummaryData([
-         {
-           musicianName: 'John Doe',
-           role: 'Violinist',
-           salary: 500.00,
-           paymentDone: 250.00,
-           remainingPayment: 250.00
-         },
-         {
-           musicianName: 'Jane Smith',
-           role: 'Pianist',
-           salary: 400.00,
-           paymentDone: 400.00,
-           remainingPayment: 0.00
-         },
-         {
-           musicianName: 'Bob Johnson',
-           role: 'Drummer',
-           salary: 300.00,
-           paymentDone: 150.00,
-           remainingPayment: 150.00
-         }
-       ]);
-       
-       setShowMusicianSummaryPopup(true);
-     } catch (err) {
-       const apiError = err as ApiError;
-       setMusicianSummaryError(apiError.detail || apiError.message || 'Failed to load musician payment summary');
-     } finally {
-       setMusicianSummaryLoading(false);
-     }
-   };
+const handleFetchMusicianPaymentSummary = async () => {
+      if (!event) return;
+      
+      setMusicianSummaryLoading(true);
+      setMusicianSummaryError(null);
+      try {
+        const response = await eventsApi.getEventMusicianPaymentSummary(event.id);
+        setMusicianSummaryData(response.data);
+        setShowMusicianSummaryPopup(true);
+      } catch (err) {
+        const apiError = err as ApiError;
+        setMusicianSummaryError(apiError.detail || apiError.message || t('events.dialog.view.failedToLoadMusicianPaymentSummary'));
+      } finally {
+        setMusicianSummaryLoading(false);
+      }
+    };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

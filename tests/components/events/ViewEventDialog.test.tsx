@@ -82,11 +82,12 @@ vi.mock('react-i18next', () => ({
          'events.payment.summary.remaining': 'Remaining',
          'events.payment.history.title': 'Payment History',
          'events.payment.history.noPayments': 'No payments have been made yet.',
-         'events.payment.ADVANCE': 'Advance Payment',
-         'events.payment.REMAINING': 'Remaining Balance',
-         'events.payment.TOTAL': 'Full Payment',
-         'events.payment.buttons.close': 'Close',
-         'common.cancel': 'Cancel',
+'events.payment.ADVANCE': 'Advance Payment',
+          'events.payment.REMAINING': 'Remaining Balance',
+          'events.payment.TOTAL': 'Full Payment',
+          'events.payment.buttons.close': 'Close',
+          'common.close': 'Close',
+          'common.cancel': 'Cancel',
          'events.dialog.view.musicianName': 'Musician Name',
          'events.dialog.view.role': 'Role',
          'events.dialog.view.salary': 'Salary',
@@ -978,27 +979,163 @@ describe('ViewEventDialog', () => {
        expect(musicianButton).toBeTruthy();
      });
 
-     it('should have accessible labels on report buttons', async () => {
-       render(
-         <UserProvider>
-           <ViewEventDialog
-             eventId={1}
-             open={true}
-             onOpenChange={() => {}}
-           />
-         </UserProvider>
-       );
+it('should have accessible labels on report buttons', async () => {
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
 
-       await waitFor(() => {
-         expect(screen.getByText('Test Event')).toBeTruthy();
-       });
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
 
-       // Check that buttons have accessible labels (aria-label or title)
-       const billingButton = screen.getByLabelText(/billing summary/i);
-       expect(billingButton).toHaveAttribute('aria-label');
-       
-       const musicianButton = screen.getByLabelText(/musician payment summary/i);
-       expect(musicianButton).toHaveAttribute('aria-label');
-     });
-   });
+      // Check that buttons have accessible labels (aria-label or title)
+      const billingButton = screen.getByLabelText(/billing summary/i);
+      expect(billingButton).toHaveAttribute('aria-label');
+      
+      const musicianButton = screen.getByLabelText(/musician payment summary/i);
+      expect(musicianButton).toHaveAttribute('aria-label');
+    });
+
+    it('should call billing summary API and show loading state when billing button is clicked', async () => {
+      mockEventsApi.getEventBillingSummary.mockResolvedValue({
+        data: {
+          eventName: 'Test Event',
+          eventPrice: 1000.00,
+          paymentDone: 500.00,
+          remainingPayment: 500.00,
+          sumOfMusicianSalaries: 3000.00,
+          paymentDoneToMusicians: 1500.00
+        },
+      });
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      // Click billing summary button
+      const billingButton = screen.getByLabelText(/billing summary/i);
+      fireEvent.click(billingButton);
+
+      // Wait for API call to be made
+      await waitFor(() => {
+        expect(mockEventsApi.getEventBillingSummary).toHaveBeenCalledWith(1);
+      });
+    });
+
+    it('should call musician payment summary API and show loading state when musician button is clicked', async () => {
+      mockEventsApi.getEventMusicianPaymentSummary.mockResolvedValue({
+        data: [
+          {
+            musicianName: 'John Doe',
+            role: 'Violinist',
+            salary: 500.00,
+            paymentDone: 250.00,
+            remainingPayment: 250.00
+          },
+          {
+            musicianName: 'Jane Smith',
+            role: 'Pianist',
+            salary: 300.00,
+            paymentDone: 300.00,
+            remainingPayment: 0.00
+          }
+        ],
+      });
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      // Click musician payment summary button
+      const musicianButton = screen.getByLabelText(/musician payment summary/i);
+      fireEvent.click(musicianButton);
+
+      // Wait for API call to be made
+      await waitFor(() => {
+        expect(mockEventsApi.getEventMusicianPaymentSummary).toHaveBeenCalledWith(1);
+      });
+    });
+
+    it('should handle billing summary API error', async () => {
+      mockEventsApi.getEventBillingSummary.mockRejectedValue(
+        new Error('Failed to fetch billing summary')
+      );
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      const billingButton = screen.getByLabelText(/billing summary/i);
+      fireEvent.click(billingButton);
+
+      // Wait for error to be displayed in popup
+      await waitFor(() => {
+        expect(screen.getByText('Failed to fetch billing summary')).toBeTruthy();
+      });
+    });
+
+    it('should handle musician payment summary API error', async () => {
+      mockEventsApi.getEventMusicianPaymentSummary.mockRejectedValue(
+        new Error('Failed to fetch musician payment summary')
+      );
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      const musicianButton = screen.getByLabelText(/musician payment summary/i);
+      fireEvent.click(musicianButton);
+
+      // Wait for error to be displayed in popup
+      await waitFor(() => {
+        expect(screen.getByText('Failed to fetch musician payment summary')).toBeTruthy();
+      });
+    });
+  });
  });

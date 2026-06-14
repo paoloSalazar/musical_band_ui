@@ -230,13 +230,29 @@ export const eventsApi = {
     return apiClient.get<any[]>(`/events/${eventId}/musicians/${musicianId}/payments`);
   },
 
-  /**
-   * Get payment summary for a musician in an event
-   */
+/**
+    * Get payment summary for a musician in an event
+    */
   getMusicianPaymentSummary: async (
     eventId: number,
     musicianId: number
   ): Promise<ApiResponse<any>> => {
     return apiClient.get<any>(`/events/${eventId}/musicians/${musicianId}/payments/summary`);
+  },
+
+  /**
+    * Get billing summary for an event
+    * GET /api/events/{event_id}/billing-summary
+    */
+  getEventBillingSummary: async (eventId: number): Promise<ApiResponse<any>> => {
+    return apiClient.get<any>(`/events/${eventId}/billing-summary`);
+  },
+
+  /**
+    * Get musician payment summary for an event
+    * GET /api/events/{event_id}/musicians/payment-summary
+    */
+  getEventMusicianPaymentSummary: async (eventId: number): Promise<ApiResponse<any[]>> => {
+    return apiClient.get<any[]>(`/events/${eventId}/musicians/payment-summary`);
   },
 };
