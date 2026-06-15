@@ -5,6 +5,7 @@ import { eventsApi } from '../../lib/api';
 import type { Event, EventMusician } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
 import { ViewMusicianPaymentsDialog } from './ViewMusicianPaymentsDialog';
+import { BillingSummaryPopup } from './BillingSummaryPopup';
 import { formatDateHumanReadable, formatTimeHumanReadable } from '../../lib/timezone';
 import { useUser } from '../../contexts/UserContext';
 import { Button } from '../ui/button';
@@ -518,178 +519,95 @@ const handleFetchMusicianPaymentSummary = async () => {
        />
      )}
      
-     {/* Billing Summary Popup */}
-     {event && (
-       <div data-testid="billing-summary-popup" data-open={showBillingSummaryPopup}>
-         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-           <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
-             <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setShowBillingSummaryPopup(false)}>
-               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-               </svg>
-             </button>
-             <h3 className="text-lg font-bold mb-4">{t('events.dialog.view.billingSummaryTitle')}</h3>
-             {billingSummaryLoading ? (
-               <div className="flex items-center justify-center py-8">
-                 <Loader2 className="h-6 w-6 animate-spin" />
-               </div>
-             ) : billingSummaryError ? (
-               <p className="text-red-600 text-center">{billingSummaryError}</p>
-             ) : billingSummaryData ? (
-               <div className="space-y-4">
-                 <div className="grid grid-cols-2 gap-4">
-                   <div>
-                     <p className="text-sm text-gray-500">{t('events.dialog.view.eventName')}</p>
-                     <p className="text-xl font-semibold">{billingSummaryData.eventName}</p>
-                   </div>
-                   <div>
-                     <p className="text-sm text-gray-500">{t('events.dialog.view.eventPrice')}</p>
-                     <p className="text-xl font-semibold">{billingSummaryData.eventPrice.toFixed(2)}</p>
-                   </div>
-                 </div>
-                 <div className="grid grid-cols-2 gap-4">
-                   <div>
-                     <p className="text-sm text-gray-500">{t('events.dialog.view.paymentDone')}</p>
-                     <p className={`
-                       text-xl font-semibold ${ 
-                         billingSummaryData.paymentDone < billingSummaryData.eventPrice 
-                           ? 'text-amber-600' 
-                           : billingSummaryData.paymentDone === billingSummaryData.eventPrice 
-                             ? 'text-green-600' 
-                             : 'text-red-600'
-                       }
-                     `}>
-                       {billingSummaryData.paymentDone.toFixed(2)}
-                     </p>
-                   </div>
-                   <div>
-                     <p className="text-sm text-gray-500">{t('events.dialog.view.remainingPayment')}</p>
-                     <p className={`
-                       text-xl font-semibold ${ 
-                         billingSummaryData.paymentDone < billingSummaryData.eventPrice 
-                           ? 'text-red-600' 
-                           : 'text-gray-600'
-                       }
-                     `}>
-                       {billingSummaryData.remainingPayment.toFixed(2)}
-                     </p>
-                   </div>
-                 </div>
-                 <div className="grid grid-cols-2 gap-4">
-                   <div>
-                     <p className="text-sm text-gray-500">{t('events.dialog.view.sumOfMusicianSalaries')}</p>
-                     <p className="text-xl font-semibold">{billingSummaryData.sumOfMusicianSalaries.toFixed(2)}</p>
-                   </div>
-                   <div>
-                     <p className="text-sm text-gray-500">{t('events.dialog.view.paymentDoneToMusicians')}</p>
-                     <p className={`
-                       text-xl font-semibold ${ 
-                         billingSummaryData.sumOfMusicianSalaries > billingSummaryData.paymentDoneToMusicians 
-                           ? 'text-amber-600' 
-                           : billingSummaryData.sumOfMusicianSalaries === billingSummaryData.paymentDoneToMusicians 
-                             ? 'text-green-600' 
-                             : 'text-red-600'
-                       }
-                     `}>
-                       {billingSummaryData.paymentDoneToMusicians.toFixed(2)}
-                     </p>
-                   </div>
-                 </div>
-               </div>
-             ) : (
-               <p className="text-center">{t('events.dialog.view.noData')}</p>
-             )}
-             <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => setShowBillingSummaryPopup(false)}>
-               {t('common.close')}
-             </button>
-           </div>
-         </div>
-       </div>
-     )}
+{/* Billing Summary Popup */}
+      <BillingSummaryPopup
+        open={showBillingSummaryPopup}
+        onOpenChange={setShowBillingSummaryPopup}
+        data={billingSummaryData}
+        loading={billingSummaryLoading}
+        error={billingSummaryError}
+      />
 
-     {/* Musician Payment Summary Popup */}
-     {event && (
-       <div data-testid="musician-summary-popup" data-open={showMusicianSummaryPopup}>
-         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-           <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
-             <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setShowMusicianSummaryPopup(false)}>
-               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-               </svg>
-             </button>
-             <h3 className="text-lg font-bold mb-4">{t('events.dialog.view.musicianPaymentSummaryTitle')}</h3>
-             {musicianSummaryLoading ? (
-               <div className="flex items-center justify-center py-8">
-                 <Loader2 className="h-6 w-6 animate-spin" />
-               </div>
-             ) : musicianSummaryError ? (
-               <p className="text-red-600 text-center">{musicianSummaryError}</p>
-             ) : musicianSummaryData && musicianSummaryData.length > 0 ? (
-               <div className="space-y-4">
-                 <table className="min-w-full divide-y divide-gray-200">
-                   <thead className="bg-gray-50">
-                     <tr>
-                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.musicianName')}</th>
-                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.role')}</th>
-                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.salary')}</th>
-                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.paymentDone')}</th>
-                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.remainingPayment')}</th>
-                     </tr>
-                   </thead>
-                   <tbody className="bg-white divide-y divide-gray-200">
-                     {musicianSummaryData.map((musician, index) => (
-                       <tr key={index} className="hover:bg-gray-50">
-                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                           {musician.musicianName}
-                         </td>
-                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                           {musician.role}
-                         </td>
-                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                           {musician.salary.toFixed(2)}
-                         </td>
-                         <td className="px-6 py-4 whitespace-nowrap">
-                           <span className={`
-                             px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ 
-                               musician.paymentDone < musician.salary 
-                                 ? 'bg-amber-100 text-amber-800'
-                                 : musician.paymentDone === musician.salary
-                                   ? 'bg-green-100 text-green-800'
-                                   : 'bg-red-100 text-red-800'
-                             }
-                           `}>
-                             {musician.paymentDone.toFixed(2)}
-                           </span>
-                         </td>
-                         <td className="px-6 py-4 whitespace-nowrap">
-                           <span className={`
-                             px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ 
-                               musician.paymentDone < musician.salary 
-                                 ? 'bg-red-100 text-red-600'
-                                 : 'bg-gray-100 text-gray-600'
-                             }
-                           `}>
-                             {musician.remainingPayment.toFixed(2)}
-                           </span>
-                         </td>
-                       </tr>
-                     ))}
-                   </tbody>
-                 </table>
-                 {musicianSummaryData.length === 0 && (
-                   <p className="text-center">{t('events.dialog.view.noData')}</p>
-                 )}
-               </div>
-             ) : (
-               <p className="text-center">{t('events.dialog.view.noData')}</p>
-             )}
-             <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => setShowMusicianSummaryPopup(false)}>
-               {t('common.close')}
-             </button>
-           </div>
-         </div>
-       </div>
-     )}
-     </Dialog>
-  );
+      {/* Musician Payment Summary Popup */}
+      {event && (
+        <div data-testid="musician-summary-popup" data-open={showMusicianSummaryPopup}>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full relative">
+              <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onClick={() => setShowMusicianSummaryPopup(false)}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <h3 className="text-lg font-bold mb-4">{t('events.dialog.view.musicianPaymentSummaryTitle')}</h3>
+              {musicianSummaryLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                </div>
+              ) : musicianSummaryError ? (
+                <p className="text-red-600 text-center">{musicianSummaryError}</p>
+              ) : musicianSummaryData && musicianSummaryData.length > 0 ? (
+                <div className="space-y-4">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.musicianName')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.role')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.salary')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.paymentDone')}</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('events.dialog.view.remainingPayment')}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {musicianSummaryData.map((musician, index) => (
+                        <tr key={index} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {musician.musician_name}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {musician.role}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {parseFloat(musician.salary).toFixed(2)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`
+                              px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ 
+                                parseFloat(musician.payment_done) < parseFloat(musician.salary) 
+                                  ? 'bg-amber-100 text-amber-800'
+                                  : parseFloat(musician.payment_done) === parseFloat(musician.salary)
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-red-100 text-red-800'
+                              }
+                            `}>
+                              {parseFloat(musician.payment_done).toFixed(2)}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`
+                              px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ 
+                                parseFloat(musician.payment_done) < parseFloat(musician.salary) 
+                                  ? 'bg-red-100 text-red-600'
+                                  : 'bg-gray-100 text-gray-600'
+                              }
+                            `}>
+                              {parseFloat(musician.remaining_payment).toFixed(2)}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-center">{t('events.dialog.view.noData')}</p>
+              )}
+              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => setShowMusicianSummaryPopup(false)}>
+                {t('common.close')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      </Dialog>
+   );
 }
