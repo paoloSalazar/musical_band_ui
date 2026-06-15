@@ -195,6 +195,13 @@ vi.mock('@/app/components/events/BillingSummaryPopup', () => ({
   ),
 }));
 
+// Mock MusicianPaymentSummaryPopup component
+vi.mock('@/app/components/events/MusicianPaymentSummaryPopup', () => ({
+  MusicianPaymentSummaryPopup: vi.fn(({ open }) => 
+    open ? <div data-testid="musician-summary-popup" data-open={open}>Musician Payment Summary</div> : null
+  ),
+}));
+
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
   Pencil: () => <div data-testid="pencil-icon" />,
