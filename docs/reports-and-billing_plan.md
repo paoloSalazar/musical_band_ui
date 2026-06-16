@@ -108,11 +108,6 @@ Response:
 2. Implement proper error handling
 3. Use React Query or similar for data fetching if applicable, or use useState/useEffect
 
-### Phase 6: API Integration
-1. Create service functions for the two endpoints (if not already available)
-2. Implement proper error handling
-3. Use React Query or similar for data fetching if applicable, or use useState/useEffect
-
 ### Phase 7: Styling and UI/UX
 1. Ensure buttons are styled consistently with existing UI
 2. Make popups responsive and accessible
@@ -143,3 +138,128 @@ Response:
 - We need to extract eventId from the dialog's props or context
 - We should follow existing patterns in the codebase for API calls and UI components
 - Consider reusing existing popup/modal components to maintain consistency
+
+## Printed reports
+
+Tasks for implementing PDF report generation:
+
+### Task 1: Convert ViewMusicianPaymentsDialog.tsx to PDF format
+
+#### Description
+Add a print/download PDF button to the ViewMusicianPaymentsDialog component. Implement PDF generation that mirrors the React component structure.
+
+#### Libraries
+- **react-to-pdf**: For converting React components to PDF format
+
+#### Files to Modify
+- `src/app/components/events/ViewMusicianPaymentsDialog.tsx`
+
+#### Files to Create
+- `src/app/components/pdf/PrintButton.tsx` - Reusable print/download button component
+- `tests/components/pdf/PrintButton.test.tsx`
+
+#### TDD Approach
+1. Write tests for PrintButton component (verify it renders and calls onPrint callback)
+2. Write tests for ViewMusicianPaymentsDialog PDF integration (verify print button appears and PDF generation is triggered)
+3. Implement PrintButton component
+4. Implement PDF generation in ViewMusicianPaymentsDialog
+5. Run all tests
+
+#### Implementation Steps
+1. Install `react-to-pdf` library
+2. Create PrintButton component with icon and tooltip
+3. Add ref to dialog content for PDF generation target
+4. Add print button to dialog footer
+5. Implement PDF generation using react-to-pdf
+6. Style PDF output to match screen appearance (colors: orange for pending, green for paid)
+7. Test PDF download functionality
+
+### Task 2: Convert ViewPaymentDetailsDialog.tsx to PDF format
+
+#### Description
+Add a print/download PDF button to the ViewPaymentDetailsDialog component. Implement PDF generation that mirrors the React component structure.
+
+#### Libraries
+- **react-to-pdf**: For converting React components to PDF format
+
+#### Files to Modify
+- `src/app/components/events/ViewPaymentDetailsDialog.tsx`
+
+#### Files to Create
+- `src/app/components/pdf/PrintButton.tsx` - Reusable print/download button component (if not created in Task 1)
+- `tests/components/pdf/PrintButton.test.tsx` (if not created in Task 1)
+
+#### TDD Approach
+1. Write tests for ViewPaymentDetailsDialog PDF integration (verify print button appears and PDF generation is triggered)
+2. Implement PDF generation in ViewPaymentDetailsDialog
+3. Run all tests
+
+#### Implementation Steps
+1. Add ref to dialog content for PDF generation target
+2. Add print button to dialog footer
+3. Implement PDF generation using react-to-pdf
+4. Style PDF output to match screen appearance
+5. Test PDF download functionality
+
+### Task 3: Generate PDF Invoice
+
+#### Description
+Create a PDF invoice report based on `docs/invoice_sample.jpg` template.
+
+#### Fields (ESP)
+| Field | Description | Source |
+|-------|-------------|--------|
+| **Current date** | Fecha actual (filled in squares) | System date |
+| **Recibi de** | Name of event owner | `create_by.name` + `create_by.lastname` |
+| **La suma de** | Event price in literal text | `event_price` + numberToLiteral() |
+| **Por concepto de** | Event name | `name` |
+| **Fecha de evento** | Event start date | `start_datetime` |
+| **A cuenta** | Total of payment done | `payment_done` |
+| **Saldo** | Remaining payment | `remaining_payment` |
+| **Total** | Event price | `event_price` |
+| **Entregue Conforme** | Signature line (blank) | - |
+| **Recibi Conforme** | Signature line (blank) | - |
+
+#### Libraries
+- **react-to-pdf**: For converting React components to PDF format
+
+#### Files to Modify
+- `src/app/components/events/ViewEventDialog.tsx` - Add invoice generation button
+
+#### Files to Create
+- `src/app/utils/numberToLiteral.ts` - Utility to convert numbers to Spanish literal text
+- `src/app/components/invoice/InvoicePdf.tsx` - PDF invoice component using template
+- `src/app/components/invoice/InvoicePdfDialog.tsx` - Dialog wrapper for invoice PDF
+- `tests/app/utils/numberToLiteral.test.ts`
+- `tests/app/components/invoice/InvoicePdf.test.tsx`
+- `tests/app/components/invoice/InvoicePdfDialog.test.tsx`
+
+#### TDD Approach
+1. Write tests for `numberToLiteral` utility (test various numbers: 1-999, edge cases, thousands, decimals)
+2. Write tests for InvoicePdf component (verify all fields render correctly)
+3. Write tests for InvoicePdfDialog (verify dialog opens and PDF downloads)
+4. Implement `numberToLiteral` utility with support for:
+   - Integer values (1-999, thousands, millions)
+   - Decimal values (e.g., 532.50 → "quinientos treinta y dos con cincuenta pesos")
+   - Currency formatting with "pesos" suffix
+5. Implement InvoicePdf component with template styling
+6. Implement InvoicePdfDialog
+7. Integrate into ViewEventDialog
+8. Run all tests
+
+#### Implementation Steps
+1. Create `numberToLiteral` utility for Spanish number-to-text conversion
+2. Create InvoicePdf component with:
+   - Header with current date in squares
+   - "Recibi de" field with event owner name
+   - "La suma de" with literal number + "pesos"
+   - "Por concepto de" with event name
+   - "Fecha de evento" with event start date
+   - "A cuenta" with payment done amount
+   - "Saldo" with remaining payment
+   - "Total" with event price
+   - Two signature lines (Entregue Conforme, Recibi Conforme)
+3. Create InvoicePdfDialog for triggering PDF generation
+4. Add invoice button to ViewEventDialog
+5. Style PDF to match invoice_sample.jpg template
+6. Test PDF download and content accuracy
