@@ -11,9 +11,9 @@ vi.mock('react-i18next', () => ({
     t: vi.fn((key) => {
       const translations: Record<string, string> = {
         'events.dialog.view.musicianPaymentSummaryTitle': 'Musician Payment Summary',
-        'events.dialog.view.musicianName': 'Musician Name',
-        'events.dialog.view.role': 'Role',
-        'events.dialog.view.salary': 'Salary',
+        'events.musicianManagement.table.musician': 'Musician',
+        'events.musicianManagement.table.role': 'Role',
+        'events.musicianManagement.table.salary': 'Salary',
         'events.dialog.view.paymentDone': 'Payment Done',
         'events.dialog.view.remainingPayment': 'Remaining Payment',
         'events.dialog.view.noData': 'No data available',
