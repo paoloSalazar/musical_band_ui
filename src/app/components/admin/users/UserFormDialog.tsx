@@ -42,6 +42,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
   const [lastname, setLastname] = useState('');
   const [secondLastname, setSecondLastname] = useState('');
   const [email, setEmail] = useState('');
+  const [ci, setCi] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [roleId, setRoleId] = useState<string>('');
@@ -70,6 +71,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
     setLastname('');
     setSecondLastname('');
     setEmail('');
+    setCi('');
     setPhoneNumber('');
     setPassword('');
     setRoleId('');
@@ -116,6 +118,7 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
         lastname: lastname.trim(),
         second_lastname: secondLastname.trim() || undefined,
         email: email.trim(),
+        ci: ci.trim() || undefined,
         phone_number: phoneNumber.trim() || undefined,
         password: password.trim(),
         role_id: parseInt(roleId, 10),
@@ -221,6 +224,21 @@ export function UserFormDialog({ onSuccess, trigger }: UserFormDialogProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g., juan.perez@example.com"
+                className="col-span-3"
+                disabled={isLoading}
+              />
+            </div>
+            
+            {/* CI */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="ci" className="text-right">
+                {t('users.form.fields.ci')}
+              </Label>
+              <Input
+                id="ci"
+                value={ci}
+                onChange={(e) => setCi(e.target.value)}
+                placeholder="e.g., 12345678"
                 className="col-span-3"
                 disabled={isLoading}
               />

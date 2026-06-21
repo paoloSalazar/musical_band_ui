@@ -153,15 +153,16 @@ export function UsersListPage() {
               <div className="overflow-x-auto -mx-4 sm:mx-0">
                 <Table className="min-w-full">
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('users.table.id')}</TableHead>
-                      <TableHead>{t('users.table.name')}</TableHead>
-                      <TableHead>{t('users.table.lastName')}</TableHead>
-                      <TableHead>{t('users.table.phoneNumber')}</TableHead>
-                      <TableHead>{t('users.table.email')}</TableHead>
-                      <TableHead>{t('users.table.role')}</TableHead>
-                      <TableHead className="text-right">{t('users.table.actions')}</TableHead>
-                    </TableRow>
+<TableRow>
+                       <TableHead>{t('users.table.id')}</TableHead>
+                       <TableHead>{t('users.table.name')}</TableHead>
+                       <TableHead>{t('users.table.lastName')}</TableHead>
+                       <TableHead>{t('users.table.ci')}</TableHead>
+                       <TableHead>{t('users.table.phoneNumber')}</TableHead>
+                       <TableHead>{t('users.table.email')}</TableHead>
+                       <TableHead>{t('users.table.role')}</TableHead>
+                       <TableHead className="text-right">{t('users.table.actions')}</TableHead>
+                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {users.map((user) => (
@@ -173,12 +174,15 @@ export function UsersListPage() {
                             <span className="text-gray-500"> {capitalizeFirstLetter(user.second_lastname)}</span>
                           )}
                         </TableCell>
-                        <TableCell className="text-gray-600">
-                          {capitalizeFirstLetter(user.lastname)}
-                        </TableCell>
-                        <TableCell className="text-gray-600">
-                          {user.phone_number || '-'}
-                        </TableCell>
+<TableCell className="text-gray-600">
+                           {capitalizeFirstLetter(user.lastname)}
+                         </TableCell>
+                         <TableCell className="text-gray-600">
+                           {user.ci || '-'}
+                         </TableCell>
+                         <TableCell className="text-gray-600">
+                           {user.phone_number || '-'}
+                         </TableCell>
                         <TableCell className="text-gray-600">
                           {user.email}
                         </TableCell>

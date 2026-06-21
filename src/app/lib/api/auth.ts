@@ -3,7 +3,7 @@
  * Handles login, logout, and user authentication with the REST API
  */
 
-import { apiClient, ApiResponse, ApiError } from './client';
+import { apiClient } from './client';
 
 /**
  * Login request payload
@@ -29,7 +29,12 @@ export interface User {
   id: number;
   email: string;
   name: string;
+  lastname?: string;
+  second_lastname?: string;
+  phone_number?: string;
+  ci?: string;
   role?: string;
+  role_id?: number;
   created_at?: string;
   updated_at?: string;
 }

@@ -14,6 +14,7 @@ export interface ProfileUpdateData {
   lastname?: string;
   second_lastname?: string;
   phone_number?: string;
+  ci?: string;
 }
 
 /**

@@ -509,16 +509,18 @@
       "error": {
         "failed": "Error al actualizar el perfil"
       },
-      "fields": {
-        "name": "Nombre",
-        "namePlaceholder": "Ingrese su nombre",
-        "lastname": "Apellido",
-        "lastnamePlaceholder": "Ingrese su apellido",
-        "secondLastname": "Segundo Apellido",
-        "secondLastnamePlaceholder": "Ingrese su segundo apellido (opcional)",
-        "phoneNumber": "Número de Teléfono",
-        "phoneNumberPlaceholder": "+1234567890"
-      },
+"fields": {
+         "name": "Nombre",
+         "namePlaceholder": "Ingrese su nombre",
+         "lastname": "Apellido",
+         "lastnamePlaceholder": "Ingrese su apellido",
+         "secondLastname": "Segundo Apellido",
+         "secondLastnamePlaceholder": "Ingrese su segundo apellido (opcional)",
+         "phoneNumber": "Número de Teléfono",
+         "phoneNumberPlaceholder": "+1234567890",
+         "ci": "CI",
+         "ciPlaceholder": "Ingrese su CI (opcional)"
+       },
       "buttons": {
         "cancel": "Cancelar",
         "saveChanges": "Guardar Cambios"
@@ -535,11 +537,12 @@
       "changePassword": "Cambiar Contraseña",
       "editProfile": "Editar Perfil",
       "userId": "ID: {{id}}",
-      "sections": {
-        "contactInfo": "Información de Contacto",
-        "email": "Correo Electrónico",
-        "phoneNumber": "Número de Teléfono",
-        "role": "Rol",
+"sections": {
+         "contactInfo": "Información de Contacto",
+         "email": "Correo Electrónico",
+         "phoneNumber": "Número de Teléfono",
+         "ci": "CI",
+         "role": "Rol",
         "memberSince": "Miembro Desde",
         "additionalInfo": "Información Adicional",
         "addInfo": "Agregar Info",
@@ -824,15 +827,16 @@
     "totalUsers": "Total: {{count}} usuario(s)",
     "noUsers": "No se encontraron usuarios",
     "noUsersMessage": "Crea tu primer usuario para comenzar",
-    "table": {
-      "id": "ID",
-      "name": "Nombre",
-      "lastName": "Apellido",
-      "phoneNumber": "Número de Teléfono",
-      "email": "Correo Electrónico",
-      "role": "Rol",
-      "actions": "Acciones"
-    },
+"table": {
+       "id": "ID",
+       "name": "Nombre",
+       "lastName": "Apellido",
+       "ci": "CI",
+       "phoneNumber": "Número de Teléfono",
+       "email": "Correo Electrónico",
+       "role": "Rol",
+       "actions": "Acciones"
+     },
     "actions": {
       "view": "Ver",
       "edit": "Editar",
@@ -855,16 +859,17 @@
         "title": "Editar Usuario",
         "description": "Actualizar nombre, apellido y rol del usuario."
       },
-      "fields": {
-        "name": "Nombre",
-        "lastName": "Apellido",
-        "secondLastName": "Segundo Apellido",
-        "email": "Correo Electrónico",
-        "phoneNumber": "Número de Teléfono",
-        "password": "Contraseña",
-        "role": "Rol",
-        "selectRole": "Seleccionar un rol"
-      },
+"fields": {
+         "name": "Nombre",
+         "lastName": "Apellido",
+         "secondLastName": "Segundo Apellido",
+         "email": "Correo Electrónico",
+         "ci": "CI",
+         "phoneNumber": "Número de Teléfono",
+         "password": "Contraseña",
+         "role": "Rol",
+         "selectRole": "Seleccionar un rol"
+       },
       "validation": {
         "nameRequired": "El nombre es obligatorio",
         "lastNameRequired": "El apellido es obligatorio",
@@ -881,17 +886,18 @@
       "failedToCreate": "Error al crear usuario",
       "failedToUpdate": "Error al actualizar usuario"
     },
-    "dialog": {
-      "view": {
-        "title": "Detalles del Usuario",
-        "description": "Ver información del usuario",
-        "email": "Correo Electrónico",
-        "phoneNumber": "Número de Teléfono",
-        "role": "Rol",
-        "createdAt": "Creado En",
-        "updatedAt": "Actualizado En",
-        "permissions": "Permisos",
-        "close": "Cerrar",
+"dialog": {
+       "view": {
+         "title": "Detalles del Usuario",
+         "description": "Ver información del usuario",
+         "email": "Correo Electrónico",
+         "ci": "CI",
+         "phoneNumber": "Número de Teléfono",
+         "role": "Rol",
+         "createdAt": "Creado En",
+         "updatedAt": "Actualizado En",
+         "permissions": "Permisos",
+         "close": "Cerrar",
         "noData": "No hay datos de usuario disponibles"
       },
       "delete": {

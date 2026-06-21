@@ -51,9 +51,11 @@ describe('types.ts', () => {
         permissions: [],
         second_lastname: 'Smith',
         phone_number: '1234567890',
+        ci: 'V-12345678',
       };
       expect(user.second_lastname).toBe('Smith');
       expect(user.phone_number).toBe('1234567890');
+      expect(user.ci).toBe('V-12345678');
     });
   });
 
@@ -81,6 +83,7 @@ describe('types.ts', () => {
           role: 'admin',
           role_id: 1,
           permissions: [],
+          ci: 'V-12345678',
         },
       };
       expect(response.access_token).toBe('mock-token');
@@ -213,19 +216,21 @@ describe('types.ts', () => {
       expect(formData.role_id).toBe(1);
     });
 
-    it('should allow optional second_lastname and phone_number', () => {
-      const formData: UserFormData = {
-        name: 'John',
-        lastname: 'Doe',
-        second_lastname: 'Smith',
-        email: 'john@example.com',
-        phone_number: '1234567890',
-        password: 'password123',
-        role_id: 1,
-      };
-      expect(formData.second_lastname).toBe('Smith');
-      expect(formData.phone_number).toBe('1234567890');
-    });
+it('should allow optional second_lastname and phone_number', () => {
+       const formData: UserFormData = {
+         name: 'John',
+         lastname: 'Doe',
+         second_lastname: 'Smith',
+         email: 'john@example.com',
+         phone_number: '1234567890',
+         ci: 'V-12345678',
+         password: 'password123',
+         role_id: 1,
+       };
+       expect(formData.second_lastname).toBe('Smith');
+       expect(formData.phone_number).toBe('1234567890');
+       expect(formData.ci).toBe('V-12345678');
+     });
   });
 
   describe('AssignPermissionResponse type', () => {
@@ -253,24 +258,25 @@ describe('types.ts', () => {
   });
 
   describe('UserProfileWithDetails type', () => {
-    it('should have user and details array', () => {
-      const profile: UserProfileWithDetails = {
-        user: {
-          id: 1,
-          name: 'John',
-          lastname: 'Doe',
-          email: 'john@example.com',
-          role: 'admin',
-          role_id: 1,
-          permissions: [],
-        },
-        details: [
-          { id: 1, user_id: 1, detail_type: 'bio', detail_value: 'Bio' },
-        ],
-      };
-      expect(profile.user.name).toBe('John');
-      expect(profile.details.length).toBe(1);
-    });
+it('should have user and details array', () => {
+       const profile: UserProfileWithDetails = {
+         user: {
+           id: 1,
+           name: 'John',
+           lastname: 'Doe',
+           email: 'john@example.com',
+           role: 'admin',
+           role_id: 1,
+           permissions: [],
+           ci: 'V-12345678',
+         },
+         details: [
+           { id: 1, user_id: 1, detail_type: 'bio', detail_value: 'Bio' },
+         ],
+       };
+       expect(profile.user.name).toBe('John');
+       expect(profile.details.length).toBe(1);
+     });
   });
 
   describe('EventCreator type', () => {

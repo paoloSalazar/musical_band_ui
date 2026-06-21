@@ -32,6 +32,7 @@ describe('EditProfileDialog Component', () => {
     second_lastname: 'Smith',
     email: 'john.doe@example.com',
     phone_number: '+1234567890',
+    ci: 'V-12345678',
     role: 'admin',
     role_id: 1,
     permissions: ['read'],
@@ -60,6 +61,7 @@ describe('EditProfileDialog Component', () => {
         'profile.editProfile.fields.name': 'Name',
         'profile.editProfile.fields.lastname': 'Last Name',
         'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.ci': 'CI',
         'profile.editProfile.fields.phoneNumber': 'Phone Number',
         'profile.editProfile.buttons.cancel': 'Cancel',
         'profile.editProfile.buttons.saveChanges': 'Save Changes',
@@ -77,6 +79,7 @@ describe('EditProfileDialog Component', () => {
     expect(screen.getByLabelText('Name')).toBeInTheDocument();
     expect(screen.getByLabelText('Last Name')).toBeInTheDocument();
     expect(screen.getByLabelText('Second Last Name')).toBeInTheDocument();
+    expect(screen.getByLabelText('CI')).toBeInTheDocument();
     expect(screen.getByLabelText('Phone Number')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save Changes' })).toBeInTheDocument();
@@ -101,6 +104,7 @@ describe('EditProfileDialog Component', () => {
         'profile.editProfile.fields.name': 'Name',
         'profile.editProfile.fields.lastname': 'Last Name',
         'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.ci': 'CI',
         'profile.editProfile.fields.phoneNumber': 'Phone Number',
       };
       return translations[key] || key;
@@ -111,6 +115,7 @@ describe('EditProfileDialog Component', () => {
     expect(screen.getByLabelText('Name')).toHaveValue('John');
     expect(screen.getByLabelText('Last Name')).toHaveValue('Doe');
     expect(screen.getByLabelText('Second Last Name')).toHaveValue('Smith');
+    expect(screen.getByLabelText('CI')).toHaveValue('V-12345678');
     expect(screen.getByLabelText('Phone Number')).toHaveValue('+1234567890');
   });
 
@@ -120,6 +125,7 @@ describe('EditProfileDialog Component', () => {
         'profile.editProfile.fields.name': 'Name',
         'profile.editProfile.fields.lastname': 'Last Name',
         'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.ci': 'CI',
         'profile.editProfile.fields.phoneNumber': 'Phone Number',
       };
       return translations[key] || key;
@@ -130,16 +136,19 @@ describe('EditProfileDialog Component', () => {
     const nameInput = screen.getByLabelText('Name');
     const lastnameInput = screen.getByLabelText('Last Name');
     const secondLastnameInput = screen.getByLabelText('Second Last Name');
+    const ciInput = screen.getByLabelText('CI');
     const phoneInput = screen.getByLabelText('Phone Number');
 
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
     fireEvent.change(lastnameInput, { target: { value: 'Smith' } });
     fireEvent.change(secondLastnameInput, { target: { value: 'Johnson' } });
+    fireEvent.change(ciInput, { target: { value: 'V-87654321' } });
     fireEvent.change(phoneInput, { target: { value: '+0987654321' } });
 
     expect(nameInput).toHaveValue('Jane');
     expect(lastnameInput).toHaveValue('Smith');
     expect(secondLastnameInput).toHaveValue('Johnson');
+    expect(ciInput).toHaveValue('V-87654321');
     expect(phoneInput).toHaveValue('+0987654321');
   });
 
@@ -200,6 +209,7 @@ describe('EditProfileDialog Component', () => {
         name: 'Jane',
         lastname: 'Smith',
         second_lastname: 'Smith',
+        ci: 'V-12345678',
         phone_number: '+1234567890',
       });
     });
@@ -213,6 +223,9 @@ describe('EditProfileDialog Component', () => {
       const translations = {
         'profile.editProfile.fields.name': 'Name',
         'profile.editProfile.fields.lastname': 'Last Name',
+        'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.ci': 'CI',
+        'profile.editProfile.fields.phoneNumber': 'Phone Number',
         'profile.editProfile.buttons.saveChanges': 'Save Changes',
         'profile.editProfile.buttons.cancel': 'Cancel',
       };
@@ -227,6 +240,9 @@ describe('EditProfileDialog Component', () => {
 
     const nameInput = screen.getByLabelText('Name');
     const lastnameInput = screen.getByLabelText('Last Name');
+    const secondLastnameInput = screen.getByLabelText('Second Last Name');
+    const ciInput = screen.getByLabelText('CI');
+    const phoneInput = screen.getByLabelText('Phone Number');
     const submitButton = screen.getByRole('button', { name: 'Save Changes' });
 
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
@@ -401,6 +417,7 @@ describe('EditProfileDialog Component', () => {
         'profile.editProfile.fields.name': 'Name',
         'profile.editProfile.fields.lastname': 'Last Name',
         'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.ci': 'CI',
         'profile.editProfile.fields.phoneNumber': 'Phone Number',
         'profile.editProfile.buttons.saveChanges': 'Save Changes',
       };
@@ -416,6 +433,7 @@ describe('EditProfileDialog Component', () => {
     const nameInput = screen.getByLabelText('Name');
     const lastnameInput = screen.getByLabelText('Last Name');
     const secondLastnameInput = screen.getByLabelText('Second Last Name');
+    const ciInput = screen.getByLabelText('CI');
     const phoneInput = screen.getByLabelText('Phone Number');
 
     fireEvent.change(nameInput, { target: { value: 'Jane' } });
@@ -427,6 +445,7 @@ describe('EditProfileDialog Component', () => {
     expect(nameInput).toBeDisabled();
     expect(lastnameInput).toBeDisabled();
     expect(secondLastnameInput).toBeDisabled();
+    expect(ciInput).toBeDisabled();
     expect(phoneInput).toBeDisabled();
   });
 
@@ -436,6 +455,7 @@ describe('EditProfileDialog Component', () => {
         'profile.editProfile.fields.name': 'Name',
         'profile.editProfile.fields.lastname': 'Last Name',
         'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.ci': 'CI',
         'profile.editProfile.fields.phoneNumber': 'Phone Number',
       };
       return translations[key] || key;
@@ -445,6 +465,7 @@ describe('EditProfileDialog Component', () => {
       ...mockUser,
       second_lastname: undefined,
       phone_number: undefined,
+      ci: undefined,
     };
 
     render(<EditProfileDialog {...mockProps} user={userWithoutOptional} />);
@@ -452,6 +473,7 @@ describe('EditProfileDialog Component', () => {
     expect(screen.getByLabelText('Name')).toHaveValue('John');
     expect(screen.getByLabelText('Last Name')).toHaveValue('Doe');
     expect(screen.getByLabelText('Second Last Name')).toHaveValue('');
+    expect(screen.getByLabelText('CI')).toHaveValue('');
     expect(screen.getByLabelText('Phone Number')).toHaveValue('');
   });
 
@@ -461,6 +483,7 @@ describe('EditProfileDialog Component', () => {
         'profile.editProfile.fields.name': 'Name',
         'profile.editProfile.fields.lastname': 'Last Name',
         'profile.editProfile.fields.secondLastname': 'Second Last Name',
+        'profile.editProfile.fields.ci': 'CI',
         'profile.editProfile.fields.phoneNumber': 'Phone Number',
       };
       return translations[key] || key;
@@ -472,6 +495,7 @@ describe('EditProfileDialog Component', () => {
       lastname: null,
       second_lastname: null,
       phone_number: null,
+      ci: null,
     } as any;
 
     render(<EditProfileDialog {...mockProps} user={userWithNulls} />);
@@ -479,6 +503,7 @@ describe('EditProfileDialog Component', () => {
     expect(screen.getByLabelText('Name')).toHaveValue('');
     expect(screen.getByLabelText('Last Name')).toHaveValue('');
     expect(screen.getByLabelText('Second Last Name')).toHaveValue('');
+    expect(screen.getByLabelText('CI')).toHaveValue('');
     expect(screen.getByLabelText('Phone Number')).toHaveValue('');
   });
 });

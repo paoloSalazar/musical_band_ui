@@ -57,8 +57,8 @@ describe('UsersListPage Component', () => {
 
   it('should display users in table', async () => {
     const mockUsers = [
-      { id: 1, name: 'John', lastname: 'Doe', email: 'john@example.com', role: 'admin', phone_number: '123-456-7890' },
-      { id: 2, name: 'Jane', lastname: 'Smith', email: 'jane@example.com', role: 'user', phone_number: null },
+      { id: 1, name: 'John', lastname: 'Doe', email: 'john@example.com', role: 'admin', phone_number: '123-456-7890', ci: 'V-12345678' },
+      { id: 2, name: 'Jane', lastname: 'Smith', email: 'jane@example.com', role: 'user', phone_number: null, ci: null },
     ];
 
     mockUsersApi.list.mockResolvedValue({ data: { data: mockUsers, total: 2 } });
@@ -73,6 +73,7 @@ describe('UsersListPage Component', () => {
     expect(screen.getByText('users.totalUsers')).toBeInTheDocument();
     expect(screen.getByText('john@example.com')).toBeInTheDocument();
     expect(screen.getByText('admin')).toBeInTheDocument();
+    expect(screen.getByText('V-12345678')).toBeInTheDocument();
   });
 
   it('should show empty state when no users', async () => {
