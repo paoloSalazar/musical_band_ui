@@ -135,6 +135,7 @@ describe('ProfilePage Component', () => {
     second_lastname: 'Smith',
     email: 'john.doe@example.com',
     phone_number: '+1234567890',
+    ci: 'V-12345678',
     role: 'admin',
     role_id: 1,
     permissions: ['read', 'write'],

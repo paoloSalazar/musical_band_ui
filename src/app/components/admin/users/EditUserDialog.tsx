@@ -42,6 +42,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
   const [secondLastname, setSecondLastname] = useState('');
+  const [ci, setCi] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [roleId, setRoleId] = useState<string>('');
 
@@ -62,6 +63,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
       setName(user.name);
       setLastname(user.lastname);
       setSecondLastname(user.second_lastname || '');
+      setCi(user.ci || '');
       setPhoneNumber(user.phone_number || '');
       setRoleId(user.role_id.toString());
     } catch (err) {
@@ -87,6 +89,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
     setName('');
     setLastname('');
     setSecondLastname('');
+    setCi('');
     setPhoneNumber('');
     setRoleId('');
     setError(null);
@@ -123,6 +126,7 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
         name: name.trim(),
         lastname: lastname.trim(),
         second_lastname: secondLastname.trim() || undefined,
+        ci: ci.trim() || undefined,
         phone_number: phoneNumber.trim() || undefined,
         role_id: parseInt(roleId, 10),
       };
@@ -214,6 +218,21 @@ export function EditUserDialog({ userId, open, onOpenChange, onSuccess }: EditUs
                   value={secondLastname}
                   onChange={(e) => setSecondLastname(e.target.value)}
                   placeholder="e.g., Villarroel"
+                  className="col-span-3"
+                  disabled={isLoading}
+                />
+              </div>
+              
+              {/* CI */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-ci" className="text-right">
+                  {t('users.form.fields.ci')}
+                </Label>
+                <Input
+                  id="edit-ci"
+                  value={ci}
+                  onChange={(e) => setCi(e.target.value)}
+                  placeholder="e.g., 12345678"
                   className="col-span-3"
                   disabled={isLoading}
                 />

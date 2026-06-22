@@ -33,6 +33,7 @@ describe('EditUserDialog Component', () => {
       lastname: 'Doe',
       second_lastname: 'Smith',
       phone_number: '123-456-7890',
+      ci: 'V-12345678',
       role_id: 1,
     };
     const mockRoles = [{ id: 1, name: 'admin' }];
@@ -57,6 +58,7 @@ describe('EditUserDialog Component', () => {
       expect(screen.getByDisplayValue('Doe')).toBeInTheDocument();
       expect(screen.getByDisplayValue('Smith')).toBeInTheDocument();
       expect(screen.getByDisplayValue('123-456-7890')).toBeInTheDocument();
+      expect(screen.getByDisplayValue('V-12345678')).toBeInTheDocument();
     });
   });
 
@@ -156,6 +158,7 @@ describe('EditUserDialog Component', () => {
         name: 'Jane',
         lastname: 'Doe',
         second_lastname: undefined,
+        ci: undefined,
         phone_number: undefined,
         role_id: 1,
       });
@@ -312,9 +315,11 @@ describe('EditUserDialog Component', () => {
     await waitFor(() => screen.getByDisplayValue('John'));
 
     const secondLastnameInput = screen.getByPlaceholderText('e.g., Villarroel');
+    const ciInput = screen.getByPlaceholderText('e.g., 12345678');
     const phoneInput = screen.getByPlaceholderText('e.g., +1234567890');
 
     expect(secondLastnameInput).toHaveValue('');
+    expect(ciInput).toHaveValue('');
     expect(phoneInput).toHaveValue('');
   });
 });

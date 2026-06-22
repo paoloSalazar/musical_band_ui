@@ -508,16 +508,18 @@
       "error": {
         "failed": "Failed to update profile"
       },
-      "fields": {
-        "name": "Name",
-        "namePlaceholder": "Enter your name",
-        "lastname": "Last Name",
-        "lastnamePlaceholder": "Enter your last name",
-        "secondLastname": "Second Last Name",
-        "secondLastnamePlaceholder": "Enter your second last name (optional)",
-        "phoneNumber": "Phone Number",
-        "phoneNumberPlaceholder": "+1234567890"
-      },
+"fields": {
+         "name": "Name",
+         "namePlaceholder": "Enter your name",
+         "lastname": "Last Name",
+         "lastnamePlaceholder": "Enter your last name",
+         "secondLastname": "Second Last Name",
+         "secondLastnamePlaceholder": "Enter your second last name (optional)",
+         "phoneNumber": "Phone Number",
+         "phoneNumberPlaceholder": "+1234567890",
+         "ci": "CI",
+         "ciPlaceholder": "Enter your CI (optional)"
+       },
       "buttons": {
         "cancel": "Cancel",
         "saveChanges": "Save Changes"
@@ -539,8 +541,9 @@
         "email": "Email",
         "phoneNumber": "Phone Number",
         "role": "Role",
-        "memberSince": "Member Since",
-        "additionalInfo": "Additional Information",
+"memberSince": "Member Since",
+         "ci": "CI",
+         "additionalInfo": "Additional Information",
         "addInfo": "Add Info",
         "noAdditionalInfo": "No additional information added yet. Click \"Add Info\" to add details like address, city, or other information.",
         "myPermissions": "My Permissions"
@@ -910,15 +913,16 @@
     "totalUsers": "Total: {{count}} user(s)",
     "noUsers": "No users found",
     "noUsersMessage": "Create your first user to get started",
-    "table": {
-      "id": "ID",
-      "name": "Name",
-      "lastName": "Last Name",
-      "phoneNumber": "Phone Number",
-      "email": "Email",
-      "role": "Role",
-      "actions": "Actions"
-    },
+"table": {
+       "id": "ID",
+       "name": "Name",
+       "lastName": "Last Name",
+       "ci": "CI",
+       "phoneNumber": "Phone Number",
+       "email": "Email",
+       "role": "Role",
+       "actions": "Actions"
+     },
     "actions": {
       "view": "View",
       "edit": "Edit",
@@ -941,16 +945,17 @@
         "title": "Edit User",
         "description": "Update user name, last name, and role."
       },
-      "fields": {
-        "name": "Name",
-        "lastName": "Last Name",
-        "secondLastName": "Second Last Name",
-        "email": "Email",
-        "phoneNumber": "Phone Number",
-        "password": "Password",
-        "role": "Role",
-        "selectRole": "Select a role"
-      },
+"fields": {
+         "name": "Name",
+         "lastName": "Last Name",
+         "secondLastName": "Second Last Name",
+         "email": "Email",
+         "ci": "CI",
+         "phoneNumber": "Phone Number",
+         "password": "Password",
+         "role": "Role",
+         "selectRole": "Select a role"
+       },
       "validation": {
         "nameRequired": "Name is required",
         "lastNameRequired": "Last name is required",
@@ -967,19 +972,20 @@
       "failedToCreate": "Failed to create user",
       "failedToUpdate": "Failed to update user"
     },
-    "dialog": {
-      "view": {
-        "title": "User Details",
-        "description": "View user information",
-        "email": "Email",
-        "phoneNumber": "Phone Number",
-        "role": "Role",
-        "createdAt": "Created At",
-        "updatedAt": "Updated At",
-        "permissions": "Permissions",
-        "close": "Close",
-        "noData": "No user data available"
-      },
+"dialog": {
+       "view": {
+         "title": "User Details",
+         "description": "View user information",
+         "email": "Email",
+         "ci": "CI",
+         "phoneNumber": "Phone Number",
+         "role": "Role",
+         "createdAt": "Created At",
+         "updatedAt": "Updated At",
+         "permissions": "Permissions",
+         "close": "Close",
+         "noData": "No user data available"
+       },
       "delete": {
         "title": "Delete User",
         "description": "Are you sure you want to delete this user? This action cannot be undone.",

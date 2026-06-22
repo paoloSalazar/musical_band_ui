@@ -147,6 +147,56 @@ describe('ViewUserDialog Component', () => {
     expect(screen.queryByText('Permissions')).not.toBeInTheDocument();
   });
 
+  it('should display CI when available', async () => {
+    const mockUser = {
+      id: 1,
+      name: 'John',
+      lastname: 'Doe',
+      email: 'john@example.com',
+      role: 'admin',
+      ci: 'V-12345678',
+      permissions: [],
+    };
+
+    mockUsersApi.getById.mockResolvedValue({
+      data: mockUser,
+    });
+
+    render(<ViewUserDialog userId={1} open={true} onOpenChange={() => {}} />);
+
+    await waitFor(() => {
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+
+    // Should show CI
+    expect(screen.getByText('V-12345678')).toBeInTheDocument();
+  });
+
+  it('should handle user without CI', async () => {
+    const mockUser = {
+      id: 1,
+      name: 'John',
+      lastname: 'Doe',
+      email: 'john@example.com',
+      role: 'admin',
+      ci: null,
+      permissions: [],
+    };
+
+    mockUsersApi.getById.mockResolvedValue({
+      data: mockUser,
+    });
+
+    render(<ViewUserDialog userId={1} open={true} onOpenChange={() => {}} />);
+
+    await waitFor(() => {
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+
+    // Should not show CI section
+    expect(screen.queryByText('CI')).not.toBeInTheDocument();
+  });
+
   it('should reset state when dialog closes', async () => {
     const mockUser = {
       id: 1,

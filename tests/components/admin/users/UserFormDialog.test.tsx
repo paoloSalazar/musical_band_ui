@@ -171,6 +171,7 @@ describe('UserFormDialog Component', () => {
         role_id: 1,
         second_lastname: undefined,
         phone_number: undefined,
+        ci: undefined,
       });
     });
 
@@ -325,6 +326,7 @@ describe('UserFormDialog Component', () => {
         role_id: 1,
         second_lastname: undefined,
         phone_number: undefined,
+        ci: undefined,
       });
     });
   });
