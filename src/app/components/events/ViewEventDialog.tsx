@@ -43,6 +43,8 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   const isMusicianUser = hasRole('musician') || hasRole('auxiliar_musician') || hasRole('helper');
   
   const [event, setEvent] = useState<Event | null>(null);
+  const isEventOwner = user && event?.user_id === user.id;
+  const canViewReports = isAdmin || isEventOwner;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isUpdatingPrice, setIsUpdatingPrice] = useState(false);
@@ -389,49 +391,48 @@ const handleFetchMusicianPaymentSummary = async () => {
                </div>
              )}
              
-             {/* Reports section */}
-             {event && (
-               <div className="space-y-4">
-                 <div className="space-y-1">
-                   <h3 className="text-xl font-semibold">{t('events.dialog.view.reports')}</h3>
-                 </div>
-                 
-                 {/* Report buttons container */}
-                 <div className="flex items-start space-x-2">
-                    {/* Billing summary button */}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleFetchBillingSummary}
-                      disabled={billingSummaryLoading}
-                      aria-label={t('events.dialog.view.billingSummaryLabel')}
-                      {...(billingSummaryLoading ? { 'aria-busy': 'true' } : {})}
-                    >
-                      {billingSummaryLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <PieChart className="h-4 w-4" />
-                      )}
-                    </Button>
-                    
-                    {/* Musician payment summary button */}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleFetchMusicianPaymentSummary}
-                      disabled={musicianSummaryLoading}
-                      aria-label={t('events.dialog.view.musicianPaymentSummaryLabel')}
-                      {...(musicianSummaryLoading ? { 'aria-busy': 'true' } : {})}
-                    >
-                      {musicianSummaryLoading ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Users className="h-4 w-4" />
-                      )}
-                    </Button>
-                 </div>
-               </div>
-             )}
+{canViewReports && event && (
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-semibold">{t('events.dialog.view.reports')}</h3>
+                  </div>
+                  
+                  {/* Report buttons container */}
+                  <div className="flex items-start space-x-2">
+                     {/* Billing summary button */}
+                     <Button
+                       type="button"
+                       variant="outline"
+                       onClick={handleFetchBillingSummary}
+                       disabled={billingSummaryLoading}
+                       aria-label={t('events.dialog.view.billingSummaryLabel')}
+                       {...(billingSummaryLoading ? { 'aria-busy': 'true' } : {})}
+                     >
+                       {billingSummaryLoading ? (
+                         <Loader2 className="h-4 w-4 animate-spin" />
+                       ) : (
+                         <PieChart className="h-4 w-4" />
+                       )}
+                     </Button>
+                     
+                     {/* Musician payment summary button */}
+                     <Button
+                       type="button"
+                       variant="outline"
+                       onClick={handleFetchMusicianPaymentSummary}
+                       disabled={musicianSummaryLoading}
+                       aria-label={t('events.dialog.view.musicianPaymentSummaryLabel')}
+                       {...(musicianSummaryLoading ? { 'aria-busy': 'true' } : {})}
+                     >
+                       {musicianSummaryLoading ? (
+                         <Loader2 className="h-4 w-4 animate-spin" />
+                       ) : (
+                         <Users className="h-4 w-4" />
+                       )}
+                     </Button>
+                  </div>
+                </div>
+              )}
            </div>
         ) : null}
 

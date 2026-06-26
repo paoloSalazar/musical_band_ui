@@ -962,38 +962,88 @@ describe('ViewEventDialog', () => {
      expect(mockOnOpenChange).toHaveBeenCalledWith(false);
    });
 
-   describe('Reports section', () => {
-     it('should render Reports section with title and two icon-only buttons', async () => {
-       render(
-         <UserProvider>
-           <ViewEventDialog
-             eventId={1}
-             open={true}
-             onOpenChange={() => {}}
-           />
-         </UserProvider>
-       );
+describe('Reports section', () => {
+      it('should render Reports section with title and two icon-only buttons for admin users', async () => {
+        mockUser.hasRole.mockReturnValue(true); // Admin user
 
-       await waitFor(() => {
-         expect(screen.getByText('Test Event')).toBeTruthy();
-       });
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
 
-       // Check Reports section title
-       expect(screen.getByText('Reports')).toBeTruthy();
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
 
-       // Check two icon-only buttons (they should have aria-label or title for accessibility)
-       const reportButtons = screen.getAllByRole('button', { name: /^(billing summary|musician payment summary)$/i });
-       expect(reportButtons).toHaveLength(2);
+        // Check Reports section title
+        expect(screen.getByText('Reports')).toBeTruthy();
 
-       // Alternatively, check by testid or label if we implement with aria-label
-       // We'll check for buttons that contain icons (we can check for the icon testids)
-       const billingButton = screen.getByLabelText(/billing summary/i);
-       const musicianButton = screen.getByLabelText(/musician payment summary/i);
-       expect(billingButton).toBeTruthy();
-       expect(musicianButton).toBeTruthy();
-     });
+        // Check two icon-only buttons (they should have aria-label or title for accessibility)
+        const reportButtons = screen.getAllByRole('button', { name: /^(billing summary|musician payment summary)$/i });
+        expect(reportButtons).toHaveLength(2);
+
+        // Alternatively, check by testid or label if we implement with aria-label
+        // We'll check for buttons that contain icons (we can check for the icon testids)
+        const billingButton = screen.getByLabelText(/billing summary/i);
+        const musicianButton = screen.getByLabelText(/musician payment summary/i);
+        expect(billingButton).toBeTruthy();
+        expect(musicianButton).toBeTruthy();
+      });
+
+      it('should show Reports section for event owner (non-admin)', async () => {
+        mockUser.hasRole.mockReturnValue(false); // Regular user (event owner)
+        mockUser.id = 1; // User is the event owner (event.user_id is 1)
+
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
+
+        // Reports section should be visible for event owner
+        expect(screen.getByText('Reports')).toBeTruthy();
+        expect(screen.getByLabelText(/billing summary/i)).toBeTruthy();
+        expect(screen.getByLabelText(/musician payment summary/i)).toBeTruthy();
+      });
+
+      it('should hide Reports section for non-admin and non-owner users', async () => {
+        mockUser.hasRole.mockReturnValue(false); // Non-admin user
+        mockUser.id = 999; // Different user ID (not owner)
+
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
+
+        // Reports section title should not be visible for non-owner
+        expect(screen.queryByText('Reports')).toBeFalsy();
+      });
 
 it('should have accessible labels on report buttons', async () => {
+      mockUser.hasRole.mockReturnValue(true); // Admin user
+
       render(
         <UserProvider>
           <ViewEventDialog
@@ -1017,139 +1067,143 @@ it('should have accessible labels on report buttons', async () => {
     });
 
 it('should call billing summary API and show loading state when billing button is clicked', async () => {
-       mockEventsApi.getEventBillingSummary.mockResolvedValue({
-         data: {
-           event_name: 'Test Event',
-           event_price: '1000.00',
-           payment_done: '500.00',
-           remaining_payment: '500.00',
-           sum_of_musician_salaries: '3000.00',
-           payment_done_to_musicians: '1500.00'
-         },
-       });
+        mockUser.hasRole.mockReturnValue(true); // Admin user
+        mockEventsApi.getEventBillingSummary.mockResolvedValue({
+          data: {
+            event_name: 'Test Event',
+            event_price: '1000.00',
+            payment_done: '500.00',
+            remaining_payment: '500.00',
+            sum_of_musician_salaries: '3000.00',
+            payment_done_to_musicians: '1500.00'
+          },
+        });
 
-       render(
-         <UserProvider>
-           <ViewEventDialog
-             eventId={1}
-             open={true}
-             onOpenChange={() => {}}
-           />
-         </UserProvider>
-       );
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
 
-       await waitFor(() => {
-         expect(screen.getByText('Test Event')).toBeTruthy();
-       });
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
 
-       // Click billing summary button
-       const billingButton = screen.getByLabelText(/billing summary/i);
-       fireEvent.click(billingButton);
+        // Click billing summary button
+        const billingButton = screen.getByLabelText(/billing summary/i);
+        fireEvent.click(billingButton);
 
-       // Wait for API call to be made
-       await waitFor(() => {
-         expect(mockEventsApi.getEventBillingSummary).toHaveBeenCalledWith(1);
-       });
-     });
+        // Wait for API call to be made
+        await waitFor(() => {
+          expect(mockEventsApi.getEventBillingSummary).toHaveBeenCalledWith(1);
+        });
+      });
 
-     it('should call musician payment summary API and show loading state when musician button is clicked', async () => {
-       mockEventsApi.getEventMusicianPaymentSummary.mockResolvedValue({
-         data: [
-           {
-             musician_name: 'John Doe',
-             role: 'Violinist',
-             salary: '500.00',
-             payment_done: '250.00',
-             remaining_payment: '250.00'
-           },
-           {
-             musician_name: 'Jane Smith',
-             role: 'Pianist',
-             salary: '300.00',
-             payment_done: '300.00',
-             remaining_payment: '0.00'
-           }
-         ],
-       });
+it('should call musician payment summary API and show loading state when musician button is clicked', async () => {
+        mockUser.hasRole.mockReturnValue(true); // Admin user
+        mockEventsApi.getEventMusicianPaymentSummary.mockResolvedValue({
+          data: [
+            {
+              musician_name: 'John Doe',
+              role: 'Violinist',
+              salary: '500.00',
+              payment_done: '250.00',
+              remaining_payment: '250.00'
+            },
+            {
+              musician_name: 'Jane Smith',
+              role: 'Pianist',
+              salary: '300.00',
+              payment_done: '300.00',
+              remaining_payment: '0.00'
+            }
+          ],
+        });
 
-       render(
-         <UserProvider>
-           <ViewEventDialog
-             eventId={1}
-             open={true}
-             onOpenChange={() => {}}
-           />
-         </UserProvider>
-       );
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
 
-       await waitFor(() => {
-         expect(screen.getByText('Test Event')).toBeTruthy();
-       });
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
 
-       // Click musician payment summary button
-       const musicianButton = screen.getByLabelText(/musician payment summary/i);
-       fireEvent.click(musicianButton);
+        // Click musician payment summary button
+        const musicianButton = screen.getByLabelText(/musician payment summary/i);
+        fireEvent.click(musicianButton);
 
-       // Wait for API call to be made
-       await waitFor(() => {
-         expect(mockEventsApi.getEventMusicianPaymentSummary).toHaveBeenCalledWith(1);
-       });
-     });
+        // Wait for API call to be made
+        await waitFor(() => {
+          expect(mockEventsApi.getEventMusicianPaymentSummary).toHaveBeenCalledWith(1);
+        });
+      });
 
-     it('should handle billing summary API error', async () => {
-       mockEventsApi.getEventBillingSummary.mockRejectedValue(
-         new Error('Failed to fetch billing summary')
-       );
+it('should handle billing summary API error', async () => {
+        mockUser.hasRole.mockReturnValue(true); // Admin user
+        mockEventsApi.getEventBillingSummary.mockRejectedValue(
+          new Error('Failed to fetch billing summary')
+        );
 
-       render(
-         <UserProvider>
-           <ViewEventDialog
-             eventId={1}
-             open={true}
-             onOpenChange={() => {}}
-           />
-         </UserProvider>
-       );
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
 
-       await waitFor(() => {
-         expect(screen.getByText('Test Event')).toBeTruthy();
-       });
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
 
-       const billingButton = screen.getByLabelText(/billing summary/i);
-       fireEvent.click(billingButton);
+        const billingButton = screen.getByLabelText(/billing summary/i);
+        fireEvent.click(billingButton);
 
-       // Wait for the billing summary popup to be called with error state
-       await waitFor(() => {
-         expect(mockEventsApi.getEventBillingSummary).toHaveBeenCalledWith(1);
-       });
-     });
+        // Wait for the billing summary popup to be called with error state
+        await waitFor(() => {
+          expect(mockEventsApi.getEventBillingSummary).toHaveBeenCalledWith(1);
+        });
+      });
 
-     it('should handle musician payment summary API error', async () => {
-       mockEventsApi.getEventMusicianPaymentSummary.mockRejectedValue(
-         new Error('Failed to fetch musician payment summary')
-       );
+      it('should handle musician payment summary API error', async () => {
+        mockUser.hasRole.mockReturnValue(true); // Admin user
+        mockEventsApi.getEventMusicianPaymentSummary.mockRejectedValue(
+          new Error('Failed to fetch musician payment summary')
+        );
 
-       render(
-         <UserProvider>
-           <ViewEventDialog
-             eventId={1}
-             open={true}
-             onOpenChange={() => {}}
-           />
-         </UserProvider>
-       );
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
 
-       await waitFor(() => {
-         expect(screen.getByText('Test Event')).toBeTruthy();
-       });
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
 
-       const musicianButton = screen.getByLabelText(/musician payment summary/i);
-       fireEvent.click(musicianButton);
+        const musicianButton = screen.getByLabelText(/musician payment summary/i);
+        fireEvent.click(musicianButton);
 
-       // Wait for the musician payment summary popup to be called with error state
-       await waitFor(() => {
-         expect(mockEventsApi.getEventMusicianPaymentSummary).toHaveBeenCalledWith(1);
-       });
-     });
+        // Wait for the musician payment summary popup to be called with error state
+        await waitFor(() => {
+          expect(mockEventsApi.getEventMusicianPaymentSummary).toHaveBeenCalledWith(1);
+        });
+      });
   });
  });
