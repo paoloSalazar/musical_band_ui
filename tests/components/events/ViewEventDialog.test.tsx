@@ -127,6 +127,12 @@ vi.mock('@/app/contexts/UserContext', () => ({
   }),
 }));
 
+afterEach(() => {
+  mockUser.id = 1;
+  mockUser.hasRole.mockReset();
+  mockUser.hasPermission.mockReset();
+});
+
 // Mock UI components
 vi.mock('@/app/components/ui/button', () => ({
   Button: ({ children, onClick, disabled, ...props }) => (
@@ -982,7 +988,7 @@ describe('ViewEventDialog', () => {
    });
 
 describe('Reports section', () => {
-      it('should render Reports section with title and two icon-only buttons for admin users', async () => {
+      it('should render Reports section with title and buttons for admin users', async () => {
         mockUser.hasRole.mockReturnValue(true); // Admin user
 
         render(
@@ -1000,21 +1006,20 @@ describe('Reports section', () => {
         });
 
         // Check Reports section title
-        expect(screen.getByText('Reports')).toBeTruthy();
+        expect(screen.getAllByText('Reports')[0]).toBeTruthy();
 
-        // Check two icon-only buttons (they should have aria-label or title for accessibility)
-        const reportButtons = screen.getAllByRole('button', { name: /^(billing summary|musician payment summary)$/i });
-        expect(reportButtons).toHaveLength(2);
-
-        // Alternatively, check by testid or label if we implement with aria-label
-        // We'll check for buttons that contain icons (we can check for the icon testids)
-        const billingButton = screen.getByLabelText(/billing summary/i);
-        const musicianButton = screen.getByLabelText(/musician payment summary/i);
+        // Check billing and musician payment summary buttons (admin only)
+        const billingButton = screen.getAllByLabelText(/billing summary/i)[0];
+        const musicianButton = screen.getAllByLabelText(/musician payment summary/i)[0];
         expect(billingButton).toBeTruthy();
         expect(musicianButton).toBeTruthy();
+
+        // Check PDF download buttons (admin AND event owner)
+        expect(screen.getAllByTestId('receipt-download-button')[0]).toBeTruthy();
+        expect(screen.getAllByTestId('contract-download-button')[0]).toBeTruthy();
       });
 
-      it('should show Reports section for event owner (non-admin)', async () => {
+      it('should show Reports section with PDF buttons for event owner (non-admin)', async () => {
         mockUser.hasRole.mockReturnValue(false); // Regular user (event owner)
         mockUser.id = 1; // User is the event owner (event.user_id is 1)
 
@@ -1032,10 +1037,16 @@ describe('Reports section', () => {
           expect(screen.getByText('Test Event')).toBeTruthy();
         });
 
-        // Reports section should be visible for event owner
-        expect(screen.getByText('Reports')).toBeTruthy();
-        expect(screen.getByLabelText(/billing summary/i)).toBeTruthy();
-        expect(screen.getByLabelText(/musician payment summary/i)).toBeTruthy();
+        // Reports section title should be visible
+        expect(screen.getAllByText('Reports')[0]).toBeTruthy();
+
+        // Billing and musician payment summary buttons should NOT be visible for non-admin
+        expect(screen.queryAllByLabelText(/billing summary/i)).toHaveLength(0);
+        expect(screen.queryAllByLabelText(/musician payment summary/i)).toHaveLength(0);
+
+        // PDF download buttons should be visible for event owner
+        expect(screen.getAllByTestId('receipt-download-button')[0]).toBeTruthy();
+        expect(screen.getAllByTestId('contract-download-button')[0]).toBeTruthy();
       });
 
       it('should hide Reports section for non-admin and non-owner users', async () => {
@@ -1057,7 +1068,7 @@ describe('Reports section', () => {
         });
 
         // Reports section title should not be visible for non-owner
-        expect(screen.queryByText('Reports')).toBeFalsy();
+        expect(screen.queryAllByText('Reports')).toHaveLength(0);
       });
 
 it('should have accessible labels on report buttons', async () => {
@@ -1078,10 +1089,10 @@ it('should have accessible labels on report buttons', async () => {
       });
 
       // Check that buttons have accessible labels (aria-label or title)
-      const billingButton = screen.getByLabelText(/billing summary/i);
+      const billingButton = screen.getAllByLabelText(/billing summary/i)[0];
       expect(billingButton).toHaveAttribute('aria-label');
       
-      const musicianButton = screen.getByLabelText(/musician payment summary/i);
+      const musicianButton = screen.getAllByLabelText(/musician payment summary/i)[0];
       expect(musicianButton).toHaveAttribute('aria-label');
     });
 
@@ -1103,8 +1114,8 @@ it('should have accessible labels on report buttons', async () => {
       });
 
       // Check PDF download buttons are visible for admin
-      expect(screen.getByTestId('receipt-download-button')).toBeTruthy();
-      expect(screen.getByTestId('contract-download-button')).toBeTruthy();
+      expect(screen.getAllByTestId('receipt-download-button')[0]).toBeTruthy();
+      expect(screen.getAllByTestId('contract-download-button')[0]).toBeTruthy();
     });
 
     it('should show PDF download buttons for event owner (non-admin)', async () => {
@@ -1126,8 +1137,8 @@ it('should have accessible labels on report buttons', async () => {
       });
 
       // Check PDF download buttons are visible for event owner
-      expect(screen.getByTestId('receipt-download-button')).toBeTruthy();
-      expect(screen.getByTestId('contract-download-button')).toBeTruthy();
+      expect(screen.getAllByTestId('receipt-download-button')[0]).toBeTruthy();
+      expect(screen.getAllByTestId('contract-download-button')[0]).toBeTruthy();
     });
 
     it('should hide PDF download buttons for non-owner users', async () => {
@@ -1149,11 +1160,11 @@ it('should have accessible labels on report buttons', async () => {
       });
 
       // Check PDF download buttons are NOT visible for non-owner
-      expect(screen.queryByTestId('receipt-download-button')).toBeFalsy();
-      expect(screen.queryByTestId('contract-download-button')).toBeFalsy();
-    });
+      expect(screen.queryAllByTestId('receipt-download-button')).toHaveLength(0);
+      expect(screen.queryAllByTestId('contract-download-button')).toHaveLength(0);
+});
 
-it('should call billing summary API and show loading state when billing button is clicked', async () => {
+      it('should call billing summary API and show loading state when billing button is clicked', async () => {
         mockUser.hasRole.mockReturnValue(true); // Admin user
         mockEventsApi.getEventBillingSummary.mockResolvedValue({
           data: {
@@ -1181,7 +1192,7 @@ it('should call billing summary API and show loading state when billing button i
         });
 
         // Click billing summary button
-        const billingButton = screen.getByLabelText(/billing summary/i);
+        const billingButton = screen.getAllByLabelText(/billing summary/i)[0];
         fireEvent.click(billingButton);
 
         // Wait for API call to be made
@@ -1190,7 +1201,7 @@ it('should call billing summary API and show loading state when billing button i
         });
       });
 
-it('should call musician payment summary API and show loading state when musician button is clicked', async () => {
+      it('should call musician payment summary API and show loading state when musician button is clicked', async () => {
         mockUser.hasRole.mockReturnValue(true); // Admin user
         mockEventsApi.getEventMusicianPaymentSummary.mockResolvedValue({
           data: [
@@ -1226,7 +1237,7 @@ it('should call musician payment summary API and show loading state when musicia
         });
 
         // Click musician payment summary button
-        const musicianButton = screen.getByLabelText(/musician payment summary/i);
+        const musicianButton = screen.getAllByLabelText(/musician payment summary/i)[0];
         fireEvent.click(musicianButton);
 
         // Wait for API call to be made
@@ -1235,7 +1246,7 @@ it('should call musician payment summary API and show loading state when musicia
         });
       });
 
-it('should handle billing summary API error', async () => {
+      it('should handle billing summary API error', async () => {
         mockUser.hasRole.mockReturnValue(true); // Admin user
         mockEventsApi.getEventBillingSummary.mockRejectedValue(
           new Error('Failed to fetch billing summary')
@@ -1255,7 +1266,7 @@ it('should handle billing summary API error', async () => {
           expect(screen.getByText('Test Event')).toBeTruthy();
         });
 
-        const billingButton = screen.getByLabelText(/billing summary/i);
+        const billingButton = screen.getAllByLabelText(/billing summary/i)[0];
         fireEvent.click(billingButton);
 
         // Wait for the billing summary popup to be called with error state
@@ -1284,7 +1295,7 @@ it('should handle billing summary API error', async () => {
           expect(screen.getByText('Test Event')).toBeTruthy();
         });
 
-        const musicianButton = screen.getByLabelText(/musician payment summary/i);
+        const musicianButton = screen.getAllByLabelText(/musician payment summary/i)[0];
         fireEvent.click(musicianButton);
 
         // Wait for the musician payment summary popup to be called with error state
@@ -1293,4 +1304,4 @@ it('should handle billing summary API error', async () => {
         });
       });
   });
- });
+});
