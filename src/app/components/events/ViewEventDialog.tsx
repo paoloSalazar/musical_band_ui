@@ -7,6 +7,8 @@ import type { ApiError } from '../../lib/api/client';
 import { ViewMusicianPaymentsDialog } from './ViewMusicianPaymentsDialog';
 import { BillingSummaryPopup } from './BillingSummaryPopup';
 import { MusicianPaymentSummaryPopup } from './MusicianPaymentSummaryPopup';
+import { ReceiptDownloadButton } from './ReceiptDownloadButton';
+import { ContractDownloadButton } from './ContractDownloadButton';
 import { formatDateHumanReadable, formatTimeHumanReadable } from '../../lib/timezone';
 import { useUser } from '../../contexts/UserContext';
 import { Button } from '../ui/button';
@@ -19,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
-import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save, CreditCard, Wallet, Users, PieChart } from 'lucide-react';
+import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save, CreditCard, Wallet, Users, PieChart, FileText, FileSignature } from 'lucide-react';
 import { ViewPaymentDetailsDialog } from './ViewPaymentDetailsDialog';
 import { MakePaymentDialog } from './MakePaymentDialog';
 
@@ -430,6 +432,16 @@ const handleFetchMusicianPaymentSummary = async () => {
                          <Users className="h-4 w-4" />
                        )}
                      </Button>
+
+                     {/* PDF Download Buttons */}
+                     <ReceiptDownloadButton
+                       eventId={event.id}
+                       aria-label={t('events.dialog.view.receiptPdfLabel')}
+                     />
+                     <ContractDownloadButton
+                       eventId={event.id}
+                       aria-label={t('events.dialog.view.contractPdfLabel')}
+                     />
                   </div>
                 </div>
               )}

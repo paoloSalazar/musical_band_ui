@@ -221,6 +221,8 @@
           "reports": "Reports",
           "billingSummaryLabel": "Billing Summary",
           "musicianPaymentSummaryLabel": "Musician Payment Summary",
+          "receiptPdfLabel": "Download Receipt PDF",
+          "contractPdfLabel": "Download Contract PDF",
           "billingSummaryTitle": "Billing Summary",
           "musicianPaymentSummaryTitle": "Musician Payment Summary",
           "eventName": "Event Name",

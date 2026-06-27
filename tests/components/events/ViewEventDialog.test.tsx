@@ -216,6 +216,25 @@ vi.mock('lucide-react', () => ({
   Wallet: () => <div data-testid="wallet-icon" />,
   Loader2: () => <div data-testid="loader-icon" />,
   PieChart: () => <div data-testid="pie-chart-icon" />,
+  FileText: () => <div data-testid="file-text-icon" />,
+  FileSignature: () => <div data-testid="file-signature-icon" />,
+}));
+
+// Mock PDF download button components
+vi.mock('@/app/components/events/ReceiptDownloadButton', () => ({
+  ReceiptDownloadButton: ({ 'aria-label': ariaLabel }: { ariaLabel?: string }) => (
+    <button data-testid="receipt-download-button" aria-label={ariaLabel}>
+      <div data-testid="file-text-icon" />
+    </button>
+  ),
+}));
+
+vi.mock('@/app/components/events/ContractDownloadButton', () => ({
+  ContractDownloadButton: ({ 'aria-label': ariaLabel }: { ariaLabel?: string }) => (
+    <button data-testid="contract-download-button" aria-label={ariaLabel}>
+      <div data-testid="file-signature-icon" />
+    </button>
+  ),
 }));
 
 // Import after mocking to get the mocked version
@@ -1064,6 +1083,74 @@ it('should have accessible labels on report buttons', async () => {
       
       const musicianButton = screen.getByLabelText(/musician payment summary/i);
       expect(musicianButton).toHaveAttribute('aria-label');
+    });
+
+    it('should show PDF download buttons for admin users', async () => {
+      mockUser.hasRole.mockReturnValue(true); // Admin user
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      // Check PDF download buttons are visible for admin
+      expect(screen.getByTestId('receipt-download-button')).toBeTruthy();
+      expect(screen.getByTestId('contract-download-button')).toBeTruthy();
+    });
+
+    it('should show PDF download buttons for event owner (non-admin)', async () => {
+      mockUser.hasRole.mockReturnValue(false); // Regular user (event owner)
+      mockUser.id = 1; // User is the event owner
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      // Check PDF download buttons are visible for event owner
+      expect(screen.getByTestId('receipt-download-button')).toBeTruthy();
+      expect(screen.getByTestId('contract-download-button')).toBeTruthy();
+    });
+
+    it('should hide PDF download buttons for non-owner users', async () => {
+      mockUser.hasRole.mockReturnValue(false); // Non-admin user
+      mockUser.id = 999; // Different user ID (not owner)
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      // Check PDF download buttons are NOT visible for non-owner
+      expect(screen.queryByTestId('receipt-download-button')).toBeFalsy();
+      expect(screen.queryByTestId('contract-download-button')).toBeFalsy();
     });
 
 it('should call billing summary API and show loading state when billing button is clicked', async () => {

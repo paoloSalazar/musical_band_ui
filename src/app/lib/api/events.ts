@@ -3,7 +3,7 @@
  * API functions for managing events
  */
 
-import { apiClient, type ApiResponse } from './client';
+import { apiClient, API_BASE_URL, type ApiResponse } from './client';
 import type { Event, EventFormData, Payment, PaymentSummary, PaymentFormData, EventMusician, EventMusicianFormData, EventMusicianUpdateData, User } from '../types';
 
 /**
@@ -254,5 +254,33 @@ export const eventsApi = {
     */
   getEventMusicianPaymentSummary: async (eventId: number): Promise<ApiResponse<any[]>> => {
     return apiClient.get<any[]>(`/events/${eventId}/musicians/payment-summary`);
+  },
+
+  /**
+   * Download receipt PDF for an event
+   * GET /api/receipts/{event_id}/pdf
+   */
+  downloadReceiptPdf: async (eventId: number): Promise<Blob> => {
+    const response = await fetch(`${API_BASE_URL}/receipts/${eventId}/pdf`, {
+      headers: apiClient.getToken() ? { Authorization: `Bearer ${apiClient.getToken()}` } : {},
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to download receipt: ${response.statusText}`);
+    }
+    return response.blob();
+  },
+
+  /**
+   * Download contract PDF for an event
+   * GET /api/contracts/{event_id}/pdf
+   */
+  downloadContractPdf: async (eventId: number): Promise<Blob> => {
+    const response = await fetch(`${API_BASE_URL}/contracts/${eventId}/pdf`, {
+      headers: apiClient.getToken() ? { Authorization: `Bearer ${apiClient.getToken()}` } : {},
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to download contract: ${response.statusText}`);
+    }
+    return response.blob();
   },
 };

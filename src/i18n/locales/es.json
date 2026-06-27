@@ -222,6 +222,8 @@
           "reports": "Reportes",
           "billingSummaryLabel": "Resumen de Facturación",
           "musicianPaymentSummaryLabel": "Resumen de Pago de Músicos",
+          "receiptPdfLabel": "Descargar Recibo PDF",
+          "contractPdfLabel": "Descargar Contrato PDF",
           "billingSummaryTitle": "Resumen de Facturación",
           "musicianPaymentSummaryTitle": "Resumen de Pago de Músicos",
           "eventName": "Nombre del Evento",

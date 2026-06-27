@@ -154,13 +154,13 @@ Add buttons in the Reports section after existing buttons (around line 431):
 
 ## 9. Implementation Order
 
-1. ~~Add API methods to `events.ts`~~ (backend - see `docs/pdf_documents_plan.md`)
-2. ~~Create `useDownloadPdf.ts` hook~~ (pending)
-3. ~~Create `ReceiptDownloadButton.tsx` component~~ (pending)
-4. ~~Create `ContractDownloadButton.tsx` component~~ (pending)
+1. ~~Add API methods to `events.ts`~~ (completed)
+2. ~~Create `useDownloadPdf.ts` hook~~ (completed)
+3. ~~Create `ReceiptDownloadButton.tsx` component~~ (completed)
+4. ~~Create `ContractDownloadButton.tsx` component~~ (completed)
 5. ~~Update `ViewEventDialog.tsx` Reports section authorization~~ (completed - now visible for both admins AND event owners)
-6. ~~Add translation keys~~ (pending)
-7. Integrate buttons in `ViewEventDialog.tsx` (pending)
+6. ~~Add translation keys~~ (completed)
+7. ~~Integrate buttons in `ViewEventDialog.tsx`~~ (completed)
 
 ---
 
@@ -175,9 +175,10 @@ Add buttons in the Reports section after existing buttons (around line 431):
 - Test authorization (admin vs event owner vs other user)
 
 ### Files to Create
-- `tests/components/events/ReceiptDownloadButton.test.tsx` (pending)
-- `tests/components/events/ContractDownloadButton.test.tsx` (pending)
-- `tests/lib/hooks/useDownloadPdf.test.ts` (pending)
+- `tests/components/events/ReceiptDownloadButton.test.tsx` (completed)
+- `tests/components/events/ContractDownloadButton.test.tsx` (completed)
+- `tests/lib/hooks/useDownloadPdf.test.ts` (completed)
 
 **Completed Tests:**
 - `tests/components/events/ViewEventDialog.test.tsx` - Updated to verify Reports section is visible for both admins AND event owners
+- All 707 tests pass
