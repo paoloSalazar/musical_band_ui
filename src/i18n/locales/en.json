@@ -76,7 +76,8 @@
     "status": {
       "PENDING": "PENDING",
       "CONFIRMED": "CONFIRMED",
-      "CANCELLED": "CANCELLED"
+      "CANCELLED": "CANCELLED",
+      "COMPLETED": "COMPLETED"
     },
     "payment": {
       "ADVANCE": "Advance Payment",
