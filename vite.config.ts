@@ -10,6 +10,13 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './tests/setup.ts',
+    include: ['tests/**/*.test.{ts,tsx}'],
+    testTimeout: 10000, // Set a longer timeout for tests that involve async operations
+  },
   resolve: {
     alias: {
       // Alias @ to the src directory

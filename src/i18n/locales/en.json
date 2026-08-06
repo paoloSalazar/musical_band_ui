@@ -1,0 +1,1015 @@
+{
+   "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "tryAgain": "Try Again",
+     "this": "this",
+     "these": "these",
+     "user": "user",
+     "users": "users",
+     "paymentRecord": "payment record",
+     "paymentRecords": "payment records",
+     "verbs": {
+       "is": "is",
+       "are": "are"
+     }
+   },
+
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "rememberMe": "Remember me",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "loginError": "Invalid username or password",
+    "loginSuccess": "Login successful"
+  },
+  "login": {
+    "title": "The Electric Dreams",
+    "subtitle": "Admin Portal",
+    "welcomeBack": "Welcome Back",
+    "description": "Sign in to manage your band website",
+    "email": "Email",
+    "emailPlaceholder": "admin@electricdreams.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "validation": {
+      "required": "Please enter both email and password"
+    },
+    "footer": "© 2026 The Electric Dreams. All rights reserved."
+  },
+  "navigation": {
+    "home": "Home",
+    "profile": "Profile",
+    "events": "Events",
+    "admin": "Admin",
+    "dashboard": "Dashboard"
+  },
+  "events": {
+    "title": "Events",
+    "create": "Create Event",
+    "edit": "Edit Event",
+    "delete": "Delete Event",
+    "view": "View Event",
+    "setprice": "Set Price",
+    "status": {
+      "PENDING": "PENDING",
+      "CONFIRMED": "CONFIRMED",
+      "CANCELLED": "CANCELLED",
+      "COMPLETED": "COMPLETED"
+    },
+    "payment": {
+      "ADVANCE": "Advance Payment",
+      "REMAINING": "Remaining Balance",
+      "TOTAL": "Total Payment",
+      "title": "Payment Details",
+      "description": "{{eventName}} - Payment history and summary",
+      "loading": "Loading payment details...",
+      "error": "Error",
+      "failedToLoad": "Failed to load payment details",
+      "summary": {
+        "title": "Payment Summary",
+        "finalPrice": "Final Price",
+        "totalPaid": "Total Paid",
+        "remaining": "Remaining"
+      },
+      "history": {
+        "title": "Payment History",
+        "noPayments": "No payments have been made yet."
+      },
+      "buttons": {
+        "close": "Close"
+      }
+    },
+    "musicianManagement": {
+      "title": "Musicians for Event {{eventId}}",
+      "titleWithName": "Musicians for {{name}}",
+      "description": "Manage musicians assigned to this event",
+      "assignedMusicians": "Assigned Musicians",
+      "tableComingSoon": "Musician table will be implemented here",
+      "assignMusician": "Assign Musician",
+       "paymentStatus": {
+         "COMPLETED": "COMPLETED",
+         "PENDING": "PENDING",
+         "PARTIAL": "PARTIAL",
+         "OVERDUE": "OVERDUE"
+       },
+      "table": {
+        "musician": "Musician",
+        "role": "Role",
+        "salary": "Salary",
+        "paymentStatus": "Payment Status",
+        "actions": "Actions"
+      },
+      "assignDialog": {
+        "title": "Assign Musician to Event",
+        "description": "Select a musician and provide role and salary.",
+        "musician": "Musician",
+        "musicianPlaceholder": "Type to filter musicians...",
+        "notAvailable": "The musician is not available for the dates of this event",
+        "role": "Role",
+        "rolePlaceholder": "Role / Instrument",
+        "salary": "Salary",
+        "assign": "Assign",
+        "assigning": "Assigning...",
+        "cancel": "Cancel",
+        "validationError": "Please fill all fields with valid data",
+        "alreadyAssigned": "Musician is already assigned to this event",
+        "error": "Failed to assign musician"      },
+      "deleteDialog": {
+        "title": "Delete Musician Assignment",
+        "message": "Are you sure you want to remove {{name}} from this event? This action cannot be undone.",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "cannotDeleteWithPayments": "This musician assignment cannot be deleted because there {{verb}} already {{count}} {{record}} for this musician and event."
+      },
+      "editDialog": {
+        "title": "Edit Musician Assignment",
+        "description": "Update role and salary for {{name}} in the event.",
+        "role": "Role",
+        "rolePlaceholder": "Role / Instrument",
+        "salary": "Salary",
+        "salaryPlaceholder": "Salary",
+        "save": "Save",
+        "cancel": "Cancel",
+        "salaryError": "Salary must be a positive number",
+        "fallbackName": "this musician"
+      }
+    },
+    "makePayment": {
+      "title": "Make Payment",
+      "description": "{{eventName}} - Record a payment for this event",
+      "loadingSummary": "Loading summary...",
+      "summary": {
+        "finalPrice": "Final Price:",
+        "totalPaid": "Total Paid:",
+        "remainingBalance": "Remaining Balance:"
+      },
+      "warning": "Payment summary not available. Please ensure the event price has been set.",
+      "form": {
+        "paymentType": "Payment Type",
+        "paymentTypePlaceholder": "Select payment type",
+        "amount": "Amount ($)",
+        "notes": "Notes (optional)",
+        "notesPlaceholder": "Add any notes about this payment..."
+      },
+      "paymentTypes": {
+        "ADVANCE": "Advance Payment",
+        "REMAINING": "Remaining Balance",
+        "TOTAL": "Full Payment"
+      },
+      "descriptions": {
+        "TOTAL": "Pays the entire remaining balance",
+        "REMAINING": "Pays the full remaining balance",
+        "ADVANCE": "A partial payment towards the total"
+      },
+       "validation": {
+         "invalidAmount": "Please enter a valid amount greater than 0",
+         "exceedsBalance": "Amount cannot exceed the remaining balance of ${{balance}}",
+         "advanceMinimum": "Advance payment must be at least {{percentage}}% (${{minAmount}} of ${{totalAmount}})",
+         "remainingMinimum": "Remaining payment must be at least {{percentage}}% (${{minAmount}} of ${{totalAmount}})",
+         "remainingExact": "Remaining payment must equal exactly the remaining balance (${{expectedAmount}}), but got ${{actualAmount}}",
+         "advanceTiming": "ADVANCE payments must be made at least 24 hours before event start",
+         "totalWithExistingPartials": "Cannot create TOTAL payment when there are existing ADVANCE or REMAINING payments. Use REMAINING payment type to complete the balance."
+       },
+      "buttons": {
+        "cancel": "Cancel",
+        "submitPayment": "Submit Payment"
+      },
+      "failedToCreate": "Failed to create payment"
+    },
+"dialog": {
+        "view": {
+          "title": "Event Details",
+          "description": "View event information",
+          "loading": "Loading event...",
+          "error": "Error",
+          "date": "Date",
+         "time": "Time",
+         "allDay": "All day event",
+         "location": "Location",
+         "price": "Price",
+         "enterPrice": "Enter price",
+         "setPrice": "Set Price",
+         "noPrice": "No price set",
+         "createdBy": "Created by",
+         "editEvent": "Edit Event",
+         "manageMusicians": "Manage Musicians",
+         "paymentDetails": "Payment Details",
+         "makePayment": "Make Payment",
+"viewMyPayments": "View My Payments",
+          "reports": "Reports",
+          "billingSummaryLabel": "Billing Summary",
+          "musicianPaymentSummaryLabel": "Musician Payment Summary",
+          "receiptPdfLabel": "Download Receipt PDF",
+          "contractPdfLabel": "Download Contract PDF",
+          "billingSummaryTitle": "Billing Summary",
+          "musicianPaymentSummaryTitle": "Musician Payment Summary",
+          "eventName": "Event Name",
+          "eventPrice": "Event Price",
+          "paymentDone": "Payment Done",
+          "remainingPayment": "Remaining Payment",
+          "sumOfMusicianSalaries": "Sum of Musician Salaries",
+          "paymentDoneToMusicians": "Payment Done to Musicians",
+          "noData": "No data available",
+          "musicianName": "Musician Name",
+"validation": {
+            "invalidAmount": "Please enter a valid number",
+            "priceNegative": "Price cannot be negative"
+          },
+          "failedToUpdate": "Failed to update price",
+          "failedToLoadBillingSummary": "Failed to load billing summary",
+          "failedToLoadMusicianPaymentSummary": "Failed to load musician payment summary"
+       }
+     },
+    "list": {
+      "title": "All Events",
+      "totalEvents": "Total: {{total}} event(s) - Page {{current}} of {{totalPages}}",
+      "createEvent": "Create Event",
+      "noEvents": "No events found",
+      "noEventsMessage": "Create your first event to get started",
+      "table": {
+        "name": "Name",
+        "place": "Place",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "price": "Price",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "actions": {
+        "view": "View Details",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "loading": "Loading events...",
+      "error": "Error loading events",
+      "tryAgain": "Try Again",
+      "pagination": {
+        "showing": "Showing {{from}} to {{to}} of {{total}} events",
+        "previous": "Previous",
+        "next": "Next"
+      },
+       "failedToLoad": "Failed to load events"
+     },
+     "musicianPayments": {
+       "addTitle": "Record Musician Payment",
+       "addDescription": "Record a payment for {{name}}",
+       "viewTitle": "Payments for {{name}}",
+       "viewDescription": "View payment history and total amount paid to this musician",
+       "form": {
+         "amount": "Amount",
+         "paymentType": "Payment Type",
+         "notes": "Notes",
+         "notesPlaceholder": "Optional notes",
+         "save": "Save Payment"
+       },
+       "paymentTypes": {
+         "ADVANCE": "ADVANCE",
+         "REMAINING": "REMAINING",
+         "TOTAL": "TOTAL"
+       },
+        "validation": {
+          "invalidAmount": "Please enter a valid amount",
+          "advanceLimit": "ADVANCE cannot exceed 50% of salary",
+          "advanceTiming": "ADVANCE payments can only be made before event start date. Event starts: {{eventStart}}, Current time: {{currentTime}}",
+          "totalPaymentMismatch": "TOTAL payment must equal the full salary amount. Expected: {{expected}}, Got: {{got}}",
+          "remainingPaymentMismatch": "REMAINING payment must equal the full remaining salary. Expected: {{expected}}, Got: {{got}}",
+          "remainingPaymentExceeds": "REMAINING payment would exceed remaining salary. Already paid: {{alreadyPaid}}, Payment amount: {{paymentAmount}}, Salary: {{salary}}",
+          "totalPaymentWithPartials": "Cannot create TOTAL payment when partial payments exist"
+        },
+        "messages": {
+          "error": "Failed to process payment",
+          "remainingPaymentWithoutAdvance": "Cannot create REMAINING payment without prior ADVANCE payments. Use TOTAL payment type instead."
+        },
+       "summary": {
+         "salary": "Assigned Salary",
+         "totalPaid": "Total Paid"
+       },
+       "history": "Payment History",
+       "noPayments": "No payments recorded yet"
+     },
+     "calendar": {
+      "loading": "Loading calendar...",
+      "error": "Error loading events",
+      "tryAgain": "Try Again",
+      "today": "Today",
+      "dayNames": {
+        "sunday": "Sun",
+        "monday": "Mon",
+        "tuesday": "Tue",
+        "wednesday": "Wed",
+        "thursday": "Thu",
+        "friday": "Fri",
+        "saturday": "Sat"
+      },
+      "moreEvents": "+{{count}} more",
+      "failedToLoad": "Failed to load events"
+    },
+    "create": {
+      "title": "Create New Event",
+      "description": "Add a new event to your schedule.",
+      "failedToCreate": "Failed to create event",
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "e.g., Cumpleaños de Maria",
+        "place": "Place",
+        "placePlaceholder": "e.g., Calle Calama y San Martin, Cochabamba",
+        "description": "Description",
+        "descriptionPlaceholder": "Event description...",
+        "allDay": "All Day",
+        "allDayLabel": "This is an all-day event",
+        "startDate": "Start Date",
+        "startTime": "Start Time",
+        "endDate": "End Date",
+        "endTime": "End Time"
+      },
+      "validation": {
+        "nameRequired": "Name is required",
+        "placeRequired": "Place is required",
+        "startDateRequired": "Start date is required",
+        "startTimeRequired": "Start time is required",
+        "endDateRequired": "End date is required",
+        "endTimeRequired": "End time is required",
+        "cannotCreateInPast": "Cannot create events in the past",
+        "eventConflict": "Event conflicts with existing event '{{eventName}}' on {{date}}"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "createEvent": "Create Event"
+      }
+    },
+    "delete": {
+      "title": "Delete Event",
+      "description": "Are you sure you want to delete this event? This action cannot be undone.",
+      "failedToDelete": "Failed to delete event",
+      "eventLabel": "Event: {{eventName}}",
+      "warning": "This will permanently delete the event and all its information.",
+      "buttons": {
+        "cancel": "Cancel",
+        "deleteEvent": "Delete Event"
+      }
+    },
+    "edit": {
+      "title": "Edit Event",
+      "description": "Update event information.",
+      "loading": "Loading event...",
+      "failedToLoad": "Failed to load event",
+      "failedToUpdate": "Failed to update event",
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "e.g., Cumpleaños de Maria",
+        "place": "Place",
+        "placePlaceholder": "e.g., Calle Calama y San Martin, Cochabamba",
+        "description": "Description",
+        "descriptionPlaceholder": "Event description...",
+        "allDay": "All Day",
+        "allDayLabel": "This is an all-day event",
+        "startDate": "Start Date",
+        "startTime": "Start Time",
+        "endDate": "End Date",
+        "endTime": "End Time"
+      },
+      "validation": {
+        "nameRequired": "Name is required",
+        "placeRequired": "Place is required",
+        "startDateRequired": "Start date is required",
+        "startTimeRequired": "Start time is required",
+        "endDateRequired": "End date is required",
+        "endTimeRequired": "End time is required"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "saveChanges": "Save Changes"
+      }
+    },
+    "page": {
+      "title": "Events",
+      "loggedInAs": "Logged in as: {{name}}",
+      "description": "Manage your band events and schedule",
+      "views": {
+        "list": "List View",
+        "calendar": "Calendar View"
+      }
+    },
+    "deleteAdditionalInfo": {
+      "title": "Delete Additional Information",
+      "description": "Are you sure you want to delete the \"{{detailType}}\" information? This action cannot be undone.",
+      "error": {
+        "failed": "Failed to delete additional info"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "delete": "Delete"
+      }
+    }
+  },
+   "profile": {
+    "title": "Profile",
+    "name": "Name",
+    "phone": "Phone",
+    "bio": "Bio",
+    "updateProfile": "Update Profile",
+    "changePassword": "Change Password",
+    "addAdditionalInfo": {
+      "title": "Add Additional Information",
+      "description": "Add new additional information to your profile.",
+      "error": {
+        "fillFields": "Please fill in all required fields",
+        "failed": "Failed to add additional info"
+      },
+      "fields": {
+        "type": "Type",
+        "typePlaceholder": "e.g., address, city, phone",
+        "value": "Value",
+        "valuePlaceholder": "Enter the value"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "addInfo": "Add Info"
+      },
+      "detailTypes": {
+        "address": "Address",
+        "address1": "Address Line 1",
+        "address2": "Address Line 2",
+        "city": "City",
+        "state": "State/Province",
+        "country": "Country",
+        "postal_code": "Postal Code",
+        "phone": "Phone",
+        "bio": "Biography",
+        "website": "Website",
+        "linkedin": "LinkedIn",
+        "twitter": "Twitter",
+        "instagram": "Instagram"
+      }
+    },
+    "changePassword": {
+      "title": "Change Password",
+      "description": "Enter your current password and choose a new password.",
+      "error": {
+        "passwordsNotMatch": "New passwords do not match",
+        "passwordTooShort": "New password must be at least 6 characters",
+        "failed": "Failed to change password"
+      },
+      "success": "Password changed successfully!",
+      "fields": {
+        "current": "Current",
+        "currentPlaceholder": "Enter current password",
+        "new": "New",
+        "newPlaceholder": "Enter new password",
+        "confirm": "Confirm",
+        "confirmPlaceholder": "Confirm new password"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "changePassword": "Change Password",
+        "changed": "Changed!"
+      }
+    },
+    "editAdditionalInfo": {
+      "title": "Edit Additional Information",
+      "description": "Update the additional information for your profile.",
+      "error": {
+        "fillFields": "Please enter a value",
+        "failed": "Failed to update additional info"
+      },
+      "fields": {
+        "type": "Type",
+        "value": "Value",
+        "valuePlaceholder": "Enter the value"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "saveChanges": "Save Changes"
+      }
+    },
+    "editProfile": {
+      "title": "Edit Profile",
+      "description": "Update your basic profile information below.",
+      "error": {
+        "failed": "Failed to update profile"
+      },
+"fields": {
+         "name": "Name",
+         "namePlaceholder": "Enter your name",
+         "lastname": "Last Name",
+         "lastnamePlaceholder": "Enter your last name",
+         "secondLastname": "Second Last Name",
+         "secondLastnamePlaceholder": "Enter your second last name (optional)",
+         "phoneNumber": "Phone Number",
+         "phoneNumberPlaceholder": "+1234567890",
+         "ci": "CI",
+         "ciPlaceholder": "Enter your CI (optional)"
+       },
+      "buttons": {
+        "cancel": "Cancel",
+        "saveChanges": "Save Changes"
+      }
+    },
+    "page": {
+      "loading": "Loading profile...",
+      "error": "Error",
+      "failedToLoad": "Failed to load profile",
+      "retry": "Retry",
+      "noData": "No profile data available",
+      "backToHome": "Back to Home",
+      "title": "My Profile",
+      "changePassword": "Change Password",
+      "editProfile": "Edit Profile",
+      "userId": "ID: {{id}}",
+      "sections": {
+        "contactInfo": "Contact Information",
+        "email": "Email",
+        "phoneNumber": "Phone Number",
+        "role": "Role",
+"memberSince": "Member Since",
+         "ci": "CI",
+         "additionalInfo": "Additional Information",
+        "addInfo": "Add Info",
+        "noAdditionalInfo": "No additional information added yet. Click \"Add Info\" to add details like address, city, or other information.",
+        "myPermissions": "My Permissions"
+      }
+    }
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": "Users",
+    "roles": "Roles",
+    "permissions": "Permissions",
+    "rolePermissions": "Role Permissions",
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "logged_in_as": "Logged in as {{name}}"
+  },
+  "home": {
+    "title": "Music Events Management",
+    "subtitle": "App to Manage Your Band's Events and Schedule",
+    "profile": "My Profile",
+    "logout": "Logout",
+    "welcome": "Welcome to Music Events Management App",
+    "description": "Manage your events, schedule, and band members all in one place. Use the cards below to navigate.",
+    "cards": {
+      "members": {
+        "title": "Band Members",
+        "description": "Manage band member profiles and bios",
+        "button": "Manage Members"
+      },
+      "events": {
+        "title": "Events",
+        "description": "Schedule and manage upcoming shows",
+        "button": "Manage Events"
+      },
+      "admin": {
+        "title": "Admin Panel",
+        "description": "User management and permissions",
+        "button": "Manage Admin"
+      },
+      "availability": {
+        "title": "My Availability",
+        "description": "Manage your unavailable dates",
+        "button": "Manage Availability"
+      }
+    },
+    "stats": {
+      "members": {
+        "title": "Total Band Members",
+        "description": "Active members"
+      },
+      "events": {
+        "title": "Upcoming Events",
+        "description": "Scheduled shows"
+      },
+      "admins": {
+        "title": "Admin Users",
+        "description": "Active administrators"
+      }
+    },
+    "debug": {
+      "title": "Debug: Your Permissions",
+      "role": "Role:"
+    }
+  },
+  "language": {
+    "current": "Language",
+    "select": "Select Language",
+    "english": "English",
+    "spanish": "Español"
+  },
+  "musicianAvailability": {
+    "title": "My Availability",
+    "subtitle": "Manage your unavailable dates",
+    "calendarViewTitle": "Calendar View",
+    "calendarViewSubTitle": "Click on available dates to add them as unavailable",
+    "quickActions": "Quick Actions",
+    "addUnavailableDates": "Add unavailable dates",
+    "yourUnavailableDates": "Your Unavailable Dates",
+    "calendar": {
+      "today": "Today",
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "selected": "Selected",
+      "selectDate": "Select date",
+      "months": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month"
+    },
+    "form": {
+      "date": "Date",
+      "dateRequired": "Date is required",
+      "reason": "Reason (optional)",
+      "reasonPlaceholder": "e.g., Vacation, Family event, etc.",
+      "addSingle": "Add Unavailable Date",
+      "addSingleDescription": "Select a date when you will be unavailable",
+      "addBulk": "Add Multiple Dates",
+      "editDescription": "Update your availability information",
+      "edit": "Edit Availability",
+      "save": "Save Changes",
+      "cancel": "Cancel"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Remove this unavailable date?"
+    },
+    "messages": {
+      "added": "Availability updated successfully",
+      "deleted": "Availability removed successfully",
+      "error": "Failed to update availability",
+      "pastDateError": "Cannot set past dates as unavailable",
+      "duplicateError": "This date is already marked as unavailable",
+      "assignedToEvent": "Cannot mark date unavailable – assigned to event '{{eventName}}' on {{date}}"
+    },
+    "bulk": {
+      "description": "Select multiple dates to mark as unavailable",
+      "selectDates": "Select Dates",
+      "selectedCount": "{{count}} date(s) selected",
+      "addDates": "Add {{count}} Dates",
+      "noDatesSelected": "Please select at least one date",
+      "conflictingDates": "{{count}} selected date(s) are already unavailable"
+    },
+    "summary": {
+      "count": "{{count}} date(s) marked as unavailable"
+    },
+    "empty": {
+      "title": "No unavailable dates",
+      "description": "You haven't set any unavailable dates yet."
+    }
+  },
+  "permissions": {
+    "read:events": "View Events",
+    "create:events": "Create Events",
+    "update:events": "Edit Events",
+    "delete:events": "Delete Events",
+    "read:user_roles": "View User Roles",
+    "create:user_roles": "Create User Roles",
+    "update:user_roles": "Edit User Roles",
+    "delete:user_roles": "Delete User Roles",
+    "read:permissions": "View Permissions",
+    "create:permissions": "Create Permissions",
+    "update:permissions": "Edit Permissions",
+    "delete:permissions": "Delete Permissions",
+    "read:users": "View Users",
+    "create:users": "Create Users",
+    "update:users": "Edit Users",
+    "delete:users": "Delete Users",
+    "title": "Permissions",
+    "subtitle": "Manage system permissions",
+    "createPermission": "Create Permission",
+    "allPermissions": "All Permissions",
+    "totalPermissions": "Showing {{from}} to {{to}} of {{total}} permission(s)",
+    "noPermissions": "No permissions found",
+    "noPermissionsMessage": "Create your first permission to get started",
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "loading": "Loading permissions...",
+    "error": "Error loading permissions",
+    "tryAgain": "Try Again",
+    "form": {
+      "create": {
+        "title": "Create New Permission",
+        "description": "Add a new permission to the system. Click save when you're done."
+      },
+      "edit": {
+        "title": "Edit Permission",
+        "description": "Update the permission details below."
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "namePlaceholder": "e.g., read:events",
+        "descriptionPlaceholder": "Optional description"
+      },
+      "validation": {
+        "nameRequired": "Permission name is required"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "savePermission": "Save Permission",
+        "saveChanges": "Save Changes"
+      },
+      "loadingPermission": "Loading permission...",
+      "failedToCreate": "Failed to create permission",
+      "failedToUpdate": "Failed to update permission"
+    },
+    "dialog": {
+      "view": {
+        "title": "Permission Details",
+        "description": "View permission information",
+        "id": "ID",
+        "name": "Name",
+        "description": "Description",
+        "noDescription": "No description",
+        "close": "Close"
+      },
+      "delete": {
+        "title": "Delete Permission",
+        "description": "Are you sure you want to delete this permission? This action cannot be undone.",
+        "confirmationText": "You are about to delete the permission:",
+        "deletePermission": "Delete Permission",
+        "failedToDelete": "Failed to delete permission"
+      }
+    },
+    "errors": {
+      "permissionAlreadyExists": "Permission {{name}} already exists",
+      "permissionNotFound": "Permission {{name}} not found",
+      "permissionInUse": "Permission {{name}} is currently in use and cannot be deleted",
+      "cannotDeletePermissionWithRoles": "This permission cannot be deleted because it is assigned to {{count}} role ('{{roles}}'). Please remove this permission from the role first.",
+      "validationError": "Validation error",
+      "networkError": "Network error occurred",
+      "serverError": "Server error occurred"
+    }
+  },
+  "rolePermissions": {
+    "title": "Role Permissions",
+    "subtitle": "Assign and manage permissions for each role",
+    "rolesAndPermissions": "Roles & Permissions",
+    "totalRoles": "Total: {{count}} role(s)",
+    "noRoles": "No roles found",
+    "loading": "Loading...",
+    "errorLoading": "Error loading data",
+    "tryAgain": "Try Again",
+    "table": {
+      "role": "Role",
+      "permissions": "Permissions",
+      "actions": "Actions",
+      "noPermissions": "No permissions",
+      "morePermissions": "+{{count}} more"
+    },
+    "actions": {
+      "manage": "Manage"
+    },
+    "dialog": {
+      "managePermissions": "Manage Permissions for {{roleName}}",
+      "selectPermissions": "Select the permissions to assign to this role",
+      "noPermissionsAvailable": "No permissions available",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "saving": "Saving..."
+    },
+    "errors": {
+      "failedToSave": "Failed to save permissions",
+      "failedToLoad": "Failed to load data"
+    }
+  },
+  "roles": {
+    "admin": "Administrator",
+    "member": "Member",
+    "moderator": "Moderator",
+    "user": "User",
+    "musician": "Musician",
+    "client": "Client",
+    "manager": "Manager",
+    "staff": "Staff",
+    "auxiliar_musician": "Auxiliar Musician",
+    "helper": "Helper",
+    "title": "User Roles",
+    "subtitle": "Manage user roles and their permissions",
+    "createRole": "Create Role",
+    "allRoles": "All Roles",
+    "totalRoles": "Total: {{count}} role(s)",
+    "noRoles": "No roles found",
+    "noRolesMessage": "Create your first role to get started",
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "loading": "Loading roles...",
+    "error": "Error loading roles",
+    "tryAgain": "Try Again",
+    "form": {
+      "create": {
+        "title": "Create New Role",
+        "description": "Add a new user role to the system. Click save when you're done."
+      },
+      "edit": {
+        "title": "Edit Role",
+        "description": "Update the role details below."
+      },
+      "fields": {
+        "name": "Name",
+        "description": "Description",
+        "descriptionPlaceholder": "Optional description",
+        "namePlaceholder": "e.g., moderator"
+      },
+      "validation": {
+        "nameRequired": "Role name is required"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "saveRole": "Save Role",
+        "saveChanges": "Save Changes"
+      },
+      "loadingRole": "Loading role...",
+      "failedToCreate": "Failed to create role",
+      "failedToUpdate": "Failed to update role"
+    },
+    "dialog": {
+      "view": {
+        "title": "Role Details",
+        "description": "View role information",
+        "id": "ID",
+        "name": "Name",
+        "description": "Description",
+        "noDescription": "No description",
+        "close": "Close"
+      },
+      "delete": {
+        "title": "Delete Role",
+        "description": "Are you sure you want to delete this role? This action cannot be undone.",
+        "confirmationText": "You are about to delete the role:",
+        "delete": "Delete",
+        "failedToDelete": "Failed to delete role"
+      }
+    },
+    "errors": {
+      "roleAlreadyExists": "Role {{name}} already exists",
+      "roleNotFound": "Role {{name}} not found",
+      "roleInUse": "Role {{name}} is currently in use and cannot be deleted",
+      "cannotDeleteRoleWithUsers": "This role cannot be deleted because {{count}} {{noun}} {{verb}} assigned to it. Please reassign {{determiner}} {{noun}} to another role first.",
+      "permissionDenied": "You don't have permission to perform this action",
+      "validationError": "Validation error",
+      "networkError": "Network error occurred",
+      "serverError": "Server error occurred"
+    }
+  },
+  "types": {
+    "musician_payment_records": "musician payment records",
+    "musician_assignment_to_an_event": "musician assignment to an event"
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Manage system users and their roles",
+    "createUser": "Create User",
+    "allUsers": "All Users",
+    "totalUsers": "Total: {{count}} user(s)",
+    "noUsers": "No users found",
+    "noUsersMessage": "Create your first user to get started",
+"table": {
+       "id": "ID",
+       "name": "Name",
+       "lastName": "Last Name",
+       "ci": "CI",
+       "phoneNumber": "Phone Number",
+       "email": "Email",
+       "role": "Role",
+       "actions": "Actions"
+     },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "loading": "Loading users...",
+    "error": "Error loading users",
+    "tryAgain": "Try Again",
+    "pagination": {
+      "showing": "Showing {{from}} to {{to}} of {{total}} users",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "form": {
+      "create": {
+        "title": "Create New User",
+        "description": "Add a new user to the system. Click save when you're done."
+      },
+      "edit": {
+        "title": "Edit User",
+        "description": "Update user name, last name, and role."
+      },
+"fields": {
+         "name": "Name",
+         "lastName": "Last Name",
+         "secondLastName": "Second Last Name",
+         "email": "Email",
+         "ci": "CI",
+         "phoneNumber": "Phone Number",
+         "password": "Password",
+         "role": "Role",
+         "selectRole": "Select a role"
+       },
+      "validation": {
+        "nameRequired": "Name is required",
+        "lastNameRequired": "Last name is required",
+        "emailRequired": "Email is required",
+        "passwordRequired": "Password is required",
+        "roleRequired": "Role is required"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "saveUser": "Save User",
+        "saveChanges": "Save Changes"
+      },
+      "loadingUser": "Loading user...",
+      "failedToCreate": "Failed to create user",
+      "failedToUpdate": "Failed to update user"
+    },
+"dialog": {
+       "view": {
+         "title": "User Details",
+         "description": "View user information",
+         "email": "Email",
+         "ci": "CI",
+         "phoneNumber": "Phone Number",
+         "role": "Role",
+         "createdAt": "Created At",
+         "updatedAt": "Updated At",
+         "permissions": "Permissions",
+         "close": "Close",
+         "noData": "No user data available"
+       },
+      "delete": {
+        "title": "Delete User",
+        "description": "Are you sure you want to delete this user? This action cannot be undone.",
+        "loadingUser": "Loading user...",
+        "deleteUser": "Delete User",
+        "failedToDelete": "Failed to delete user"
+      }
+    },
+    "errors": {
+      "userAlreadyExists": "User {{email}} already exists",
+      "emailAlreadyInUse": "Email {{email}} is already in use",
+      "invalidEmail": "Invalid email address: {{email}}",
+      "permissionDenied": "You don't have permission to perform this action",
+      "userNotFound": "User with ID {{id}} not found",
+      "roleNotFound": "Role {{role}} not found",
+      "cannotDeleteOwnAccount": "Cannot delete your own account",
+      "cannotDeleteUserWithAssociations": "This user cannot be deleted because they have created {{count}} events. Please reassign or delete these events first.",
+      "cannotDeleteUserWithPaymentRecords": "This user cannot be deleted because they have {{count}} {{type}}. Please remove {{determiner}} {{type}} first.",
+      "validationError": "Validation error",
+      "networkError": "Network error occurred",
+      "serverError": "Server error occurred"
+    }
+  }
+}
