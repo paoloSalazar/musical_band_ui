@@ -1,4 +1,4 @@
-name: musical_band_ui
+name: musical_band
 
 services:
   ui:
