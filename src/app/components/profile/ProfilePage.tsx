@@ -144,23 +144,32 @@ export function ProfilePage() {
                 </div>
               </div>
               
-              {user.phone_number && (
-                <div className="flex items-start gap-3">
-                  <Phone className="h-5 w-5 text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm text-gray-500">{t('profile.page.sections.phoneNumber')}</p>
-                    <p className="font-medium">{user.phone_number}</p>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex items-start gap-3">
-                <Shield className="h-5 w-5 text-gray-400 mt-0.5" />
-                <div>
-                  <p className="text-sm text-gray-500">{t('profile.page.sections.role')}</p>
-                  <p className="font-medium capitalize">{user.role}</p>
-                </div>
-              </div>
+{user.phone_number && (
+                 <div className="flex items-start gap-3">
+                   <Phone className="h-5 w-5 text-gray-400 mt-0.5" />
+                   <div>
+                     <p className="text-sm text-gray-500">{t('profile.page.sections.phoneNumber')}</p>
+                     <p className="font-medium">{user.phone_number}</p>
+                   </div>
+                 </div>
+               )}
+               
+               {user.ci && (
+                 <div className="flex items-start gap-3">
+                   <div>
+                     <p className="text-sm text-gray-500">{t('profile.page.sections.ci')}</p>
+                     <p className="font-medium">{user.ci}</p>
+                   </div>
+                 </div>
+               )}
+               
+               <div className="flex items-start gap-3">
+                 <Shield className="h-5 w-5 text-gray-400 mt-0.5" />
+                 <div>
+                   <p className="text-sm text-gray-500">{t('profile.page.sections.role')}</p>
+                   <p className="font-medium capitalize">{user.role}</p>
+                 </div>
+               </div>
 
               {user.created_at && (
                 <div>
@@ -195,7 +204,7 @@ export function ProfilePage() {
                         <div className="h-5 w-5 rounded-full bg-gray-200 mt-0.5" />
                       )}
                       <div>
-                        <p className="text-sm text-gray-500">{detail.detail_type}</p>
+                        <p className="text-sm text-gray-500">{t(`profile.addAdditionalInfo.detailTypes.${detail.detail_type}`)}</p>
                         <p className="font-medium">{detail.detail_value}</p>
                       </div>
                     </div>

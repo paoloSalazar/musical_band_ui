@@ -5,6 +5,10 @@ import { eventsApi } from '../../lib/api';
 import type { Event, EventMusician } from '../../lib/types';
 import type { ApiError } from '../../lib/api/client';
 import { ViewMusicianPaymentsDialog } from './ViewMusicianPaymentsDialog';
+import { BillingSummaryPopup } from './BillingSummaryPopup';
+import { MusicianPaymentSummaryPopup } from './MusicianPaymentSummaryPopup';
+import { ReceiptDownloadButton } from './ReceiptDownloadButton';
+import { ContractDownloadButton } from './ContractDownloadButton';
 import { formatDateHumanReadable, formatTimeHumanReadable } from '../../lib/timezone';
 import { useUser } from '../../contexts/UserContext';
 import { Button } from '../ui/button';
@@ -17,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../ui/dialog';
-import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save, CreditCard, Wallet, Users } from 'lucide-react';
+import { Loader2, Pencil, Calendar, MapPin, Clock, User, DollarSign, Save, CreditCard, Wallet, Users, PieChart, FileText, FileSignature } from 'lucide-react';
 import { ViewPaymentDetailsDialog } from './ViewPaymentDetailsDialog';
 import { MakePaymentDialog } from './MakePaymentDialog';
 
@@ -41,6 +45,8 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   const isMusicianUser = hasRole('musician') || hasRole('auxiliar_musician') || hasRole('helper');
   
   const [event, setEvent] = useState<Event | null>(null);
+  const isEventOwner = user && event?.user_id === user.id;
+  const canViewReports = isAdmin || isEventOwner;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isUpdatingPrice, setIsUpdatingPrice] = useState(false);
@@ -54,6 +60,17 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
   // Personal musician payment summary (for musician/auxiliar/helper roles)
   const [myMusicianAssignment, setMyMusicianAssignment] = useState<EventMusician | null>(null);
   const [showMyMusicianPayments, setShowMyMusicianPayments] = useState(false);
+
+  // Reports state
+  const [billingSummaryLoading, setBillingSummaryLoading] = useState(false);
+  const [billingSummaryData, setBillingSummaryData] = useState<any>(null);
+  const [billingSummaryError, setBillingSummaryError] = useState<string | null>(null);
+  const [showBillingSummaryPopup, setShowBillingSummaryPopup] = useState(false);
+
+  const [musicianSummaryLoading, setMusicianSummaryLoading] = useState(false);
+  const [musicianSummaryData, setMusicianSummaryData] = useState<any[]>([]);
+  const [musicianSummaryError, setMusicianSummaryError] = useState<string | null>(null);
+  const [showMusicianSummaryPopup, setShowMusicianSummaryPopup] = useState(false);
 
   useEffect(() => {
     if (open && eventId) {
@@ -167,6 +184,40 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
     }
   };
 
+  const handleFetchBillingSummary = async () => {
+    if (!event) return;
+    
+    setBillingSummaryLoading(true);
+    setBillingSummaryError(null);
+    try {
+      const response = await eventsApi.getEventBillingSummary(event.id);
+      setBillingSummaryData(response.data);
+      setShowBillingSummaryPopup(true);
+    } catch (err) {
+      const apiError = err as ApiError;
+      setBillingSummaryError(apiError.detail || apiError.message || t('events.dialog.view.failedToLoadBillingSummary'));
+    } finally {
+      setBillingSummaryLoading(false);
+    }
+  };
+
+  const handleFetchMusicianPaymentSummary = async () => {
+    if (!event) return;
+    
+    setMusicianSummaryLoading(true);
+    setMusicianSummaryError(null);
+    try {
+      const response = await eventsApi.getEventMusicianPaymentSummary(event.id);
+      setMusicianSummaryData(response.data);
+      setShowMusicianSummaryPopup(true);
+    } catch (err) {
+      const apiError = err as ApiError;
+      setMusicianSummaryError(apiError.detail || apiError.message || t('events.dialog.view.failedToLoadMusicianPaymentSummary'));
+    } finally {
+      setMusicianSummaryLoading(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
@@ -261,74 +312,69 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                 <div className="flex-1">
                   <p className="text-sm text-gray-500">{t('events.dialog.view.price')}</p>
                   {isAdmin ? (
-                  priceInput !== '' || event.price !== undefined ? (
-                    <div className="flex items-center gap-2 mt-1">
-                      <Input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        value={event.price !== undefined ? event.price : priceInput}
-                        onChange={(e) => setPriceInput(e.target.value)}
-                        placeholder={t('events.dialog.view.enterPrice')}
-                        className="h-8 w-32"
-                        disabled={isUpdatingPrice}
-                      />
-                      {priceInput !== '' ? (
-                        <>
-                          <Button
-                            size="sm"
-                            onClick={handleSavePrice}
-                            disabled={isUpdatingPrice}
-                            className="h-8"
-                          >
-                            <Save className="h-4 w-4" />
-                          </Button>
+                    priceInput !== '' || event.price !== undefined ? (
+                      <div className="flex items-center gap-2 mt-1">
+                        <Input
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          value={event.price !== undefined ? event.price : priceInput}
+                          onChange={(e) => setPriceInput(e.target.value)}
+                          placeholder={t('events.dialog.view.enterPrice')}
+                          className="h-8 w-32"
+                          disabled={isUpdatingPrice}
+                        />
+                        {priceInput !== '' ? (
+                          <>
+                            <Button
+                              size="sm"
+                              onClick={handleSavePrice}
+                              disabled={isUpdatingPrice}
+                              className="h-8"
+                            >
+                              <Save className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={handleCancelEditPrice}
+                              disabled={isUpdatingPrice}
+                              className="h-8"
+                            >
+                              {t('common.cancel')}
+                            </Button>
+                          </>
+                        ) : (
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={handleCancelEditPrice}
-                            disabled={isUpdatingPrice}
+                            onClick={handleStartEditPrice}
                             className="h-8"
                           >
-                            {t('common.cancel')}
+                            {t('events.dialog.view.setPrice')}
                           </Button>
-                        </>
-                      ) : (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={handleStartEditPrice}
-                          className="h-8"
-                        >
-                          {t('events.dialog.view.setPrice')}
-                        </Button>
-                      )}
-                    </div>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-sm">
+                        {event.price !== undefined && event.price !== null
+                          ? `${event.price.toFixed(2)}`
+                          : t('events.dialog.view.noPrice')}
+                      </p>
+                    )
                   ) : (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={handleStartEditPrice}
-                          className="h-8 mt-1"
-                        >
-                          {t('events.dialog.view.setPrice')}
-                        </Button>
-                  )
-                ) : (
-                  <p className="text-sm">
-                    {event.price !== undefined && event.price !== null
-                      ? `${event.price.toFixed(2)}`
-                      : t('events.dialog.view.noPrice')}
-                  </p>
-                )}
-                {priceError && (
-                  <p className="text-xs text-red-600 mt-1">{priceError}</p>
-                )}
+                    <p className="text-sm">
+                      {event.price !== undefined && event.price !== null
+                        ? `${event.price.toFixed(2)}`
+                        : t('events.dialog.view.noPrice')}
+                    </p>
+                  )}
+                  {priceError && (
+                    <p className="text-xs text-red-600 mt-1">{priceError}</p>
+                  )}
                 </div>
               </div>
             )}
-
-            {/* Created By */}
             {event.created_by && (
               <div className="flex items-start space-x-2">
                 <User className="h-4 w-4 mt-1 text-gray-500" />
@@ -341,11 +387,72 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
                 </div>
               </div>
             )}
+
+            {event && canViewReports && (
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-semibold">{t('events.dialog.view.reports')}</h3>
+                </div>
+                
+                {/* Report buttons container */}
+                <div className="flex items-start space-x-2">
+                   {/* Billing summary button - admin only */}
+                   {isAdmin && (
+                     <Button
+                       type="button"
+                       variant="outline"
+                       onClick={handleFetchBillingSummary}
+                       disabled={billingSummaryLoading}
+                       aria-label={t('events.dialog.view.billingSummaryLabel')}
+                       {...(billingSummaryLoading ? { 'aria-busy': 'true' } : {})}
+                     >
+                       {billingSummaryLoading ? (
+                         <Loader2 className="h-4 w-4 animate-spin" />
+                       ) : (
+                         <PieChart className="h-4 w-4" />
+                       )}
+                     </Button>
+                   )}
+                   
+                   {/* Musician payment summary button - admin only */}
+                   {isAdmin && (
+                     <Button
+                       type="button"
+                       variant="outline"
+                       onClick={handleFetchMusicianPaymentSummary}
+                       disabled={musicianSummaryLoading}
+                       aria-label={t('events.dialog.view.musicianPaymentSummaryLabel')}
+                       {...(musicianSummaryLoading ? { 'aria-busy': 'true' } : {})}
+                     >
+                       {musicianSummaryLoading ? (
+                         <Loader2 className="h-4 w-4 animate-spin" />
+                       ) : (
+                         <Users className="h-4 w-4" />
+                       )}
+                     </Button>
+                   )}
+
+                   {/* PDF Download Buttons - admin AND event owner */}
+                   {canViewReports && (
+                     <>
+                       <ReceiptDownloadButton
+                         eventId={event.id}
+                         aria-label={t('events.dialog.view.receiptPdfLabel')}
+                       />
+                       <ContractDownloadButton
+                         eventId={event.id}
+                         aria-label={t('events.dialog.view.contractPdfLabel')}
+                       />
+                     </>
+                   )}
+                </div>
+              </div>
+            )}
           </div>
         ) : null}
 
         <DialogFooter>
-          {canManageMusicians && isAdmin && (
+          {canManageMusicians && (
             <Button type="button" variant="outline" onClick={handleManageMusicians} disabled={event?.status !== 'CONFIRMED'}>
               <Users className="h-4 w-4 mr-2" />
               {t('events.dialog.view.manageMusicians')}
@@ -397,37 +504,57 @@ export function ViewEventDialog({ eventId, open, onOpenChange, onEdit, canEditEv
         </DialogFooter>
       </DialogContent>
 
-      {event && (
+      {/* Payment Details Dialog */}
+      {event && user && (
         <ViewPaymentDetailsDialog
-        eventId={event.id}
-        eventName={event.name}
-        open={showPaymentDetails}
-        onOpenChange={setShowPaymentDetails}
-      />
-    )}
+          eventId={event.id}
+          eventName={event.name}
+          userId={user.id}
+          open={showPaymentDetails}
+          onOpenChange={setShowPaymentDetails}
+        />
+      )}
 
-    {/* Make Payment Dialog */}
-    {event && user && (
-      <MakePaymentDialog
-        eventId={event.id}
-        eventName={event.name}
-        userId={user.id}
-        open={showMakePayment}
-        onOpenChange={setShowMakePayment}
-      />
-    )}
+      {/* Make Payment Dialog */}
+      {event && user && (
+        <MakePaymentDialog
+          eventId={event.id}
+          eventName={event.name}
+          userId={user.id}
+          open={showMakePayment}
+          onOpenChange={setShowMakePayment}
+        />
+      )}
 
-    {/* Personal Musician Payment Summary Dialog (for musician/auxiliar_musician/helper roles viewing their own assignment) */}
-    {event && myMusicianAssignment && (
-      <ViewMusicianPaymentsDialog
-        eventId={event.id}
-        musicianId={myMusicianAssignment.musician_id}
-        musicianName={`${myMusicianAssignment.musician_name} ${myMusicianAssignment.musician_lastname}`}
-        salary={myMusicianAssignment.salary}
-        open={showMyMusicianPayments}
-        onOpenChange={setShowMyMusicianPayments}
+      {/* Personal Musician Payment Summary Dialog (for musician/auxiliar_musician/helper roles viewing their own assignment) */}
+      {event && myMusicianAssignment && (
+        <ViewMusicianPaymentsDialog
+          eventId={event.id}
+          musicianId={myMusicianAssignment.musician_id}
+          musicianName={`${myMusicianAssignment.musician_name} ${myMusicianAssignment.musician_lastname}`}
+          salary={myMusicianAssignment.salary}
+          open={showMyMusicianPayments}
+          onOpenChange={setShowMyMusicianPayments}
+        />
+      )}
+      
+      {/* Billing Summary Popup */}
+      <BillingSummaryPopup
+        open={showBillingSummaryPopup}
+        onOpenChange={setShowBillingSummaryPopup}
+        data={billingSummaryData}
+        loading={billingSummaryLoading}
+        error={billingSummaryError}
       />
-    )}
+
+      {/* Musician Payment Summary Popup */}
+      <MusicianPaymentSummaryPopup
+        open={showMusicianSummaryPopup}
+        onOpenChange={setShowMusicianSummaryPopup}
+        data={musicianSummaryData}
+        loading={musicianSummaryLoading}
+        error={musicianSummaryError}
+      />
     </Dialog>
   );
 }

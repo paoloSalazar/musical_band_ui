@@ -34,6 +34,7 @@ export function EditProfileDialog({
     name: '',
     lastname: '',
     second_lastname: '',
+    ci: '',
     phone_number: '',
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +47,7 @@ export function EditProfileDialog({
         name: user.name || '',
         lastname: user.lastname || '',
         second_lastname: user.second_lastname || '',
+        ci: user.ci || '',
         phone_number: user.phone_number || '',
       });
       setError(null);
@@ -164,6 +166,21 @@ export function EditProfileDialog({
                 value={formData.phone_number}
                 onChange={(e) => handleChange('phone_number', e.target.value)}
                 placeholder={t('profile.editProfile.fields.phoneNumberPlaceholder')}
+                className="col-span-3"
+                disabled={isLoading}
+              />
+            </div>
+            
+            {/* CI */}
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="ci" className="text-right">
+                {t('profile.editProfile.fields.ci')}
+              </Label>
+              <Input
+                id="ci"
+                value={formData.ci}
+                onChange={(e) => handleChange('ci', e.target.value)}
+                placeholder={t('profile.editProfile.fields.ciPlaceholder')}
                 className="col-span-3"
                 disabled={isLoading}
               />

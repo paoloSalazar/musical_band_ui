@@ -22,7 +22,27 @@ export function AvailabilityCalendar({
   initialMonth
 }: AvailabilityCalendarProps) {
   const { t } = useTranslation();
-  const [currentDate, setCurrentDate] = useState(initialMonth || new Date()); // Current month
+  const [currentDate, setCurrentDate] = useState<Date>(() => {
+    if (initialMonth) {
+      const date = new Date(initialMonth);
+      date.setDate(1);
+      return date;
+    }
+
+    if (availability.length > 0) {
+      const earliestUnavailable = availability.reduce((earliest, item) => {
+        const itemDate = new Date(item.unavailable_date);
+        return itemDate < earliest ? itemDate : earliest;
+      }, new Date(availability[0].unavailable_date));
+      const date = new Date(earliestUnavailable);
+      date.setDate(1);
+      return date;
+    }
+
+    const today = new Date();
+    today.setDate(1);
+    return today;
+  });
 
   // Get unavailable dates as Set for quick lookup
   const unavailableDates = new Set(

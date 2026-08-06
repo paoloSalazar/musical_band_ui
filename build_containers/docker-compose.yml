@@ -1,0 +1,22 @@
+name: musical_band
+
+services:
+  ui:
+    build:
+      context: ..
+      dockerfile: build_containers/Dockerfile.ui
+      args:
+        - VITE_API_URL=${VITE_API_URL:-http://localhost:8000}
+    ports:
+      - "5173:80"
+    networks:
+      - musical_band_network
+    volumes:
+      - ui_logs:/var/log/nginx
+
+volumes:
+  ui_logs:
+
+networks:
+  musical_band_network:
+    # external: true

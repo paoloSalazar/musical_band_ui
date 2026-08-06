@@ -12,6 +12,11 @@ vi.mock('@/app/lib/api', () => ({
     getById: vi.fn(),
     updatePrice: vi.fn(),
     getPrice: vi.fn(),
+    getPaymentSummary: vi.fn(),
+    getMusicianPaymentSummary: vi.fn(),
+    getEventMusicians: vi.fn(),
+    getEventBillingSummary: vi.fn(),
+    getEventMusicianPaymentSummary: vi.fn(),
   },
 }));
 
@@ -29,53 +34,70 @@ vi.mock('@/app/lib/timezone', () => ({
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: vi.fn((key, options) => {
-      // Return mocked translations for common keys
-      const translations = {
-        'events.dialog.view.title': 'Event Details',
-        'events.dialog.view.description': 'View event information',
-        'events.dialog.view.loading': 'Loading event...',
-        'events.dialog.view.error': 'Error',
-        'events.dialog.view.date': 'Date',
-        'events.dialog.view.time': 'Time',
-        'events.dialog.view.allDay': 'All day event',
-        'events.dialog.view.location': 'Location',
-        'events.dialog.view.price': 'Price',
-        'events.dialog.view.enterPrice': 'Enter price',
-        'events.dialog.view.setPrice': 'Set Price',
-        'events.dialog.view.noPrice': 'No price set',
-        'events.dialog.view.createdBy': 'Created by',
-        'events.dialog.view.editEvent': 'Edit Event',
-        'events.dialog.view.paymentDetails': 'Payment Details',
-        'events.dialog.view.makePayment': 'Make Payment',
-        'events.dialog.view.manageMusicians': 'Manage Musicians',
-        'events.status.PENDING': 'PENDING',
-        'events.status.CONFIRMED': 'CONFIRMED',
-        'events.status.CANCELLED': 'CANCELLED',
-        'events.dialog.view.validation.invalidAmount': 'Please enter a valid number',
-        'events.dialog.view.validation.priceNegative': 'Price cannot be negative',
-        'events.dialog.view.failedToUpdate': 'Failed to update price',
-        'events.payment.title': 'Payment Details',
-        'events.payment.description': '{{eventName}} - Payment history and summary',
-        'events.payment.loading': 'Loading payment details...',
-        'events.payment.error': 'Error',
-        'events.payment.summary.title': 'Payment Summary',
-        'events.payment.summary.finalPrice': 'Final Price',
-        'events.payment.summary.totalPaid': 'Total Paid',
-        'events.payment.summary.remaining': 'Remaining',
-        'events.payment.history.title': 'Payment History',
-        'events.payment.history.noPayments': 'No payments have been made yet.',
-        'events.payment.ADVANCE': 'Advance Payment',
-        'events.payment.REMAINING': 'Remaining Balance',
-        'events.payment.TOTAL': 'Full Payment',
-        'events.payment.buttons.close': 'Close',
-        'common.cancel': 'Cancel',
-      };
-      const translation = translations[key] || key;
-      if (options && typeof translation === 'string' && translation.includes('{{')) {
-        return translation.replace('{{eventName}}', options.eventName || '');
-      }
-      return translation;
-    }),
+       // Return mocked translations for common keys
+       const translations = {
+         'events.dialog.view.title': 'Event Details',
+         'events.dialog.view.description': 'View event information',
+         'events.dialog.view.loading': 'Loading event...',
+         'events.dialog.view.error': 'Error',
+         'events.dialog.view.date': 'Date',
+         'events.dialog.view.time': 'Time',
+         'events.dialog.view.allDay': 'All day event',
+         'events.dialog.view.location': 'Location',
+         'events.dialog.view.price': 'Price',
+         'events.dialog.view.enterPrice': 'Enter price',
+         'events.dialog.view.setPrice': 'Set Price',
+         'events.dialog.view.noPrice': 'No price set',
+         'events.dialog.view.createdBy': 'Created by',
+         'events.dialog.view.editEvent': 'Edit Event',
+         'events.dialog.view.manageMusicians': 'Manage Musicians',
+         'events.dialog.view.paymentDetails': 'Payment Details',
+         'events.dialog.view.makePayment': 'Make Payment',
+         'events.dialog.view.viewMyPayments': 'View My Payments',
+         'events.dialog.view.reports': 'Reports',
+         'events.dialog.view.billingSummaryLabel': 'Billing Summary',
+         'events.dialog.view.musicianPaymentSummaryLabel': 'Musician Payment Summary',
+         'events.dialog.view.billingSummaryTitle': 'Billing Summary',
+         'events.dialog.view.musicianPaymentSummaryTitle': 'Musician Payment Summary',
+         'events.dialog.view.eventName': 'Event Name',
+         'events.dialog.view.eventPrice': 'Event Price',
+         'events.dialog.view.paymentDone': 'Payment Done',
+         'events.dialog.view.remainingPayment': 'Remaining Payment',
+         'events.dialog.view.sumOfMusicianSalaries': 'Sum of Musician Salaries',
+         'events.dialog.view.paymentDoneToMusicians': 'Payment Done to Musicians',
+         'events.dialog.view.noData': 'No data available',
+         'events.status.PENDING': 'PENDING',
+         'events.status.CONFIRMED': 'CONFIRMED',
+         'events.status.CANCELLED': 'CANCELLED',
+         'events.dialog.view.validation.invalidAmount': 'Please enter a valid number',
+         'events.dialog.view.validation.priceNegative': 'Price cannot be negative',
+         'events.dialog.view.failedToUpdate': 'Failed to update price',
+         'events.payment.title': 'Payment Details',
+         'events.payment.description': '{{eventName}} - Payment history and summary',
+         'events.payment.loading': 'Loading payment details...',
+         'events.payment.error': 'Error',
+         'events.payment.summary.title': 'Payment Summary',
+         'events.payment.summary.finalPrice': 'Final Price',
+         'events.payment.summary.totalPaid': 'Total Paid',
+         'events.payment.summary.remaining': 'Remaining',
+         'events.payment.history.title': 'Payment History',
+         'events.payment.history.noPayments': 'No payments have been made yet.',
+'events.payment.ADVANCE': 'Advance Payment',
+          'events.payment.REMAINING': 'Remaining Balance',
+          'events.payment.TOTAL': 'Full Payment',
+          'events.payment.buttons.close': 'Close',
+          'common.close': 'Close',
+          'common.cancel': 'Cancel',
+         'events.dialog.view.musicianName': 'Musician Name',
+         'events.dialog.view.role': 'Role',
+         'events.dialog.view.salary': 'Salary',
+       };
+     const translation = translations[key] || key;
+     if (options && typeof translation === 'string' && translation.includes('{{')) {
+       return translation.replace('{{eventName}}', options.eventName || '');
+     }
+     return translation;
+   }),
     i18n: {
       language: 'en',
     },
@@ -104,6 +126,12 @@ vi.mock('@/app/contexts/UserContext', () => ({
     hasPermission: mockUser.hasPermission,
   }),
 }));
+
+afterEach(() => {
+  mockUser.id = 1;
+  mockUser.hasRole.mockReset();
+  mockUser.hasPermission.mockReset();
+});
 
 // Mock UI components
 vi.mock('@/app/components/ui/button', () => ({
@@ -166,6 +194,20 @@ vi.mock('@/app/components/events/MakePaymentDialog', () => ({
   ),
 }));
 
+// Mock BillingSummaryPopup component
+vi.mock('@/app/components/events/BillingSummaryPopup', () => ({
+  BillingSummaryPopup: vi.fn(({ open, onOpenChange, data, loading, error }) => 
+    open ? <div data-testid="billing-summary-popup" data-open={open} data-error={error}>{data?.event_name}</div> : null
+  ),
+}));
+
+// Mock MusicianPaymentSummaryPopup component
+vi.mock('@/app/components/events/MusicianPaymentSummaryPopup', () => ({
+  MusicianPaymentSummaryPopup: vi.fn(({ open }) => 
+    open ? <div data-testid="musician-summary-popup" data-open={open}>Musician Payment Summary</div> : null
+  ),
+}));
+
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
   Pencil: () => <div data-testid="pencil-icon" />,
@@ -179,6 +221,26 @@ vi.mock('lucide-react', () => ({
   CreditCard: () => <div data-testid="credit-card-icon" />,
   Wallet: () => <div data-testid="wallet-icon" />,
   Loader2: () => <div data-testid="loader-icon" />,
+  PieChart: () => <div data-testid="pie-chart-icon" />,
+  FileText: () => <div data-testid="file-text-icon" />,
+  FileSignature: () => <div data-testid="file-signature-icon" />,
+}));
+
+// Mock PDF download button components
+vi.mock('@/app/components/events/ReceiptDownloadButton', () => ({
+  ReceiptDownloadButton: ({ 'aria-label': ariaLabel }: { ariaLabel?: string }) => (
+    <button data-testid="receipt-download-button" aria-label={ariaLabel}>
+      <div data-testid="file-text-icon" />
+    </button>
+  ),
+}));
+
+vi.mock('@/app/components/events/ContractDownloadButton', () => ({
+  ContractDownloadButton: ({ 'aria-label': ariaLabel }: { ariaLabel?: string }) => (
+    <button data-testid="contract-download-button" aria-label={ariaLabel}>
+      <div data-testid="file-signature-icon" />
+    </button>
+  ),
 }));
 
 // Import after mocking to get the mocked version
@@ -921,7 +983,325 @@ describe('ViewEventDialog', () => {
     const manageButton = screen.getByText('Manage Musicians');
     fireEvent.click(manageButton);
 
-    expect(mockNavigate).toHaveBeenCalledWith('/events/1/musicians');
-    expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+     expect(mockNavigate).toHaveBeenCalledWith('/events/1/musicians');
+     expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+   });
+
+describe('Reports section', () => {
+      it('should render Reports section with title and buttons for admin users', async () => {
+        mockUser.hasRole.mockReturnValue(true); // Admin user
+
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
+
+        // Check Reports section title
+        expect(screen.getAllByText('Reports')[0]).toBeTruthy();
+
+        // Check billing and musician payment summary buttons (admin only)
+        const billingButton = screen.getAllByLabelText(/billing summary/i)[0];
+        const musicianButton = screen.getAllByLabelText(/musician payment summary/i)[0];
+        expect(billingButton).toBeTruthy();
+        expect(musicianButton).toBeTruthy();
+
+        // Check PDF download buttons (admin AND event owner)
+        expect(screen.getAllByTestId('receipt-download-button')[0]).toBeTruthy();
+        expect(screen.getAllByTestId('contract-download-button')[0]).toBeTruthy();
+      });
+
+      it('should show Reports section with PDF buttons for event owner (non-admin)', async () => {
+        mockUser.hasRole.mockReturnValue(false); // Regular user (event owner)
+        mockUser.id = 1; // User is the event owner (event.user_id is 1)
+
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
+
+        // Reports section title should be visible
+        expect(screen.getAllByText('Reports')[0]).toBeTruthy();
+
+        // Billing and musician payment summary buttons should NOT be visible for non-admin
+        expect(screen.queryAllByLabelText(/billing summary/i)).toHaveLength(0);
+        expect(screen.queryAllByLabelText(/musician payment summary/i)).toHaveLength(0);
+
+        // PDF download buttons should be visible for event owner
+        expect(screen.getAllByTestId('receipt-download-button')[0]).toBeTruthy();
+        expect(screen.getAllByTestId('contract-download-button')[0]).toBeTruthy();
+      });
+
+      it('should hide Reports section for non-admin and non-owner users', async () => {
+        mockUser.hasRole.mockReturnValue(false); // Non-admin user
+        mockUser.id = 999; // Different user ID (not owner)
+
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
+
+        // Reports section title should not be visible for non-owner
+        expect(screen.queryAllByText('Reports')).toHaveLength(0);
+      });
+
+it('should have accessible labels on report buttons', async () => {
+      mockUser.hasRole.mockReturnValue(true); // Admin user
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      // Check that buttons have accessible labels (aria-label or title)
+      const billingButton = screen.getAllByLabelText(/billing summary/i)[0];
+      expect(billingButton).toHaveAttribute('aria-label');
+      
+      const musicianButton = screen.getAllByLabelText(/musician payment summary/i)[0];
+      expect(musicianButton).toHaveAttribute('aria-label');
+    });
+
+    it('should show PDF download buttons for admin users', async () => {
+      mockUser.hasRole.mockReturnValue(true); // Admin user
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      // Check PDF download buttons are visible for admin
+      expect(screen.getAllByTestId('receipt-download-button')[0]).toBeTruthy();
+      expect(screen.getAllByTestId('contract-download-button')[0]).toBeTruthy();
+    });
+
+    it('should show PDF download buttons for event owner (non-admin)', async () => {
+      mockUser.hasRole.mockReturnValue(false); // Regular user (event owner)
+      mockUser.id = 1; // User is the event owner
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      // Check PDF download buttons are visible for event owner
+      expect(screen.getAllByTestId('receipt-download-button')[0]).toBeTruthy();
+      expect(screen.getAllByTestId('contract-download-button')[0]).toBeTruthy();
+    });
+
+    it('should hide PDF download buttons for non-owner users', async () => {
+      mockUser.hasRole.mockReturnValue(false); // Non-admin user
+      mockUser.id = 999; // Different user ID (not owner)
+
+      render(
+        <UserProvider>
+          <ViewEventDialog
+            eventId={1}
+            open={true}
+            onOpenChange={() => {}}
+          />
+        </UserProvider>
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('Test Event')).toBeTruthy();
+      });
+
+      // Check PDF download buttons are NOT visible for non-owner
+      expect(screen.queryAllByTestId('receipt-download-button')).toHaveLength(0);
+      expect(screen.queryAllByTestId('contract-download-button')).toHaveLength(0);
+});
+
+      it('should call billing summary API and show loading state when billing button is clicked', async () => {
+        mockUser.hasRole.mockReturnValue(true); // Admin user
+        mockEventsApi.getEventBillingSummary.mockResolvedValue({
+          data: {
+            event_name: 'Test Event',
+            event_price: '1000.00',
+            payment_done: '500.00',
+            remaining_payment: '500.00',
+            sum_of_musician_salaries: '3000.00',
+            payment_done_to_musicians: '1500.00'
+          },
+        });
+
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
+
+        // Click billing summary button
+        const billingButton = screen.getAllByLabelText(/billing summary/i)[0];
+        fireEvent.click(billingButton);
+
+        // Wait for API call to be made
+        await waitFor(() => {
+          expect(mockEventsApi.getEventBillingSummary).toHaveBeenCalledWith(1);
+        });
+      });
+
+      it('should call musician payment summary API and show loading state when musician button is clicked', async () => {
+        mockUser.hasRole.mockReturnValue(true); // Admin user
+        mockEventsApi.getEventMusicianPaymentSummary.mockResolvedValue({
+          data: [
+            {
+              musician_name: 'John Doe',
+              role: 'Violinist',
+              salary: '500.00',
+              payment_done: '250.00',
+              remaining_payment: '250.00'
+            },
+            {
+              musician_name: 'Jane Smith',
+              role: 'Pianist',
+              salary: '300.00',
+              payment_done: '300.00',
+              remaining_payment: '0.00'
+            }
+          ],
+        });
+
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
+
+        // Click musician payment summary button
+        const musicianButton = screen.getAllByLabelText(/musician payment summary/i)[0];
+        fireEvent.click(musicianButton);
+
+        // Wait for API call to be made
+        await waitFor(() => {
+          expect(mockEventsApi.getEventMusicianPaymentSummary).toHaveBeenCalledWith(1);
+        });
+      });
+
+      it('should handle billing summary API error', async () => {
+        mockUser.hasRole.mockReturnValue(true); // Admin user
+        mockEventsApi.getEventBillingSummary.mockRejectedValue(
+          new Error('Failed to fetch billing summary')
+        );
+
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
+
+        const billingButton = screen.getAllByLabelText(/billing summary/i)[0];
+        fireEvent.click(billingButton);
+
+        // Wait for the billing summary popup to be called with error state
+        await waitFor(() => {
+          expect(mockEventsApi.getEventBillingSummary).toHaveBeenCalledWith(1);
+        });
+      });
+
+      it('should handle musician payment summary API error', async () => {
+        mockUser.hasRole.mockReturnValue(true); // Admin user
+        mockEventsApi.getEventMusicianPaymentSummary.mockRejectedValue(
+          new Error('Failed to fetch musician payment summary')
+        );
+
+        render(
+          <UserProvider>
+            <ViewEventDialog
+              eventId={1}
+              open={true}
+              onOpenChange={() => {}}
+            />
+          </UserProvider>
+        );
+
+        await waitFor(() => {
+          expect(screen.getByText('Test Event')).toBeTruthy();
+        });
+
+        const musicianButton = screen.getAllByLabelText(/musician payment summary/i)[0];
+        fireEvent.click(musicianButton);
+
+        // Wait for the musician payment summary popup to be called with error state
+        await waitFor(() => {
+          expect(mockEventsApi.getEventMusicianPaymentSummary).toHaveBeenCalledWith(1);
+        });
+      });
   });
 });

@@ -81,7 +81,7 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
               </div>
             </div>
 
-            {/* Details */}
+{/* Details */}
             <div className="space-y-3 pt-4 border-t">
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-gray-400" />
@@ -90,6 +90,15 @@ export function ViewUserDialog({ userId, open, onOpenChange }: ViewUserDialogPro
                   <p className="font-medium">{user.email}</p>
                 </div>
               </div>
+              
+              {user.ci && (
+                <div className="flex items-center gap-3">
+                  <div>
+                    <p className="text-sm text-gray-500">{t('users.dialog.view.ci')}</p>
+                    <p className="font-medium">{user.ci}</p>
+                  </div>
+                </div>
+              )}
               
               {user.phone_number && (
                 <div className="flex items-center gap-3">

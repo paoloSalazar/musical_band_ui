@@ -20,7 +20,6 @@ vi.mock('i18next-browser-languagedetector', () => ({
 
 import i18n from 'i18next';
 import { translateEventStatus, translatePaymentType, translateUserRole, clearTranslationCache } from '@/i18n/utils';
-import i18n from 'i18next';
 
 describe('Translation Utilities', () => {
   beforeEach(() => {

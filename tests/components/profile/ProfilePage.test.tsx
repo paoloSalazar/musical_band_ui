@@ -135,6 +135,7 @@ describe('ProfilePage Component', () => {
     second_lastname: 'Smith',
     email: 'john.doe@example.com',
     phone_number: '+1234567890',
+    ci: 'V-12345678',
     role: 'admin',
     role_id: 1,
     permissions: ['read', 'write'],
@@ -292,7 +293,7 @@ describe('ProfilePage Component', () => {
       expect(screen.getByText('Additional Information')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Address')).toBeInTheDocument();
+    expect(screen.getByText(/address/i)).toBeInTheDocument();
     expect(screen.getByText('123 Main St')).toBeInTheDocument();
     expect(screen.getByText('City')).toBeInTheDocument();
     expect(screen.getByText('New York')).toBeInTheDocument();

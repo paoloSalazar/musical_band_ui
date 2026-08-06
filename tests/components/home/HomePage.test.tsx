@@ -135,6 +135,9 @@ describe('HomePage', () => {
         'home.cards.admin.title': 'Admin Panel',
         'home.cards.admin.description': 'User management and permissions',
         'home.cards.admin.button': 'Manage Admin',
+        'home.cards.availability.title': 'My Availability',
+        'home.cards.availability.description': 'Manage your unavailable dates',
+        'home.cards.availability.button': 'Manage Availability',
         'home.stats.members.title': 'Total Band Members',
         'home.stats.members.description': 'Active members',
         'home.stats.events.title': 'Upcoming Events',
@@ -207,11 +210,7 @@ describe('HomePage', () => {
     expect(screen.getByText('Welcome to Admin Dashboard')).toBeTruthy();
     expect(screen.getByText('Manage your band website from here')).toBeTruthy();
 
-    // Check card translations
-    expect(screen.getByText('Band Members')).toBeTruthy();
-    expect(screen.getByText('Manage band member profiles and bios')).toBeTruthy();
-    expect(screen.getByText('Manage Members')).toBeTruthy();
-
+    // Check card translations (Members and Stats are commented out in component)
     expect(screen.getByText('Events')).toBeTruthy();
     expect(screen.getByText('Schedule and manage upcoming shows')).toBeTruthy();
     expect(screen.getByText('Manage Events')).toBeTruthy();
@@ -219,14 +218,6 @@ describe('HomePage', () => {
     expect(screen.getByText('Admin Panel')).toBeTruthy();
     expect(screen.getByText('User management and permissions')).toBeTruthy();
     expect(screen.getByText('Manage Admin')).toBeTruthy();
-
-    // Check stats translations
-    expect(screen.getByText('Total Band Members')).toBeTruthy();
-    expect(screen.getByText('Active members')).toBeTruthy();
-    expect(screen.getByText('Upcoming Events')).toBeTruthy();
-    expect(screen.getByText('Scheduled shows')).toBeTruthy();
-    expect(screen.getByText('Admin Users')).toBeTruthy();
-    expect(screen.getByText('Active administrators')).toBeTruthy();
   });
 
   it('should call translation function with correct keys', () => {
@@ -246,24 +237,13 @@ describe('HomePage', () => {
     expect(mockT).toHaveBeenCalledWith('home.welcome');
     expect(mockT).toHaveBeenCalledWith('home.description');
 
-    // Check card translations
-    expect(mockT).toHaveBeenCalledWith('home.cards.members.title');
-    expect(mockT).toHaveBeenCalledWith('home.cards.members.description');
-    expect(mockT).toHaveBeenCalledWith('home.cards.members.button');
+    // Check card translations (Members and Stats are commented out in component)
     expect(mockT).toHaveBeenCalledWith('home.cards.events.title');
     expect(mockT).toHaveBeenCalledWith('home.cards.events.description');
     expect(mockT).toHaveBeenCalledWith('home.cards.events.button');
     expect(mockT).toHaveBeenCalledWith('home.cards.admin.title');
     expect(mockT).toHaveBeenCalledWith('home.cards.admin.description');
     expect(mockT).toHaveBeenCalledWith('home.cards.admin.button');
-
-    // Check stats translations
-    expect(mockT).toHaveBeenCalledWith('home.stats.members.title');
-    expect(mockT).toHaveBeenCalledWith('home.stats.members.description');
-    expect(mockT).toHaveBeenCalledWith('home.stats.events.title');
-    expect(mockT).toHaveBeenCalledWith('home.stats.events.description');
-    expect(mockT).toHaveBeenCalledWith('home.stats.admins.title');
-    expect(mockT).toHaveBeenCalledWith('home.stats.admins.description');
   });
 
   it('should display user information', () => {
